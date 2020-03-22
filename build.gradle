@@ -2,11 +2,13 @@ plugins {
 	id 'org.springframework.boot' version '2.2.5.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'groovy'
 }
 
 group = 'com.github.mwierzchowski'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 configurations {
 	developmentOnly
@@ -22,19 +24,31 @@ repositories {
 	mavenCentral()
 }
 
-dependencyManagement {
-}
-
 dependencies {
+	// Annotation processors
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// Compilation
 	compileOnly 'org.projectlombok:lombok'
 
+	// Implementation
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-jersey'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
+	testImplementation 'org.spockframework:spock-spring:1.3-groovy-2.5'
+
+	// Dev tools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
+test {
+	// Workaround for https://github.com/gradle/gradle/issues/6725
+	// Should be removed when Gradle switch to Groovy 3
+	jvmArgs('--add-opens', 'java.base/java.lang=ALL-UNNAMED')
+	jvmArgs('--add-opens', 'java.base/java.lang.invoke=ALL-UNNAMED')
+}

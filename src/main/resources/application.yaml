@@ -10,9 +10,6 @@ management:
 
 # JAX-RS
 spring.jackson.serialization.INDENT_OUTPUT: true
-spring.jackson.serialization.indent_output: true
-
-
 
 # Logging levels
 logging.level:

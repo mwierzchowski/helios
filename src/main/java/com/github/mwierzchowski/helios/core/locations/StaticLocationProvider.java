@@ -37,7 +37,7 @@ public class StaticLocationProvider implements LocationProvider {
         double latitude = locationProperties.getLatitude();
         double longitude = locationProperties.getLongitude();
         log.info("Static location is {} (lat={}, lon={})", city, latitude, longitude);
-        staticLocation = new Location(city, latitude, latitude);
+        staticLocation = new Location(city, latitude, longitude);
     }
 
     /**

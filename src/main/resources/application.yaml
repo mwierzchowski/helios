@@ -8,9 +8,6 @@ management:
   endpoints.web.exposure.include: '*'
   endpoint.health.show-details: always
 
-# JAX-RS
-spring.jackson.serialization.INDENT_OUTPUT: true
-
 # Logging levels
 logging.level:
   root: WARN

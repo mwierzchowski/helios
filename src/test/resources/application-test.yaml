@@ -1,0 +1,16 @@
+# Logging levels
+logging.level:
+  root: INFO
+  com.github.mwierzchowski.helios: DEBUG
+
+# Circuit breaking
+resilience4j.retry.instances.owm.maxRetryAttempts: 3
+
+# Open Weather Map canned responses from WireMock
+helios.owm.base-path: http://localhost:${wiremock.server.port}/data/2.5
+
+# Static location for tests
+helios.location:
+  city: Warsaw
+  latitude: 52.23
+  longitude: 21.01

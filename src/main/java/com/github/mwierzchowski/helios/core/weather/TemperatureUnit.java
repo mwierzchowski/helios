@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 /**
  * Enumeration that represents temperature units.
- *
  * @author Marcin Wierzchowski
  */
 @AllArgsConstructor

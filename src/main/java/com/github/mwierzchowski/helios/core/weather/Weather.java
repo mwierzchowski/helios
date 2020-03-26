@@ -8,16 +8,24 @@ import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import java.time.Instant;
 
 /**
  * Represents weather conditions outside.
- *
  * @author Marcin Wierzchowski
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Weather {
+    /**
+     * Timestamp of weather observation.
+     */
+    @NotNull
+    @PastOrPresent
+    private Instant timestamp;
+
     /**
      * Temperature
      */
@@ -39,10 +47,4 @@ public class Weather {
     @Min(0)
     @Max(100)
     private Integer cloudsCoverage;
-
-    public boolean differentThen(Weather lastWeather) {
-        // TODO implement
-        // TODO add test
-        return false;
-    }
 }

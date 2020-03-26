@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 
 /**
  * Represents speed value in given units (see {@link SpeedUnit}).
- *
  * @author Marcin Wierzchowski
  */
 @Data

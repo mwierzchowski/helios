@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Represents wind vector made of speed and direction.
- *
  * @author Marcin Wierzchowski
  */
 @Data

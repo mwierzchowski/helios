@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 
 /**
  * Represents temperature value in given units (see {@link TemperatureUnit}).
- *
  * @author Marcin Wierzchowski
  */
 @Data

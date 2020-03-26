@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 /**
  * Enumeration that represents speed unit.
- *
  * @author Marcin Wierzchowski
  */
 @AllArgsConstructor

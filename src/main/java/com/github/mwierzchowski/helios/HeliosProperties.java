@@ -67,12 +67,12 @@ public class HeliosProperties {
     @Data
     public static class OwmProperties {
         /**
-         * OpenWeatherMap service base path
+         * Open Weather Map service base path
          */
         private String basePath = "http://api.openweathermap.org/data/2.5";
 
         /**
-         * OpenWeatherMap service api key. Please sign up for free subscription on
+         * Open Weather Map service api key. Please sign up for free subscription on
          * https://home.openweathermap.org/users/sign_up. For rules of free subscription please take a look on
          * https://openweathermap.org/price#commonquestions.
          */

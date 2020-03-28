@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
  * Implementation {@link LocationProvider} that returns configured static location from application properties.
  * Location is loaded only on the application start and cached for all future calls.
@@ -16,11 +18,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @ConditionalOnProperty(prefix = "helios.location", name = {"latitude", "longitude"})
 public class StaticLocationProvider implements LocationProvider {
-    /**
-     * Constant for cities that name is unknown (null).
-     */
-    public static String UNKNOWN_CITY = "unknown city";
-
     /**
      * Cached location build based on configuration.
      */
@@ -33,10 +30,10 @@ public class StaticLocationProvider implements LocationProvider {
     @Autowired
     public StaticLocationProvider(HeliosProperties properties) {
         LocationProperties locationProperties = properties.getLocation();
-        String city = locationProperties.getCity() == null ? UNKNOWN_CITY : locationProperties.getCity();
+        String city = locationProperties.getCity();
         double latitude = locationProperties.getLatitude();
         double longitude = locationProperties.getLongitude();
-        log.info("Static location is {} (lat={}, lon={})", city, latitude, longitude);
+        log.info("Static location is {} (lat={}, lon={})", Objects.toString(city, "unknown city"), latitude, longitude);
         staticLocation = new Location(city, latitude, longitude);
     }
 

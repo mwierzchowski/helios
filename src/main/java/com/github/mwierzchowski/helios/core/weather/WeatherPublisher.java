@@ -75,7 +75,7 @@ public class WeatherPublisher {
             log.debug("Weather observation is missing but warning deadline has not been passed yet");
             return Optional.empty();
         }
-        log.error("Weather observation is missing for {}s", heliosProperties.getWeather().getObservationDeadline() / 1000);
+        log.error("Weather observation is missing");
         HeliosEvent event = new WeatherMissingEvent();
         return Optional.of(event);
     }

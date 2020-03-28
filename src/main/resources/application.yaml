@@ -18,7 +18,6 @@ spring.datasource:
   url: 'jdbc:postgresql://localhost:5432/helios'
   username: 'helios'
   password: 'helios'
-  driver-class-name: org.postgresql.Driver
 
 # Fault tolerance
 resilience4j.retry.instances:

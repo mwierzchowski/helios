@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.time.ZoneId.systemDefault;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.boot.actuate.health.Status.DOWN;
 import static org.springframework.boot.actuate.health.Status.UNKNOWN;
@@ -208,7 +210,7 @@ public class OwmHealthIndicator implements HealthIndicator {
          */
         Map<String, Object> toDetailsMap(boolean includeObject) {
             Map<String, Object> details = new LinkedHashMap<>();
-            details.put("timestamp", timestamp);
+            details.put("timestamp", ISO_LOCAL_DATE_TIME.withZone(systemDefault()).format(timestamp));
             if (includeObject) {
                 if (isSuccess()) {
                     details.put("response", getResponse());

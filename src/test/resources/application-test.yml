@@ -3,6 +3,9 @@ logging.level:
   root: INFO
   com.github.mwierzchowski.helios: DEBUG
 
+# Datasource
+spring.datasource.url: 'jdbc:postgresql://localhost:${embedded.postgresql.port}/helios'
+
 # Circuit breaking
 resilience4j.retry.instances.owm.maxRetryAttempts: 3
 

@@ -1,0 +1,5 @@
+# Bootstrap embedded PostgreSQL
+embedded.postgresql:
+  database: helios
+  user: helios
+  password: helios

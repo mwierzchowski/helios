@@ -89,7 +89,10 @@ public class OwmWeatherProvider implements WeatherProvider {
      * Scheduled method that expires response cache. Should be called at least every 10 mins or more since OWM collects
      * weather info every 10 mins at most.
      */
-    @Scheduled(fixedRateString = "${helios.schedule.owm-expire}", initialDelayString = "${helios.schedule.owm-expire}")
+    @Scheduled(
+            fixedRateString = "#{heliosProperties.owm.cacheTtl}",
+            initialDelayString = "#{heliosProperties.owm.cacheTtl}"
+    )
     @CacheEvict(allEntries = true)
     public void expireCachedResponse() {
         log.debug("Cached weather response (if any) expired");

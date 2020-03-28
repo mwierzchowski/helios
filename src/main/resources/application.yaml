@@ -13,11 +13,6 @@ logging.level:
   root: WARN
   com.github.mwierzchowski.helios: INFO
 
-# Tasks scheduling
-helios.schedule:
-  weather-checks: 15000 # 15 s
-  owm-expire: 900000 # 15 min
-
 # Fault tolerance
 resilience4j.retry.instances:
   owm:

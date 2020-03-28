@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.core.weather;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Weather {
     /**
      * Timestamp of weather observation.
@@ -47,4 +49,17 @@ public class Weather {
     @Min(0)
     @Max(100)
     private Integer cloudsCoverage;
+
+    /**
+     * Checks if given weather observation is different then other one. Timestamp is ignored as its irrelevant in the
+     * context of weather observation.
+     * @param other weather
+     * @return true if weather observations are different, otherwise false
+     */
+    public boolean isDifferentThan(Weather other) {
+        return other == null
+                || !this.temperature.equals(other.temperature)
+                || !this.wind.equals(other.wind)
+                || !this.cloudsCoverage.equals(other.cloudsCoverage);
+    }
 }

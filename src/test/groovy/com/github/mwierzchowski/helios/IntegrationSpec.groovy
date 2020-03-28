@@ -8,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestContext
 import org.springframework.test.context.TestExecutionListener
 import org.springframework.test.context.TestExecutionListeners
+import org.springframework.transaction.annotation.Transactional
 
 import java.lang.annotation.Inherited
 import java.lang.annotation.Retention
@@ -24,6 +25,7 @@ import static org.springframework.test.context.TestExecutionListeners.MergeMode.
 @Inherited
 @Target(TYPE)
 @Retention(RUNTIME)
+@Transactional
 @SpringBootTest
 @ActiveProfiles
 @AutoConfigureWireMock(port = 0)

@@ -26,12 +26,12 @@ public class WeatherInfoContributor implements InfoContributor {
     }
 
     @EventListener
-    public void onWeatherObservation(WeatherObservationEvent weatherObservationEvent) {
+    public synchronized void onWeatherObservation(WeatherObservationEvent weatherObservationEvent) {
         this.currentWeather = weatherObservationEvent.getCurrentWeather();
     }
 
     @EventListener
-    public void onWeatherMissing(WeatherMissingEvent weatherMissingEvent) {
+    public synchronized void onWeatherMissing(WeatherMissingEvent weatherMissingEvent) {
         this.currentWeather = null;
     }
 }

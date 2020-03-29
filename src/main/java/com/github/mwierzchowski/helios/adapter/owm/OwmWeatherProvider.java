@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openweathermap.api.CurrentWeatherApi;
 import org.openweathermap.model.CurrentWeatherResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,7 +29,7 @@ import java.util.Optional;
 @Component
 @CacheConfig(cacheNames = {"owm-weather-source"})
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class OwmWeatherProvider implements WeatherProvider {
     /**
      * Application properties.

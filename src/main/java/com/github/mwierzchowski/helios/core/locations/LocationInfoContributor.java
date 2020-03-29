@@ -1,7 +1,6 @@
 package com.github.mwierzchowski.helios.core.locations;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,7 @@ import java.util.Map;
  * @author Marcin Wierzchowski
  */
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class LocationInfoContributor implements InfoContributor {
     /**
      * Location provider available in the application context.

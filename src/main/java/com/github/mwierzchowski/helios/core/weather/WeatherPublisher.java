@@ -4,7 +4,6 @@ import com.github.mwierzchowski.helios.HeliosProperties;
 import com.github.mwierzchowski.helios.core.HeliosEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ import java.util.Optional;
  */
 @Component
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class WeatherPublisher {
     /**
      * Application properties

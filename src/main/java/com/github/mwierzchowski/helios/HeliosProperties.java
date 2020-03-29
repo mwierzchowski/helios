@@ -23,6 +23,16 @@ public class HeliosProperties {
     private String unitsSystem = "metric";
 
     /**
+     * Timestamps format
+     */
+    private String timestampFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    /**
+     * Feature flag that enables/disables SQL intercepting. Useful for debugging.
+     */
+    private Boolean interceptSql = false;
+
+    /**
      * Static location
      */
     @Data

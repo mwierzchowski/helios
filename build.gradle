@@ -46,6 +46,7 @@ dependencies {
 	implementation 'io.github.resilience4j:resilience4j-spring-boot2:0.16.0'
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'p6spy:p6spy:3.8.7'
 
 	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -1,13 +1,10 @@
 # Logging levels
 logging.level:
-  root: INFO
-  org.hibernate: DEBUG
   com.github.mwierzchowski.helios: DEBUG
 
 # Persistence
-spring:
-  datasource.url: 'jdbc:postgresql://localhost:${embedded.postgresql.port}/helios'
-  jpa.show-sql: true
+spring.datasource.url: 'jdbc:postgresql://localhost:${embedded.postgresql.port}/helios'
+helios.intercept-sql: true
 
 # Circuit breaking
 resilience4j.retry.instances.owm.maxRetryAttempts: 3

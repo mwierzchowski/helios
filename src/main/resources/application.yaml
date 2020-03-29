@@ -13,11 +13,14 @@ logging.level:
   root: WARN
   com.github.mwierzchowski.helios: INFO
 
-# Datasource
-spring.datasource:
-  url: 'jdbc:postgresql://localhost:5432/helios'
-  username: 'helios'
-  password: 'helios'
+# Persistence
+spring:
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/helios'
+    username: 'helios'
+    password: 'helios'
+  jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase.change-log: classpath:liquibase-changelog.sql
 
 # Fault tolerance
 resilience4j.retry.instances:

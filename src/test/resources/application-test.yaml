@@ -1,10 +1,11 @@
 # Logging levels
 logging.level:
+  p6spy: INFO
   com.github.mwierzchowski.helios: DEBUG
 
 # Persistence
 spring.datasource.url: 'jdbc:postgresql://localhost:${embedded.postgresql.port}/helios'
-helios.intercept-sql: true
+decorator.datasource.p6spy.enable-logging: true
 
 # Circuit breaking
 resilience4j.retry.instances.owm.maxRetryAttempts: 3

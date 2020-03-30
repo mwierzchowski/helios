@@ -21,6 +21,7 @@ spring:
     password: 'helios'
   jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase.change-log: classpath:liquibase-changelog.sql
+decorator.datasource.p6spy.enable-logging: false
 
 # Fault tolerance
 resilience4j.retry.instances:

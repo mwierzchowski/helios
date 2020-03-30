@@ -2,4 +2,4 @@ logging.level:
   root: INFO
   com.github.mwierzchowski.helios: DEBUG
 
-helios.intercept-sql: true
+decorator.datasource.p6spy.enable-logging: true

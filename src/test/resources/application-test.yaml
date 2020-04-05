@@ -5,6 +5,7 @@ logging.level:
 
 # Persistence
 spring.datasource.url: 'jdbc:postgresql://localhost:${embedded.postgresql.port}/helios'
+spring.jpa.properties.org.hibernate.flushMode: ALWAYS
 decorator.datasource.p6spy.enable-logging: true
 
 # Circuit breaking

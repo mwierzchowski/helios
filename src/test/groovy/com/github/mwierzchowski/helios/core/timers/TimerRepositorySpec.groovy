@@ -10,6 +10,7 @@ import spock.lang.Subject
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.persistence.PersistenceException
+import java.time.Instant
 
 @DatabaseSpec
 class TimerRepositorySpec extends Specification {
@@ -57,6 +58,20 @@ class TimerRepositorySpec extends Specification {
         entityManager.flush()
         then:
         noExceptionThrown()
+    }
+
+    def "Repository populates auditing fields when saving"() {
+        given:
+        def start = Instant.now()
+        def timer = Timer.builder().description("test timer 3").build()
+        when:
+        timerRepository.save(timer)
+        entityManager.flush()
+        then:
+        def timerFromDb = timerRepository.findByDescription(timer.description).get()
+        timerFromDb.created.isAfter(start)
+        timerFromDb.updated.isAfter(start)
+        timerFromDb.version == 0
     }
 
     @Sql("/data/timer-data.sql")

@@ -78,7 +78,7 @@ class TimerRepositorySpec extends Specification {
 
     def "Repository does not find timer by id"() {
         when:
-        def optionalTimer = timerRepository.findById(1)
+        def optionalTimer = timerRepository.findById(3)
         then:
         !optionalTimer.isPresent()
     }

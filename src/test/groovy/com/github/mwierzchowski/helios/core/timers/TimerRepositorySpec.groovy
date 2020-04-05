@@ -1,6 +1,10 @@
 package com.github.mwierzchowski.helios.core.timers
 
 import com.github.mwierzchowski.helios.DatabaseSpec
+import org.apache.commons.lang3.exception.ExceptionUtils
+import org.apache.groovy.sql.extensions.SqlExtensions
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper
+import org.spockframework.util.ExceptionUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 import spock.lang.Specification
@@ -98,7 +102,9 @@ class TimerRepositorySpec extends Specification {
         timerRepository.save(timer)
         entityManager.flush()
         then:
-        thrown PersistenceException
+        def pex = thrown(PersistenceException)
+        def pexMessage = ExceptionUtils.getRootCause(pex).getMessage()
+        pexMessage.contains('unique constraint') && pexMessage.contains('description')
     }
 
     @Sql("/data/timer-data.sql")

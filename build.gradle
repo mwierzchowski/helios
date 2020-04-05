@@ -56,6 +56,7 @@ dependencies {
 	testImplementation 'org.springframework.cloud:spring-cloud-starter:2.2.2.RELEASE'
 	testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock:2.2.2.RELEASE'
 	testImplementation 'com.playtika.testcontainers:embedded-postgresql:1.43'
+	testImplementation 'org.apache.commons:commons-lang3:3.10'
 
 	// Dev tools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

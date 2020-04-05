@@ -2,9 +2,6 @@ package com.github.mwierzchowski.helios.core.timers
 
 import com.github.mwierzchowski.helios.DatabaseSpec
 import org.apache.commons.lang3.exception.ExceptionUtils
-import org.apache.groovy.sql.extensions.SqlExtensions
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper
-import org.spockframework.util.ExceptionUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 import spock.lang.Specification

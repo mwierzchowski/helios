@@ -36,7 +36,7 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.addTimer(dto)
         then:
-        1 * timerRepository.add({
+        1 * timerRepository.save({
             verifyAll(it, Timer) {
                 id == null
                 description == dto.description
@@ -51,7 +51,7 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.removeTimer(timerId)
         then:
-        1 * timerRepository.remove(_ as Timer)
+        1 * timerRepository.delete(_ as Timer)
         1 * eventPublisher.publishEvent(_ as TimerRemovedEvent)
     }
 
@@ -62,7 +62,7 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.addTimer(new TimerDto(timer.id, timer.description))
         then:
-        0 * timerRepository.add(_ as Timer)
+        0 * timerRepository.save(_ as Timer)
     }
 
     def "Service does nothing when timer to be removed does not exist"() {
@@ -72,7 +72,7 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.removeTimer(timerId)
         then:
-        0 * timerRepository.remove(_ as Timer)
+        0 * timerRepository.delete(_ as Timer)
         0 * eventPublisher.publishEvent(_ as TimerRemovedEvent)
     }
 }

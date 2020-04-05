@@ -30,14 +30,14 @@ public class TimerService {
         Optional<Timer> existingTimer = timerRepository.findByDescription(dto.getDescription());
         if (!existingTimer.isPresent()) {
             Timer timer = mapper.toTimer(dto);
-            timerRepository.add(timer);
+            timerRepository.save(timer);
         }
     }
 
     public void removeTimer(Integer timerId) {
         log.debug("Removing timer id {}", timerId);
         timerRepository.findById(timerId).ifPresent(timer -> {
-            timerRepository.remove(timer);
+            timerRepository.delete(timer);
             eventPublisher.publishEvent(new TimerRemovedEvent(timer));
         });
     }

@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset mwierzchowski:create-timer-table
+--changeset mwierzchowski:create-timer-tables
 create sequence timer_id_sequence increment by 50;
 
 create table timer (

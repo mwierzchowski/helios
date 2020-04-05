@@ -20,7 +20,7 @@ class TimerServiceSpec extends Specification {
 
     def "Service provides list of all timers"() {
         given:
-        def timer = new Timer(1, "test timer")
+        def timer = Timer.builder().id(1).description("test timer").build()
         timerRepository.findAll() >> [timer]
         when:
         def timerDtoList = timerService.getTimers()
@@ -47,7 +47,8 @@ class TimerServiceSpec extends Specification {
     def "Service removes existing timer and sends notification"() {
         given:
         def timerId = 1
-        timerRepository.findById(timerId) >> Optional.of(new Timer(timerId, "test timer"))
+        def timer = Timer.builder().id(timerId).description("test timer").build()
+        timerRepository.findById(timerId) >> Optional.of(timer)
         when:
         timerService.removeTimer(timerId)
         then:
@@ -57,7 +58,7 @@ class TimerServiceSpec extends Specification {
 
     def "Service does nothing when timer to be added already exists"() {
         given:
-        def timer = new Timer(1, "test timer")
+        def timer = Timer.builder().id(1).description("test timer").build()
         timerRepository.findByDescription(timer.description) >> Optional.of(timer)
         when:
         timerService.addTimer(new TimerDto(timer.id, timer.description))

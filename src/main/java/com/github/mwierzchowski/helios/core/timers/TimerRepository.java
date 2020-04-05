@@ -7,9 +7,9 @@ import java.util.Optional;
 
 @RepositoryDefinition(domainClass = Timer.class, idClass = Integer.class)
 public interface TimerRepository {
+    List<Timer> findAll();
     Optional<Timer> findById(Integer id);
     Optional<Timer> findByDescription(String description);
-    List<Timer> findAll();
     void save(Timer timer);
     void delete(Timer timer);
 }

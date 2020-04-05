@@ -77,12 +77,13 @@ class TimerRepositorySpec extends Specification {
     @Sql("/data/timer-data.sql")
     def "Repository deletes timer"() {
         given:
-        def timer = timerRepository.findById(1)
+        def timerId = 1
+        def timer = timerRepository.findById(timerId)
         when:
         timerRepository.delete(timer.get())
         entityManager.flush()
         then:
-        noExceptionThrown()
+        timerRepository.findById(timerId).isEmpty()
     }
 
     def "Repository does not find timers"() {

@@ -50,7 +50,7 @@ class TimerRepositorySpec extends Specification {
     @Sql("/data/timer-data.sql")
     def "Repository saves timers"() {
         given:
-        def timer = new Timer(null, "test timer 3")
+        def timer = Timer.builder().description("test timer 3").build()
         when:
         timerRepository.save(timer)
         entityManager.flush()
@@ -93,7 +93,7 @@ class TimerRepositorySpec extends Specification {
     @Sql("/data/timer-data.sql")
     def "Repository does not save timer when description is already used"() {
         given:
-        def timer = new Timer(null, "test timer 2")
+        def timer = Timer.builder().description("test timer 2").build()
         when:
         timerRepository.save(timer)
         entityManager.flush()

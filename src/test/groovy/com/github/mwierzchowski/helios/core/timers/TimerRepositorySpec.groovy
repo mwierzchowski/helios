@@ -48,7 +48,7 @@ class TimerRepositorySpec extends Specification {
     }
 
     @Sql("/data/timer-data.sql")
-    def "Repository saves timers"() {
+    def "Repository saves timer"() {
         given:
         def timer = Timer.builder().description("test timer 3").build()
         when:
@@ -59,7 +59,7 @@ class TimerRepositorySpec extends Specification {
     }
 
     @Sql("/data/timer-data.sql")
-    def "Repository deletes timers"() {
+    def "Repository deletes timer"() {
         given:
         def timer = timerRepository.findById(1)
         when:

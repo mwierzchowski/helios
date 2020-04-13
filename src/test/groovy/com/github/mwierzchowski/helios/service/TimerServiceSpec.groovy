@@ -3,12 +3,21 @@ package com.github.mwierzchowski.helios.service
 import com.github.mwierzchowski.helios.core.timers.Timer
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent
 import com.github.mwierzchowski.helios.core.timers.TimerRepository
+import com.github.mwierzchowski.helios.core.timers.TimerSchedule
 import com.github.mwierzchowski.helios.service.dto.TimerDto
+import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto
 import com.github.mwierzchowski.helios.service.mappers.TimerServiceMapper
 import org.mapstruct.factory.Mappers
 import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 import spock.lang.Subject
+
+import java.time.LocalTime
+
+import static java.time.DayOfWeek.*
+import static java.util.Collections.emptyList
+import static java.util.Optional.empty
+import static java.util.Optional.of
 
 class TimerServiceSpec extends Specification {
     TimerServiceMapper mapper = Mappers.getMapper(TimerServiceMapper)
@@ -18,37 +27,56 @@ class TimerServiceSpec extends Specification {
     @Subject
     TimerService timerService = new TimerService(mapper, timerRepository, eventPublisher)
 
-    def "Service provides list of all timers"() {
+    def "Should return list of timers"() {
         given:
-        def timer = Timer.builder().id(1).description("test timer").build()
-        timerRepository.findAll() >> [timer]
+        def timer1 = testTimer(1)
+        def timer2 = testTimer(2, false)
+        timerRepository.findAll() >> [timer1, timer2]
         when:
         def timerDtoList = timerService.getTimers()
         then:
-        timerDtoList.size() == 1
-        timerDtoList[0].id == timer.id
+        timerDtoList.size() == 2
+        timerDtoList[0].scheduled
+        !timerDtoList[1].scheduled
     }
 
-    def "Service adds new timer"() {
+    def "Should return empty list of timers if timers do not exist"() {
         given:
-        def dto = new TimerDto(1, "new timer")
-        timerRepository.findByDescription(dto.description) >> Optional.empty()
+        timerRepository.findAll() >> emptyList()
+        expect:
+        timerService.getTimers().size() == 0
+    }
+
+    def "Should add timer if it does not exist"() {
+        given:
+        def timerDto = TimerDto.of("new timer")
+        timerDto.id = 1
+        timerRepository.findByDescription(timerDto.description) >> empty()
         when:
-        timerService.addTimer(dto)
+        timerService.addTimer(timerDto)
         then:
         1 * timerRepository.save({
             verifyAll(it, Timer) {
                 id == null
-                description == dto.description
+                description == timerDto.description
             }
         })
     }
 
-    def "Service removes existing timer and sends notification"() {
+    def "Should not add timer if it exists"() {
+        given:
+        def timer = testTimer()
+        timerRepository.findByDescription(timer.description) >> of(timer)
+        when:
+        timerService.addTimer(TimerDto.of(timer.description))
+        then:
+        0 * timerRepository.save(_ as Timer)
+    }
+
+    def "Should remove timer if it exists"() {
         given:
         def timerId = 1
-        def timer = Timer.builder().id(timerId).description("test timer").build()
-        timerRepository.findById(timerId) >> Optional.of(timer)
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
         when:
         timerService.removeTimer(timerId)
         then:
@@ -56,24 +84,293 @@ class TimerServiceSpec extends Specification {
         1 * eventPublisher.publishEvent(_ as TimerRemovedEvent)
     }
 
-    def "Service does nothing when timer to be added already exists"() {
-        given:
-        def timer = Timer.builder().id(1).description("test timer").build()
-        timerRepository.findByDescription(timer.description) >> Optional.of(timer)
-        when:
-        timerService.addTimer(new TimerDto(timer.id, timer.description))
-        then:
-        0 * timerRepository.save(_ as Timer)
-    }
-
-    def "Service does nothing when timer to be removed does not exist"() {
+    def "Should not remove timer if it does not exist"() {
         given:
         def timerId = 1
-        timerRepository.findById(timerId) >> Optional.empty()
+        timerRepository.findById(timerId) >> empty()
         when:
         timerService.removeTimer(timerId)
         then:
         0 * timerRepository.delete(_ as Timer)
         0 * eventPublisher.publishEvent(_ as TimerRemovedEvent)
+    }
+
+    def "Should change timer description if new description does not exist"() {
+        given:
+        def timerId = 1
+        def testTimer = testTimer(timerId)
+        def newDescription = testTimer.description + " unique"
+        timerRepository.findById(timerId) >> of(testTimer)
+        timerRepository.findByDescription(newDescription) >> empty()
+        when:
+        timerService.changeTimerDescription(timerId, newDescription)
+        then:
+        1 * timerRepository.save({
+            verifyAll(it, Timer) {
+                id == timerId
+                description == newDescription
+            }
+        })
+    }
+
+    def "Should not change timer description if description is the same as previous"() {
+        given:
+        def timerId = 1
+        def testTimer = testTimer(timerId)
+        def newDescription = testTimer.description
+        timerRepository.findById(timerId) >> of(testTimer)
+        when:
+        timerService.changeTimerDescription(timerId, newDescription)
+        then:
+        0 * timerRepository.save(_ as Timer)
+    }
+
+    def "Should throw exception on timer description change if new description exists"() {
+        given:
+        def timerId = 1
+        def testTimer1 = testTimer(timerId)
+        def testTimer2 = testTimer(timerId + 1)
+        def newDescription = testTimer2.description
+        timerRepository.findById(timerId) >> of(testTimer1)
+        timerRepository.findByDescription(newDescription) >> of(testTimer2)
+        when:
+        timerService.changeTimerDescription(timerId, newDescription)
+        then:
+        thrown IllegalArgumentException
+    }
+
+    def "Should throw exception on timer description change if timer does not exist"() {
+        given:
+        def timerId = 1
+        timerRepository.findById(timerId) >> empty()
+        when:
+        timerService.changeTimerDescription(timerId, "some description")
+        then:
+        thrown NoSuchElementException
+    }
+
+    def "Should return timer schedule list"() {
+        given:
+        def timerId = 1
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        when:
+        def schedules = timerService.getSchedules(timerId)
+        then:
+        schedules.size() == 2
+        with (schedules[0]) {
+            LocalTime.parse(it.time) == LocalTime.of(6, 30)
+            it.days.contains MONDAY.toString()
+            it.enabled
+        }
+        with (schedules[1]) {
+            LocalTime.parse(it.time) == LocalTime.of(8, 0)
+            it.days.contains SATURDAY.toString()
+            !it.enabled
+        }
+    }
+
+    def "Should return empty timer schedule list if schedules do not exist"() {
+        given:
+        def timerId = 1
+        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        expect:
+        timerService.getSchedules(timerId).size() == 0
+    }
+
+    def "Should throw exception on timer schedule list return if timer does not exist"() {
+        given:
+        def timerId = 1
+        timerRepository.findById(timerId) >> empty()
+        when:
+        timerService.getSchedules(timerId)
+        then:
+        thrown NoSuchElementException
+    }
+
+    def "Should add timer schedule if schedules do not exist"() {
+        given:
+        def timerId = 1
+        def scheduleDto = TimerScheduleDto.of("06:30", "MONDAY")
+        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        when:
+        timerService.addSchedule(timerId, scheduleDto)
+        then:
+        1 * timerRepository.save({
+            verifyAll(it, Timer) {
+                id == timerId
+                schedules[0].id == null
+                schedules[0].time == LocalTime.parse(scheduleDto.time)
+                schedules[0].days.contains(valueOf(scheduleDto.days[0]))
+                schedules[0].enabled
+            }
+        })
+    }
+
+    def "Should add timer schedule if schedule for given day does not exist"() {
+        given:
+        def timerId = 1
+        def scheduleDto = TimerScheduleDto.of("10:00", "SUNDAY")
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        when:
+        timerService.addSchedule(timerId, scheduleDto)
+        then:
+        1 * timerRepository.save({
+            verifyAll(it, Timer) {
+                id == timerId
+                schedules[2].id == null
+                schedules[2].time == LocalTime.parse(scheduleDto.time)
+                schedules[2].days.contains(valueOf(scheduleDto.days[0]))
+                schedules[2].enabled
+            }
+        })
+    }
+
+    def "Should not add timer schedule if schedule already exist"() {
+        given:
+        def timerId = 1
+        def scheduleDto = TimerScheduleDto.of("08:00", "SATURDAY")
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        when:
+        timerService.addSchedule(timerId, scheduleDto)
+        then:
+        0 * timerRepository.save(_ as Timer)
+    }
+
+    def "Should throw exception on adding schedule if timer does not exist"() {
+        given:
+        def timerId = 1
+        timerRepository.findById(timerId) >> empty()
+        when:
+        timerService.addSchedule(timerId, TimerScheduleDto.of("6:30", "MONDAY"))
+        then:
+        thrown NoSuchElementException
+    }
+
+    def "Should throw exception on adding schedule if schedule in given day exists"() {
+        given:
+        def timerId = 1
+        def scheduleDto = TimerScheduleDto.of("10:00", "MONDAY", "TUESDAY")
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        when:
+        timerService.addSchedule(timerId, scheduleDto)
+        then:
+        thrown IllegalArgumentException
+    }
+
+    def "Should remove timer schedule if it exists"() {
+        given:
+        def timerId = 1
+        def scheduleId = 1
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        when:
+        timerService.removeSchedule(timerId, scheduleId)
+        then:
+        1 * timerRepository.save({
+            verifyAll(it, Timer) {
+                id == timerId
+                schedules.size() == 1
+                schedules[0].id == 2
+            }
+        })
+    }
+
+    def "Should not remove remove timer schedule if it does not exist"() {
+        given:
+        def timerId = 1
+        def scheduleId = 1
+        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        when:
+        timerService.removeSchedule(timerId, scheduleId)
+        then:
+        0 * timerRepository.save(_ as Timer)
+    }
+
+    def "Should throw exception on removing schedule if timer does not exist"() {
+        given:
+        def timerId = 1
+        def scheduleId = 1
+        timerRepository.findById(timerId) >> empty()
+        when:
+        timerService.removeSchedule(timerId, scheduleId)
+        then:
+        thrown NoSuchElementException
+    }
+
+    def "Should enable schedule if it is disabled"() {
+        given:
+        def timerId = 1
+        def scheduleId = 2
+        def enableFlag = true
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        when:
+        timerService.enableSchedule(timerId, scheduleId, enableFlag)
+        then:
+        1 * timerRepository.save({
+            verifyAll(it, Timer) {
+                id == timerId
+                schedules.size() == 2
+                schedules[1].id == 2
+                schedules[1].enabled == enableFlag
+            }
+        })
+    }
+
+    def "Should not enable schedule if it is enabled"() {
+        given:
+        def timerId = 1
+        def scheduleId = 2
+        def enableFlag = false
+        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        when:
+        timerService.enableSchedule(timerId, scheduleId, enableFlag)
+        then:
+        0 * timerRepository.save(_ as Timer)
+    }
+
+    def "Should throw exception on schedule enable if it does not exist"() {
+        given:
+        def timerId = 1
+        def scheduleId = 1
+        def enableFlag = false
+        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        when:
+        timerService.enableSchedule(timerId, scheduleId, enableFlag)
+        then:
+        thrown NoSuchElementException
+    }
+
+    def "Should throw exception on schedule enable if timer does not exist"() {
+        given:
+        def timerId = 1
+        def scheduleId = 1
+        def enableFlag = false
+        timerRepository.findById(timerId) >> empty()
+        when:
+        timerService.enableSchedule(timerId, scheduleId, enableFlag)
+        then:
+        thrown NoSuchElementException
+    }
+
+    def testTimer(id = 1, schedule = true) {
+        def scheduleSet = new LinkedHashSet()
+        if (schedule) {
+            scheduleSet.add(TimerSchedule.builder()
+                    .id(1)
+                    .time(LocalTime.of(6, 30))
+                    .days([MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY] as Set)
+                    .enabled(true)
+                    .build())
+            scheduleSet.add(TimerSchedule.builder()
+                    .id(2)
+                    .time(LocalTime.of(8, 0))
+                    .days([SATURDAY] as Set)
+                    .enabled(false)
+                    .build())
+        }
+        return Timer.builder()
+                .id(id)
+                .description("test timer ${id}")
+                .schedules(scheduleSet)
+                .build()
     }
 }

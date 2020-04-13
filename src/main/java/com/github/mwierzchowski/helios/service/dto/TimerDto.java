@@ -10,5 +10,9 @@ import lombok.NoArgsConstructor;
 public class TimerDto {
     private Integer id;
     private String description;
-    // todo boolean scheduled;
+    private Boolean scheduled;
+
+    public static TimerDto of(String description) {
+        return new TimerDto(null, description, null);
+    }
 }

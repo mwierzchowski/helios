@@ -1,20 +1,24 @@
 package com.github.mwierzchowski.helios.service.mappers;
 
 import com.github.mwierzchowski.helios.core.timers.Timer;
+import com.github.mwierzchowski.helios.core.timers.TimerSchedule;
 import com.github.mwierzchowski.helios.service.dto.TimerDto;
+import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 import static org.mapstruct.ReportingPolicy.IGNORE;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = IGNORE)
 public interface TimerServiceMapper {
     @Mapping(target = "id", ignore = true)
-    Timer toTimer(TimerDto dto);
+    Timer toTimer(TimerDto timerDto);
 
-    TimerDto toDto(Timer timerType);
+    @Mapping(target = "id", ignore = true)
+    TimerSchedule toTimerSchedule(TimerScheduleDto scheduleDto);
 
-    List<TimerDto> toDtoList(List<Timer> timerTypes);
+    @Mapping(target = "scheduled", expression = "java(timer.getSchedules().size() > 0)")
+    TimerDto toTimerDto(Timer timer);
+
+    TimerScheduleDto toTimerScheduleDto(TimerSchedule schedule);
 }

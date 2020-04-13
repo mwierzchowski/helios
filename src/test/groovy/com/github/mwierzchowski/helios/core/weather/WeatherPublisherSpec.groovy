@@ -1,6 +1,5 @@
 package com.github.mwierzchowski.helios.core.weather
 
-import com.github.mwierzchowski.helios.HeliosProperties
 import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 import spock.lang.Subject
@@ -12,12 +11,12 @@ import static java.util.Optional.empty
 import static java.util.Optional.of
 
 class WeatherPublisherSpec extends Specification {
-    HeliosProperties heliosProperties = new HeliosProperties()
+    WeatherProperties weatherProperties = new WeatherProperties()
     WeatherProvider weatherProvider = Mock()
     ApplicationEventPublisher eventPublisher = Mock()
 
     @Subject
-    WeatherPublisher weatherPublisher = new WeatherPublisher(heliosProperties, weatherProvider, eventPublisher)
+    WeatherPublisher weatherPublisher = new WeatherPublisher(weatherProperties, weatherProvider, eventPublisher)
 
     def "Publisher sends weather notification when first observation is available"() {
         given:
@@ -88,7 +87,7 @@ class WeatherPublisherSpec extends Specification {
 
     def "Publisher sends warning notification when observations are missing for a long time"() {
         given:
-        def weather1 = of(weather(now().minusMillis(heliosProperties.weather.observationDeadline + 10000)))
+        def weather1 = of(weather(now().minusMillis(weatherProperties.observationDeadline + 10000)))
         def weather2 = empty()
         weatherProvider.currentWeather() >>> [weather1, weather2]
         when:
@@ -102,7 +101,7 @@ class WeatherPublisherSpec extends Specification {
 
     def "Publisher does not send warning notification when observations are missing for a short time"() {
         given:
-        def weather1 = of(weather(now().minusMillis(heliosProperties.weather.observationDeadline - 10000)))
+        def weather1 = of(weather(now().minusMillis(weatherProperties.observationDeadline - 10000)))
         def weather2 = empty()
         weatherProvider.currentWeather() >>> [weather1, weather2]
         when:
@@ -116,7 +115,7 @@ class WeatherPublisherSpec extends Specification {
 
     def "Publisher always sends weather notification when observation is back after warning was sent"() {
         given:
-        def weather1 = of(weather(now().minusMillis(heliosProperties.weather.observationDeadline + 10000)))
+        def weather1 = of(weather(now().minusMillis(weatherProperties.observationDeadline + 10000)))
         def weather2 = empty()
         def weather3 = of(weather(now()))
         weatherProvider.currentWeather() >>> [weather1, weather2, weather3]

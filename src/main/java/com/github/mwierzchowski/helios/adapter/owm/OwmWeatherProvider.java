@@ -1,6 +1,5 @@
 package com.github.mwierzchowski.helios.adapter.owm;
 
-import com.github.mwierzchowski.helios.HeliosProperties;
 import com.github.mwierzchowski.helios.core.locations.Location;
 import com.github.mwierzchowski.helios.core.locations.LocationProvider;
 import com.github.mwierzchowski.helios.core.weather.Weather;
@@ -32,9 +31,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OwmWeatherProvider implements WeatherProvider {
     /**
-     * Application properties.
+     * OWM properties.
      */
-    private final HeliosProperties properties;
+    private final OwmProperties owmProperties;
 
     /**
      * Location provider.
@@ -64,8 +63,8 @@ public class OwmWeatherProvider implements WeatherProvider {
         CurrentWeatherResponse weatherResponse = weatherApi.currentWeather(
                 location.getLatitude(),
                 location.getLongitude(),
-                properties.getUnitsSystem(),
-                properties.getLanguage()
+                owmProperties.getUnitsSystem(),
+                owmProperties.getLanguage()
         );
         log.debug("Current weather response: {}", weatherResponse);
         Weather weather = domainMapper.toWeather(weatherResponse);
@@ -89,8 +88,8 @@ public class OwmWeatherProvider implements WeatherProvider {
      * weather info every 10 mins at most.
      */
     @Scheduled(
-            fixedRateString = "#{heliosProperties.owm.cacheTtl}",
-            initialDelayString = "#{heliosProperties.owm.cacheTtl}"
+            fixedRateString = "#{owmProperties.cacheTtl}",
+            initialDelayString = "#{owmProperties.cacheTtl}"
     )
     @CacheEvict(allEntries = true)
     public void expireCachedResponse() {

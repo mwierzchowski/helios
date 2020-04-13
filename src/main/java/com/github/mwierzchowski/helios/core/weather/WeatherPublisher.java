@@ -1,6 +1,5 @@
 package com.github.mwierzchowski.helios.core.weather;
 
-import com.github.mwierzchowski.helios.HeliosProperties;
 import com.github.mwierzchowski.helios.core.HeliosEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +19,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WeatherPublisher {
     /**
-     * Application properties
+     * Weather properties
      */
-    private final HeliosProperties heliosProperties;
+    private final WeatherProperties weatherProperties;
 
     /**
      * Weather provider
@@ -43,7 +42,7 @@ public class WeatherPublisher {
      * Scheduled method that executes weather check and publish event. New weather event is published when conditions
      * have changed. Otherwise no event is published.
      */
-    @Scheduled(fixedDelayString = "#{heliosProperties.weather.checkInterval}")
+    @Scheduled(fixedDelayString = "#{weatherProperties.checkInterval}")
     public void publishWeather() {
         weatherProvider.currentWeather()
                 .map(this::toWeatherNotification)
@@ -68,7 +67,7 @@ public class WeatherPublisher {
             log.debug("Missing weather warning was already sent earlier");
             return Optional.empty();
         }
-        Instant deadline = Instant.now().minusMillis(heliosProperties.getWeather().getObservationDeadline());
+        Instant deadline = Instant.now().minusMillis(weatherProperties.getObservationDeadline());
         Weather previousWeather = previousWeather();
         if (previousWeather != null && previousWeather.getTimestamp().isAfter(deadline)) {
             log.debug("Weather observation is missing but warning deadline has not been passed yet");

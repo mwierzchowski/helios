@@ -1,7 +1,6 @@
 package com.github.mwierzchowski.helios.core.locations;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +24,6 @@ public class StaticLocationProvider implements LocationProvider {
      * Main constructor.
      * @param locationProperties properties containing static location.
      */
-    @Autowired
     public StaticLocationProvider(LocationProperties locationProperties) {
         String city = locationProperties.getCity();
         double latitude = locationProperties.getLatitude();

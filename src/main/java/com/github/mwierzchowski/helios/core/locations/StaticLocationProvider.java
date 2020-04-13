@@ -24,7 +24,7 @@ public class StaticLocationProvider implements LocationProvider {
      * Main constructor.
      * @param locationProperties properties containing static location.
      */
-    public StaticLocationProvider(LocationProperties locationProperties) {
+    public StaticLocationProvider(StaticLocationProperties locationProperties) {
         String city = locationProperties.getCity();
         double latitude = locationProperties.getLatitude();
         double longitude = locationProperties.getLongitude();

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties("helios.location")
-public class LocationProperties {
+public class StaticLocationProperties {
     /**
      * City
      */

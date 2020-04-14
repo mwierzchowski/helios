@@ -17,7 +17,7 @@ import java.time.LocalTime
 import static java.time.DayOfWeek.*
 import static java.util.Collections.emptyList
 import static java.util.Optional.empty
-import static java.util.Optional.of
+import static java.util.Optional.of as optional
 
 class TimerServiceSpec extends Specification {
     TimerServiceMapper mapper = Mappers.getMapper(TimerServiceMapper)
@@ -29,8 +29,8 @@ class TimerServiceSpec extends Specification {
 
     def "Should return list of timers"() {
         given:
-        def timer1 = testTimer(1)
-        def timer2 = testTimer(2, false)
+        def timer1 = timerOf(1)
+        def timer2 = timerOf(2, false)
         timerRepository.findAll() >> [timer1, timer2]
         when:
         def timerDtoList = timerService.getTimers()
@@ -49,7 +49,7 @@ class TimerServiceSpec extends Specification {
 
     def "Should add timer if it does not exist"() {
         given:
-        def timerDto = TimerDto.of("new timer")
+        def timerDto = timerDtoOf("new timer")
         timerDto.id = 1
         timerRepository.findByDescription(timerDto.description) >> empty()
         when:
@@ -65,10 +65,10 @@ class TimerServiceSpec extends Specification {
 
     def "Should not add timer if it exists"() {
         given:
-        def timer = testTimer()
-        timerRepository.findByDescription(timer.description) >> of(timer)
+        def timer = timerOf()
+        timerRepository.findByDescription(timer.description) >> optional(timer)
         when:
-        timerService.addTimer(TimerDto.of(timer.description))
+        timerService.addTimer(timerDtoOf(timer.description))
         then:
         0 * timerRepository.save(_ as Timer)
     }
@@ -76,7 +76,7 @@ class TimerServiceSpec extends Specification {
     def "Should remove timer if it exists"() {
         given:
         def timerId = 1
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         timerService.removeTimer(timerId)
         then:
@@ -98,9 +98,9 @@ class TimerServiceSpec extends Specification {
     def "Should change timer description if new description does not exist"() {
         given:
         def timerId = 1
-        def testTimer = testTimer(timerId)
-        def newDescription = testTimer.description + " unique"
-        timerRepository.findById(timerId) >> of(testTimer)
+        def timer = timerOf(timerId)
+        def newDescription = timer.description + " unique"
+        timerRepository.findById(timerId) >> optional(timer)
         timerRepository.findByDescription(newDescription) >> empty()
         when:
         timerService.changeTimerDescription(timerId, newDescription)
@@ -116,9 +116,9 @@ class TimerServiceSpec extends Specification {
     def "Should not change timer description if description is the same as previous"() {
         given:
         def timerId = 1
-        def testTimer = testTimer(timerId)
-        def newDescription = testTimer.description
-        timerRepository.findById(timerId) >> of(testTimer)
+        def timer = timerOf(timerId)
+        def newDescription = timer.description
+        timerRepository.findById(timerId) >> optional(timer)
         when:
         timerService.changeTimerDescription(timerId, newDescription)
         then:
@@ -128,11 +128,11 @@ class TimerServiceSpec extends Specification {
     def "Should throw exception on timer description change if new description exists"() {
         given:
         def timerId = 1
-        def testTimer1 = testTimer(timerId)
-        def testTimer2 = testTimer(timerId + 1)
-        def newDescription = testTimer2.description
-        timerRepository.findById(timerId) >> of(testTimer1)
-        timerRepository.findByDescription(newDescription) >> of(testTimer2)
+        def timer1 = timerOf(timerId)
+        def timer2 = timerOf(timerId + 1)
+        def newDescription = timer2.description
+        timerRepository.findById(timerId) >> optional(timer1)
+        timerRepository.findByDescription(newDescription) >> optional(timer2)
         when:
         timerService.changeTimerDescription(timerId, newDescription)
         then:
@@ -152,7 +152,7 @@ class TimerServiceSpec extends Specification {
     def "Should return timer schedule list"() {
         given:
         def timerId = 1
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         def schedules = timerService.getSchedules(timerId)
         then:
@@ -172,7 +172,7 @@ class TimerServiceSpec extends Specification {
     def "Should return empty timer schedule list if schedules do not exist"() {
         given:
         def timerId = 1
-        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId, false))
         expect:
         timerService.getSchedules(timerId).size() == 0
     }
@@ -190,8 +190,8 @@ class TimerServiceSpec extends Specification {
     def "Should add timer schedule if schedules do not exist"() {
         given:
         def timerId = 1
-        def scheduleDto = TimerScheduleDto.of("06:30", "MONDAY")
-        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        def scheduleDto = timerScheduleDtoOf("06:30", ["MONDAY"])
+        timerRepository.findById(timerId) >> optional(timerOf(timerId, false))
         when:
         timerService.addSchedule(timerId, scheduleDto)
         then:
@@ -209,8 +209,8 @@ class TimerServiceSpec extends Specification {
     def "Should add timer schedule if schedule for given day does not exist"() {
         given:
         def timerId = 1
-        def scheduleDto = TimerScheduleDto.of("10:00", "SUNDAY")
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        def scheduleDto = timerScheduleDtoOf("10:00", ["SUNDAY"])
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         timerService.addSchedule(timerId, scheduleDto)
         then:
@@ -228,8 +228,8 @@ class TimerServiceSpec extends Specification {
     def "Should not add timer schedule if schedule already exist"() {
         given:
         def timerId = 1
-        def scheduleDto = TimerScheduleDto.of("08:00", "SATURDAY")
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        def scheduleDto = timerScheduleDtoOf("08:00", ["SATURDAY"])
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         timerService.addSchedule(timerId, scheduleDto)
         then:
@@ -241,7 +241,7 @@ class TimerServiceSpec extends Specification {
         def timerId = 1
         timerRepository.findById(timerId) >> empty()
         when:
-        timerService.addSchedule(timerId, TimerScheduleDto.of("6:30", "MONDAY"))
+        timerService.addSchedule(timerId, timerScheduleDtoOf("6:30", ["MONDAY"]))
         then:
         thrown NoSuchElementException
     }
@@ -249,8 +249,8 @@ class TimerServiceSpec extends Specification {
     def "Should throw exception on adding schedule if schedule in given day exists"() {
         given:
         def timerId = 1
-        def scheduleDto = TimerScheduleDto.of("10:00", "MONDAY", "TUESDAY")
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        def scheduleDto = timerScheduleDtoOf("10:00", ["MONDAY", "TUESDAY"])
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         timerService.addSchedule(timerId, scheduleDto)
         then:
@@ -261,7 +261,7 @@ class TimerServiceSpec extends Specification {
         given:
         def timerId = 1
         def scheduleId = 1
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         timerService.removeSchedule(timerId, scheduleId)
         then:
@@ -278,7 +278,7 @@ class TimerServiceSpec extends Specification {
         given:
         def timerId = 1
         def scheduleId = 1
-        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId, false))
         when:
         timerService.removeSchedule(timerId, scheduleId)
         then:
@@ -301,7 +301,7 @@ class TimerServiceSpec extends Specification {
         def timerId = 1
         def scheduleId = 2
         def enableFlag = true
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         timerService.enableSchedule(timerId, scheduleId, enableFlag)
         then:
@@ -320,7 +320,7 @@ class TimerServiceSpec extends Specification {
         def timerId = 1
         def scheduleId = 2
         def enableFlag = false
-        timerRepository.findById(timerId) >> of(testTimer(timerId))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId))
         when:
         timerService.enableSchedule(timerId, scheduleId, enableFlag)
         then:
@@ -332,7 +332,7 @@ class TimerServiceSpec extends Specification {
         def timerId = 1
         def scheduleId = 1
         def enableFlag = false
-        timerRepository.findById(timerId) >> of(testTimer(timerId, false))
+        timerRepository.findById(timerId) >> optional(timerOf(timerId, false))
         when:
         timerService.enableSchedule(timerId, scheduleId, enableFlag)
         then:
@@ -351,7 +351,7 @@ class TimerServiceSpec extends Specification {
         thrown NoSuchElementException
     }
 
-    def testTimer(id = 1, schedule = true) {
+    def timerOf(id = 1, schedule = true) {
         def scheduleSet = new LinkedHashSet()
         if (schedule) {
             scheduleSet.add(TimerSchedule.builder()
@@ -372,5 +372,13 @@ class TimerServiceSpec extends Specification {
                 .description("test timer ${id}")
                 .schedules(scheduleSet)
                 .build()
+    }
+
+    def timerDtoOf(description) {
+        return new TimerDto(null, description, null)
+    }
+
+    def timerScheduleDtoOf(time, days) {
+        return new TimerScheduleDto(null, time, days as String[], true)
     }
 }

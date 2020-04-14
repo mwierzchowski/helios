@@ -12,8 +12,4 @@ public class TimerScheduleDto {
     private String time;
     private String[] days;
     private Boolean enabled;
-
-    public static TimerScheduleDto of(String time, String... days) {
-        return new TimerScheduleDto(null, time, days, true);
-    }
 }

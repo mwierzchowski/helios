@@ -49,13 +49,13 @@ public class TimerSchedule {
     @Version
     private Integer version;
 
-    public boolean isConflictedWith(TimerSchedule other) {
-        return this.days.stream().anyMatch(other.days::contains);
-    }
-
-    public boolean isSameAs(TimerSchedule other) {
+    public boolean isSame(TimerSchedule other) {
         return other != null
                 && Objects.equals(this.time, other.time)
                 && Objects.equals(this.days, other.days);
+    }
+
+    public boolean isOverlapping(TimerSchedule other) {
+        return this.days.stream().anyMatch(other.days::contains);
     }
 }

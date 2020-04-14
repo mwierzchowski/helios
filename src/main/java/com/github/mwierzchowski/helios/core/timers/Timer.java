@@ -42,19 +42,12 @@ public class Timer {
     @Version
     private Integer version;
 
-    public boolean hasSchedule(TimerSchedule newSchedule) {
-        return schedules.stream().anyMatch(newSchedule::isSameAs);
+    public boolean hasSame(TimerSchedule schedule) {
+        return schedules.stream().anyMatch(schedule::isSame);
     }
 
-    public boolean addSchedule(TimerSchedule newSchedule) {
-        if(schedules.stream().anyMatch(newSchedule::isConflictedWith)) {
-            return false;
-        }
-        return schedules.add(newSchedule);
-    }
-
-    public boolean removeSchedule(Integer scheduleId) {
-        return schedules.removeIf(schedule -> schedule.getId().equals(scheduleId));
+    public boolean hasOverlapping(TimerSchedule schedule) {
+        return schedules.stream().anyMatch(schedule::isOverlapping);
     }
 
     public Optional<TimerSchedule> getSchedule(Integer scheduleId) {

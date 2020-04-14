@@ -10,7 +10,9 @@ import spock.lang.Subject
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.persistence.PersistenceException
-import java.time.Instant
+import java.time.LocalTime
+
+import static java.time.DayOfWeek.*
 
 @DatabaseSpec
 class TimerRepositorySpec extends Specification {
@@ -22,93 +24,122 @@ class TimerRepositorySpec extends Specification {
     EntityManager entityManager
 
     @Sql("/data/timer-data.sql")
-    def "Repository finds all available timers"() {
+    def "Should find all timers"() {
         when:
         def timers = timerRepository.findAll()
         then:
         timers.size() == 2
     }
 
-    @Sql("/data/timer-data.sql")
-    def "Repository finds timer by id"() {
-        when:
-        def optionalTimer = timerRepository.findById(1)
-        then:
-        optionalTimer.isPresent()
-        optionalTimer.get().id == 1
-        optionalTimer.get().description == 'test timer 1'
-    }
-
-    @Sql("/data/timer-data.sql")
-    def "Repository finds timer by description"() {
-        when:
-        def optionalTimer = timerRepository.findByDescription("test timer 2")
-        then:
-        optionalTimer.isPresent()
-        optionalTimer.get().id == 2
-        optionalTimer.get().description == 'test timer 2'
-    }
-
-    @Sql("/data/timer-data.sql")
-    def "Repository saves timer"() {
-        given:
-        def timer = Timer.builder().description("test timer 3").build()
-        when:
-        timerRepository.save(timer)
-        entityManager.flush()
-        then:
-        noExceptionThrown()
-    }
-
-    def "Repository populates auditing fields when saving"() {
-        given:
-        def start = Instant.now()
-        def timer = Timer.builder().description("test timer 3").build()
-        when:
-        timerRepository.save(timer)
-        entityManager.flush()
-        then:
-        def timerFromDb = timerRepository.findByDescription(timer.description).get()
-        timerFromDb.created.isAfter(start)
-        timerFromDb.updated.isAfter(start)
-        timerFromDb.version == 0
-    }
-
-    @Sql("/data/timer-data.sql")
-    def "Repository deletes timer"() {
-        given:
-        def timerId = 1
-        def timer = timerRepository.findById(timerId)
-        when:
-        timerRepository.delete(timer.get())
-        entityManager.flush()
-        then:
-        timerRepository.findById(timerId).isEmpty()
-    }
-
-    def "Repository does not find timers"() {
+    def "Should not find timers if they do not exist"() {
         when:
         def timers = timerRepository.findAll()
         then:
         timers.size() == 0
     }
 
-    def "Repository does not find timer by id"() {
+    @Sql("/data/timer-data.sql")
+    def "Should find timer by id"() {
         when:
-        def optionalTimer = timerRepository.findById(3)
+        def foundTimer = timerRepository.findById(1)
         then:
-        !optionalTimer.isPresent()
+        with (foundTimer.get()) {
+            it.id == 1
+            it.description == 'test timer 1'
+            it.created != null
+            it.updated != null
+            it.version >= 0
+            it.schedules.size() == 2
+            with (it.getSchedule(1).get()) {
+                it.id == 1
+                it.days.contains(MONDAY)
+                it.time == LocalTime.of(6, 30)
+                it.enabled
+                it.created != null
+                it.updated != null
+                it.version >= 0
+            }
+        }
     }
 
-    def "Repository does not find timer by description"() {
+    def "Should not find timer by id if it does not exist"() {
         when:
-        def optionalTimer = timerRepository.findByDescription("test timer 3")
+        def foundTimer = timerRepository.findById(999)
         then:
-        !optionalTimer.isPresent()
+        foundTimer.isEmpty()
     }
 
     @Sql("/data/timer-data.sql")
-    def "Repository does not save timer when description is already used"() {
+    def "Should find timer by description"() {
+        given:
+        def description = "test timer 2"
+        when:
+        def foundTimer = timerRepository.findByDescription(description)
+        then:
+        foundTimer.isPresent()
+        foundTimer.get().id == 2
+        foundTimer.get().description == description
+    }
+
+    def "Should not find timer by description if it does not exist"() {
+        when:
+        def foundTimer = timerRepository.findByDescription("not existing timer")
+        then:
+        foundTimer.isEmpty()
+    }
+
+    def "Should save timer and its schedules"() {
+        given:
+        def timer = Timer.builder()
+                .description("new timer")
+                .build()
+        timer.add(TimerSchedule.builder()
+                .days([MONDAY, TUESDAY, WEDNESDAY] as Set)
+                .time(LocalTime.of(8, 0))
+                .enabled(true)
+                .build())
+        when:
+        timerRepository.save(timer)
+        entityManager.flush()
+        then:
+        with (timerRepository.findAll()[0]) {
+            it.id >= 0
+            it.created != null
+            it.updated != null
+            it.version >= 0
+            it.schedules.size() == 1
+            with (it.schedules[0]) {
+                it.id >= 0
+                it.created != null
+                it.updated != null
+                it.version >= 0
+                it.time != null
+                it.days.containsAll([MONDAY, TUESDAY, WEDNESDAY] as Set)
+                it.enabled
+            }
+        }
+    }
+
+    def "Should save timer but not schedules if they do not exist"() {
+        given:
+        def timer = Timer.builder()
+                .description("new timer")
+                .build()
+        when:
+        timerRepository.save(timer)
+        entityManager.flush()
+        then:
+        with (timerRepository.findAll()[0]) {
+            it.id >= 0
+            it.created != null
+            it.updated != null
+            it.version >= 0
+            it.schedules.size() == 0
+        }
+    }
+
+    @Sql("/data/timer-data.sql")
+    def "Should throw exception on save if description is used"() {
         given:
         def timer = Timer.builder().description("test timer 2").build()
         when:
@@ -121,7 +152,19 @@ class TimerRepositorySpec extends Specification {
     }
 
     @Sql("/data/timer-data.sql")
-    def "Repository does not delete timer when it does not exist"() {
+    def "Should delete timer"() {
+        given:
+        def timerId = 1
+        def timer = timerRepository.findById(timerId)
+        when:
+        timerRepository.delete(timer.get())
+        entityManager.flush()
+        then:
+        timerRepository.findById(timerId).isEmpty()
+    }
+
+    @Sql("/data/timer-data.sql")
+    def "Should not delete timer if it does not exist"() {
         given:
         def timer = timerRepository.findById(1).get()
         timerRepository.delete(timer)

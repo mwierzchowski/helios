@@ -197,8 +197,9 @@ class TimerServiceSpec extends Specification {
     def "Should add timer schedule if schedules do not exist"() {
         given:
         def timerId = 1
+        def timer = timerOf(timerId, false)
         def scheduleDto = timerScheduleDtoOf("06:30", ["MONDAY"])
-        timerRepository.findById(timerId) >> optional(timerOf(timerId, false))
+        timerRepository.findById(timerId) >> optional(timer)
         when:
         timerService.addSchedule(timerId, scheduleDto)
         then:
@@ -206,6 +207,7 @@ class TimerServiceSpec extends Specification {
             verifyAll(it, Timer) {
                 id == timerId
                 schedules[0].id == null
+                schedules[0].timer == timer
                 schedules[0].time == LocalTime.parse(scheduleDto.time)
                 schedules[0].days.contains(valueOf(scheduleDto.days[0]))
                 schedules[0].enabled
@@ -253,7 +255,7 @@ class TimerServiceSpec extends Specification {
         thrown NoSuchElementException
     }
 
-    def "Should throw exception on adding schedule if schedule in given day exists"() {
+    def "Should throw exception on adding schedule if it conflicts with others"() {
         given:
         def timerId = 1
         def scheduleDto = timerScheduleDtoOf("10:00", ["MONDAY", "TUESDAY"])
@@ -361,26 +363,25 @@ class TimerServiceSpec extends Specification {
     /** Helper methods ************************************************************************************************/
 
     def timerOf(id = 1, schedule = true) {
-        def scheduleSet = new LinkedHashSet()
+        def timer = Timer.builder()
+                .id(id)
+                .description("test timer ${id}")
+                .build()
         if (schedule) {
-            scheduleSet.add(TimerSchedule.builder()
+            timer.add(TimerSchedule.builder()
                     .id(1)
                     .time(LocalTime.of(6, 30))
                     .days([MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY] as Set)
                     .enabled(true)
                     .build())
-            scheduleSet.add(TimerSchedule.builder()
+            timer.add(TimerSchedule.builder()
                     .id(2)
                     .time(LocalTime.of(8, 0))
                     .days([SATURDAY] as Set)
                     .enabled(false)
                     .build())
         }
-        return Timer.builder()
-                .id(id)
-                .description("test timer ${id}")
-                .schedules(scheduleSet)
-                .build()
+        return timer
     }
 
     def timerDtoOf(id = null, description) {

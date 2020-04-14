@@ -30,7 +30,7 @@ public class Timer {
     @NotNull
     private String description;
 
-    @OneToMany
+    @OneToMany(mappedBy = "timer")
     private Set<TimerSchedule> schedules;
 
     @CreatedDate

@@ -4,7 +4,9 @@ import com.github.mwierzchowski.helios.adapter.jpa.DaysOfWeekConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -31,6 +33,8 @@ public class TimerSchedule {
     private Integer id;
 
     @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Timer timer;
 
     private LocalTime time;

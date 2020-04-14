@@ -10,6 +10,7 @@ import spock.lang.Subject
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.persistence.PersistenceException
+import java.time.Instant
 import java.time.LocalTime
 
 import static java.time.DayOfWeek.*
@@ -88,7 +89,7 @@ class TimerRepositorySpec extends Specification {
         foundTimer.isEmpty()
     }
 
-    def "Should save timer and its schedules"() {
+    def "Should save new timer and its schedules"() {
         given:
         def timer = Timer.builder()
                 .description("new timer")
@@ -120,7 +121,7 @@ class TimerRepositorySpec extends Specification {
         }
     }
 
-    def "Should save timer but not schedules if they do not exist"() {
+    def "Should save new timer but not schedules if they do not exist"() {
         given:
         def timer = Timer.builder()
                 .description("new timer")
@@ -149,6 +150,30 @@ class TimerRepositorySpec extends Specification {
         def pex = thrown(PersistenceException)
         def pexMessage = ExceptionUtils.getRootCause(pex).getMessage()
         pexMessage.contains('unique constraint') && pexMessage.contains('description')
+    }
+
+    @Sql("/data/timer-data.sql")
+    def "Should update timer"() {
+        given:
+        def start = Instant.now()
+        def timerId = 1
+        def timer = timerRepository.findById(timerId).get()
+        def schedule = timer.getSchedule(1).get()
+        def newDescription = "completely new description"
+        when:
+        timer.description = newDescription
+        timer.schedules.remove(schedule)
+        timerRepository.save(timer)
+        entityManager.flush()
+        then:
+        with (timerRepository.findById(timerId).get()) {
+            it.id == timerId
+            it.description == newDescription
+            it.created.isBefore(start)
+            it.updated.isAfter(start)
+            it.version == 2
+            !it.schedules.contains(schedule)
+        }
     }
 
     @Sql("/data/timer-data.sql")

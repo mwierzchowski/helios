@@ -11,6 +11,8 @@ import com.github.mwierzchowski.helios.service.mappers.TimerServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,6 +23,8 @@ import static java.text.MessageFormat.format;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
+@Service
+@Transactional
 @RequiredArgsConstructor
 public class TimerService {
     private final TimerServiceMapper serviceMapper;

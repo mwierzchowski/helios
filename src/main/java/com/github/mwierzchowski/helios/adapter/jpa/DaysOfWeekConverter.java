@@ -4,11 +4,12 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.time.DayOfWeek;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
 
 @Converter(autoApply = true)
 public class DaysOfWeekConverter implements AttributeConverter<Set<DayOfWeek>, String> {
@@ -21,6 +22,7 @@ public class DaysOfWeekConverter implements AttributeConverter<Set<DayOfWeek>, S
         } else {
             return days.stream()
                     .map(DayOfWeek::getValue)
+                    .sorted()
                     .map(String::valueOf)
                     .collect(joining(DAY_DELIMITER));
         }
@@ -35,8 +37,9 @@ public class DaysOfWeekConverter implements AttributeConverter<Set<DayOfWeek>, S
         } else {
             return stream(daysString.split(DAY_DELIMITER))
                     .map(Integer::valueOf)
+                    .sorted()
                     .map(DayOfWeek::of)
-                    .collect(Collectors.toSet());
+                    .collect(toCollection(LinkedHashSet::new));
         }
     }
 }

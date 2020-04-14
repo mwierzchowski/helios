@@ -36,8 +36,16 @@ class TimerServiceSpec extends Specification {
         def timerDtoList = timerService.getTimers()
         then:
         timerDtoList.size() == 2
-        timerDtoList[0].scheduled
-        !timerDtoList[1].scheduled
+        with (timerDtoList[0]) {
+            it.id > 0
+            it.description != null
+            it.scheduled
+        }
+        with (timerDtoList[1]) {
+            it.id > 0
+            it.description != null
+            !it.scheduled
+        }
     }
 
     def "Should return empty list of timers if timers do not exist"() {
@@ -49,8 +57,7 @@ class TimerServiceSpec extends Specification {
 
     def "Should add timer if it does not exist"() {
         given:
-        def timerDto = timerDtoOf("new timer")
-        timerDto.id = 1
+        def timerDto = timerDtoOf(1, "new timer")
         timerRepository.findByDescription(timerDto.description) >> empty()
         when:
         timerService.addTimer(timerDto)
@@ -351,6 +358,8 @@ class TimerServiceSpec extends Specification {
         thrown NoSuchElementException
     }
 
+    /** Helper methods ************************************************************************************************/
+
     def timerOf(id = 1, schedule = true) {
         def scheduleSet = new LinkedHashSet()
         if (schedule) {
@@ -374,8 +383,8 @@ class TimerServiceSpec extends Specification {
                 .build()
     }
 
-    def timerDtoOf(description) {
-        return new TimerDto(null, description, null)
+    def timerDtoOf(id = null, description) {
+        return new TimerDto(id, description, null)
     }
 
     def timerScheduleDtoOf(time, days) {

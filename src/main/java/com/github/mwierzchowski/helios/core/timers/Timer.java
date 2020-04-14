@@ -14,8 +14,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Data
 @Entity
@@ -30,8 +33,9 @@ public class Timer {
     @NotNull
     private String description;
 
-    @OneToMany(mappedBy = "timer")
-    private Set<TimerSchedule> schedules;
+    @Builder.Default
+    @OneToMany(mappedBy = "timer", cascade = ALL)
+    private Set<TimerSchedule> schedules = new LinkedHashSet<>();
 
     @CreatedDate
     private Instant created;
@@ -41,6 +45,11 @@ public class Timer {
 
     @Version
     private Integer version;
+
+    public void add(TimerSchedule schedule) {
+        schedule.setTimer(this);
+        schedules.add(schedule);
+    }
 
     public boolean hasSame(TimerSchedule schedule) {
         return schedules.stream().anyMatch(schedule::isSame);

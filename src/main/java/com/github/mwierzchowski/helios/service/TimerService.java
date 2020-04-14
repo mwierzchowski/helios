@@ -99,7 +99,7 @@ public class TimerService {
                     format("Could not add schedule for timer {0} as some days are overlapping: {1}",
                     timerId, schedule.getDays()));
         }
-        timer.getSchedules().add(schedule);
+        timer.add(schedule);
         timerRepository.save(timer);
     }
 

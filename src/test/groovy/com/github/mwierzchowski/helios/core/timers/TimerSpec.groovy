@@ -11,61 +11,60 @@ class TimerSpec extends Specification {
     Timer timer = new Timer()
 
     def setup() {
-        timer.schedules = new LinkedHashSet<>()
-        timer.schedules << TimerSchedule.builder()
-                .id(1)
-                .enabled(true)
-                .time(of(8, 0))
-                .days([MONDAY, TUESDAY] as Set)
-                .build()
-        timer.schedules << TimerSchedule.builder()
-                .id(2)
-                .enabled(false)
-                .time(of(10, 0))
-                .days([SATURDAY] as Set)
-                .build()
+        timer.add new TimerSchedule().tap {
+            it.id = 1
+            it.enabled = true
+            it.time = of(8, 0)
+            it.days = [MONDAY, TUESDAY]
+        }
+        timer.add new TimerSchedule().tap {
+            it.id = 2
+            it.enabled = false
+            it.time = of(10, 0)
+            it.days = [SATURDAY]
+        }
     }
 
     def "Should hasSame return true if one of the schedules is same logically"() {
         given:
-        def schedule = TimerSchedule.builder()
-                .enabled(false)
-                .time(of(8, 0))
-                .days([MONDAY, TUESDAY] as Set)
-                .build()
+        def schedule = new TimerSchedule().tap {
+            it.enabled = false
+            it.time = of(8, 0)
+            it.days = [MONDAY, TUESDAY]
+        }
         expect:
         timer.hasSame(schedule)
     }
 
     def "Should hasSame return false if one of the schedules is not same logically"() {
         given:
-        def schedule = TimerSchedule.builder()
-                .enabled(false)
-                .time(of(8, 0))
-                .days([MONDAY] as Set)
-                .build()
+        def schedule = new TimerSchedule().tap {
+            it.enabled = false
+            it.time = of(8, 0)
+            it.days = [MONDAY]
+        }
         expect:
         !timer.hasSame(schedule)
     }
 
     def "Should hasOverlapping return true if one of the schedules has a day in common"() {
         given:
-        def schedule = TimerSchedule.builder()
-                .enabled(false)
-                .time(of(10, 0))
-                .days([SATURDAY] as Set)
-                .build()
+        def schedule = new TimerSchedule().tap {
+            it.enabled = false
+            it.time = of(10, 0)
+            it.days = [SATURDAY]
+        }
         expect:
         timer.hasOverlapping(schedule)
     }
 
     def "Should hasOverlapping return false if one of the schedules has a day in common"() {
         given:
-        def schedule = TimerSchedule.builder()
-                .enabled(false)
-                .time(of(8, 0))
-                .days([WEDNESDAY] as Set)
-                .build()
+        def schedule = new TimerSchedule().tap {
+            it.enabled = false
+            it.time = of(8, 0)
+            it.days = [WEDNESDAY]
+        }
         expect:
         !timer.hasOverlapping(schedule)
     }

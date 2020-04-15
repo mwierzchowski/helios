@@ -1,9 +1,7 @@
 package com.github.mwierzchowski.helios.core.timers;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -19,12 +17,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
+import static lombok.AccessLevel.NONE;
 
 @Data
 @Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Timer {
     @Id
     @GeneratedValue(generator = "timer_id_sequence")
@@ -33,7 +29,7 @@ public class Timer {
     @NotNull
     private String description;
 
-    @Builder.Default
+    @Setter(NONE)
     @OneToMany(mappedBy = "timer", cascade = ALL)
     private Set<TimerSchedule> schedules = new LinkedHashSet<>();
 

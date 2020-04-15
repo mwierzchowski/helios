@@ -363,32 +363,38 @@ class TimerServiceSpec extends Specification {
     /** Helper methods ************************************************************************************************/
 
     def timerOf(id = 1, schedule = true) {
-        def timer = Timer.builder()
-                .id(id)
-                .description("test timer ${id}")
-                .build()
-        if (schedule) {
-            timer.add(TimerSchedule.builder()
-                    .id(1)
-                    .time(LocalTime.of(6, 30))
-                    .days([MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY] as Set)
-                    .enabled(true)
-                    .build())
-            timer.add(TimerSchedule.builder()
-                    .id(2)
-                    .time(LocalTime.of(8, 0))
-                    .days([SATURDAY] as Set)
-                    .enabled(false)
-                    .build())
+        new Timer().tap {
+            it.id = id
+            it.description = "test timer ${id}"
+            if (schedule) {
+                it.add new TimerSchedule().tap {
+                    it.id = 1
+                    it.time = LocalTime.of(6, 30)
+                    it.days = [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY]
+                    it.enabled = true
+                }
+                it.add new TimerSchedule().tap {
+                    it.id = 2
+                    it.time = LocalTime.of(8, 0)
+                    it.days = [SATURDAY]
+                    it.enabled = false
+                }
+            }
         }
-        return timer
     }
 
     def timerDtoOf(id = null, description) {
-        return new TimerDto(id, description, null)
+        new TimerDto().tap {
+            it.id = id
+            it.description = description
+        }
     }
 
     def timerScheduleDtoOf(time, days) {
-        return new TimerScheduleDto(null, time, days as String[], true)
+        new TimerScheduleDto().tap {
+            it.time = time
+            it.days = days
+            it.enabled = true
+        }
     }
 }

@@ -1,11 +1,8 @@
 package com.github.mwierzchowski.helios.core.timers;
 
 import com.github.mwierzchowski.helios.adapter.jpa.DaysOfWeekConverter;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -24,9 +21,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class TimerSchedule {
     @Id
     @GeneratedValue(generator = "timerschedule_id_sequence")

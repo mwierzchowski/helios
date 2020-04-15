@@ -91,14 +91,12 @@ class TimerRepositorySpec extends Specification {
 
     def "Should save new timer and its schedules"() {
         given:
-        def timer = Timer.builder()
-                .description("new timer")
-                .build()
-        timer.add(TimerSchedule.builder()
-                .days([MONDAY, TUESDAY, WEDNESDAY] as Set)
-                .time(LocalTime.of(8, 0))
-                .enabled(true)
-                .build())
+        def timer = timerOf("new timer")
+        timer.add new TimerSchedule().tap {
+            it.days = [MONDAY, TUESDAY, WEDNESDAY]
+            it.time = LocalTime.of(8, 0)
+            it.enabled = true
+        }
         when:
         timerRepository.save(timer)
         entityManager.flush()
@@ -123,9 +121,7 @@ class TimerRepositorySpec extends Specification {
 
     def "Should save new timer but not schedules if they do not exist"() {
         given:
-        def timer = Timer.builder()
-                .description("new timer")
-                .build()
+        def timer = timerOf("new timer")
         when:
         timerRepository.save(timer)
         entityManager.flush()
@@ -142,7 +138,7 @@ class TimerRepositorySpec extends Specification {
     @Sql("/data/timer-data.sql")
     def "Should throw exception on save if description is used"() {
         given:
-        def timer = Timer.builder().description("test timer 2").build()
+        def timer = timerOf("test timer 2")
         when:
         timerRepository.save(timer)
         entityManager.flush()
@@ -198,5 +194,13 @@ class TimerRepositorySpec extends Specification {
         entityManager.flush()
         then:
         noExceptionThrown()
+    }
+
+    /** Helper methods ************************************************************************************************/
+
+    def timerOf(description) {
+        new Timer().tap {
+            it.description = description
+        }
     }
 }

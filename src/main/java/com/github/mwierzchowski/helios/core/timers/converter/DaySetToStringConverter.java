@@ -1,18 +1,18 @@
-package com.github.mwierzchowski.helios.adapter.jpa;
+package com.github.mwierzchowski.helios.core.timers.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.time.DayOfWeek;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 
-@Converter(autoApply = true)
-public class DaysOfWeekConverter implements AttributeConverter<Set<DayOfWeek>, String> {
+@Converter
+public class DaySetToStringConverter implements AttributeConverter<Set<DayOfWeek>, String> {
     private static final String DAY_DELIMITER = ",";
 
     @Override
@@ -33,7 +33,7 @@ public class DaysOfWeekConverter implements AttributeConverter<Set<DayOfWeek>, S
         if (daysString == null) {
             return null;
         } else if (daysString.trim().isEmpty()) {
-            return Collections.emptySet();
+            return emptySet();
         } else {
             return stream(daysString.split(DAY_DELIMITER))
                     .map(Integer::valueOf)

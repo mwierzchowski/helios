@@ -1,11 +1,13 @@
 package com.github.mwierzchowski.helios.core.timers;
 
+import com.github.mwierzchowski.helios.core.timers.converter.DaySetToStringConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,6 +33,7 @@ public class TimerSchedule {
 
     private LocalTime time;
 
+    @Convert(converter = DaySetToStringConverter.class)
     private Set<DayOfWeek> days;
 
     private Boolean enabled;

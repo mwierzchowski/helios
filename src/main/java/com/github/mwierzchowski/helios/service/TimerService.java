@@ -53,7 +53,7 @@ public class TimerService {
     public void removeTimer(Integer timerId) {
         log.debug("Removing timer {}", timerId);
         Optional<Timer> foundTimer = timerRepository.findById(timerId);
-        if (!foundTimer.isPresent()) {
+        if (foundTimer.isEmpty()) {
             log.warn("Did not remove timer {} as it does not exist", timerId);
             return;
         }
@@ -111,7 +111,7 @@ public class TimerService {
         log.debug("Removing schedule {} from timer {}", scheduleId, timerId);
         Timer timer = timerRepository.findById(timerId).orElseThrow(notFound("timer", timerId));
         Optional<TimerSchedule> foundSchedule = timer.getSchedule(scheduleId);
-        if (!foundSchedule.isPresent()) {
+        if (foundSchedule.isEmpty()) {
             log.warn("Did not remove schedule {} from timer {} as schedule does not exist",
                     scheduleId, timerId);
             return;

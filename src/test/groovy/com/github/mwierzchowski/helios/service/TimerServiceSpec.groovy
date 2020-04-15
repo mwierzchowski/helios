@@ -6,7 +6,7 @@ import com.github.mwierzchowski.helios.core.timers.TimerRepository
 import com.github.mwierzchowski.helios.core.timers.TimerSchedule
 import com.github.mwierzchowski.helios.service.dto.TimerDto
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto
-import com.github.mwierzchowski.helios.service.mappers.TimerServiceMapper
+import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper
 import org.mapstruct.factory.Mappers
 import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification

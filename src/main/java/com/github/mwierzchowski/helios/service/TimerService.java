@@ -7,7 +7,7 @@ import com.github.mwierzchowski.helios.core.timers.TimerRepository;
 import com.github.mwierzchowski.helios.core.timers.TimerSchedule;
 import com.github.mwierzchowski.helios.service.dto.TimerDto;
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
-import com.github.mwierzchowski.helios.service.mappers.TimerServiceMapper;
+import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

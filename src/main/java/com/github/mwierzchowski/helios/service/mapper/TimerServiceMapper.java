@@ -1,4 +1,4 @@
-package com.github.mwierzchowski.helios.service.mappers;
+package com.github.mwierzchowski.helios.service.mapper;
 
 import com.github.mwierzchowski.helios.core.timers.Timer;
 import com.github.mwierzchowski.helios.core.timers.TimerSchedule;

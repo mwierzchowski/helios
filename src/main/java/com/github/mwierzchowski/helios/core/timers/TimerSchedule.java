@@ -36,8 +36,6 @@ public class TimerSchedule {
     @Convert(converter = DaySetToStringConverter.class)
     private Set<DayOfWeek> days;
 
-    private Boolean enabled;
-
     @CreatedDate
     private Instant created;
 

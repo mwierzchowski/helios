@@ -1,9 +1,6 @@
 package com.github.mwierzchowski.helios.service
 
-import com.github.mwierzchowski.helios.core.timers.Timer
-import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent
-import com.github.mwierzchowski.helios.core.timers.TimerRepository
-import com.github.mwierzchowski.helios.core.timers.TimerSchedule
+import com.github.mwierzchowski.helios.core.timers.*
 import com.github.mwierzchowski.helios.service.dto.TimerDto
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto
 import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper
@@ -167,12 +164,10 @@ class TimerServiceSpec extends Specification {
         with (schedules[0]) {
             LocalTime.parse(it.time) == LocalTime.of(6, 30)
             it.days.contains MONDAY.toString()
-            it.enabled
         }
         with (schedules[1]) {
             LocalTime.parse(it.time) == LocalTime.of(8, 0)
             it.days.contains SATURDAY.toString()
-            !it.enabled
         }
     }
 
@@ -210,7 +205,6 @@ class TimerServiceSpec extends Specification {
                 schedules[0].timer == timer
                 schedules[0].time == LocalTime.parse(scheduleDto.time)
                 schedules[0].days.contains(valueOf(scheduleDto.days[0]))
-                schedules[0].enabled
             }
         })
     }
@@ -229,7 +223,6 @@ class TimerServiceSpec extends Specification {
                 schedules[2].id == null
                 schedules[2].time == LocalTime.parse(scheduleDto.time)
                 schedules[2].days.contains(valueOf(scheduleDto.days[0]))
-                schedules[2].enabled
             }
         })
     }
@@ -305,61 +298,6 @@ class TimerServiceSpec extends Specification {
         thrown NoSuchElementException
     }
 
-    def "Should enable schedule if it is disabled"() {
-        given:
-        def timerId = 1
-        def scheduleId = 2
-        def enableFlag = true
-        timerRepository.findById(timerId) >> optional(timerOf(timerId))
-        when:
-        timerService.enableSchedule(timerId, scheduleId, enableFlag)
-        then:
-        1 * timerRepository.save({
-            verifyAll(it, Timer) {
-                id == timerId
-                schedules.size() == 2
-                schedules[1].id == 2
-                schedules[1].enabled == enableFlag
-            }
-        })
-    }
-
-    def "Should not enable schedule if it is enabled"() {
-        given:
-        def timerId = 1
-        def scheduleId = 2
-        def enableFlag = false
-        timerRepository.findById(timerId) >> optional(timerOf(timerId))
-        when:
-        timerService.enableSchedule(timerId, scheduleId, enableFlag)
-        then:
-        0 * timerRepository.save(_ as Timer)
-    }
-
-    def "Should throw exception on schedule enable if it does not exist"() {
-        given:
-        def timerId = 1
-        def scheduleId = 1
-        def enableFlag = false
-        timerRepository.findById(timerId) >> optional(timerOf(timerId, false))
-        when:
-        timerService.enableSchedule(timerId, scheduleId, enableFlag)
-        then:
-        thrown NoSuchElementException
-    }
-
-    def "Should throw exception on schedule enable if timer does not exist"() {
-        given:
-        def timerId = 1
-        def scheduleId = 1
-        def enableFlag = false
-        timerRepository.findById(timerId) >> empty()
-        when:
-        timerService.enableSchedule(timerId, scheduleId, enableFlag)
-        then:
-        thrown NoSuchElementException
-    }
-
     /** Helper methods ************************************************************************************************/
 
     def timerOf(id = 1, schedule = true) {
@@ -371,13 +309,11 @@ class TimerServiceSpec extends Specification {
                     it.id = 1
                     it.time = LocalTime.of(6, 30)
                     it.days = [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY]
-                    it.enabled = true
                 }
                 it.add new TimerSchedule().tap {
                     it.id = 2
                     it.time = LocalTime.of(8, 0)
                     it.days = [SATURDAY]
-                    it.enabled = false
                 }
             }
         }
@@ -394,7 +330,6 @@ class TimerServiceSpec extends Specification {
         new TimerScheduleDto().tap {
             it.time = time
             it.days = days
-            it.enabled = true
         }
     }
 }

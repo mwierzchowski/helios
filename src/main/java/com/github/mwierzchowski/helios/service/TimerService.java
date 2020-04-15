@@ -120,20 +120,6 @@ public class TimerService {
         timerRepository.save(timer);
     }
 
-    public void enableSchedule(Integer timerId, Integer scheduleId, Boolean enableFlag) {
-        log.debug("Changing enable flag to '{}' for schedule {} of timer {}", enableFlag, scheduleId, timerId);
-        Timer timer = timerRepository.findById(timerId).orElseThrow(notFound("timer", timerId));
-        TimerSchedule schedule = timer.getSchedule(scheduleId).orElseThrow(notFound("schedule", scheduleId));
-        if (schedule.getEnabled() == enableFlag) {
-            log.warn("Did not change enable flag for schedule {} of timer {} as flag is already '{}'",
-                    scheduleId, timerId, enableFlag);
-            return;
-        }
-        schedule.setEnabled(enableFlag);
-        timerRepository.save(timer);
-
-    }
-
     private Supplier<RuntimeException> notFound(String element, Integer id) {
         String message = "Not found {0} with id {1}";
         return () -> new NoSuchElementException(format(message, element, id));

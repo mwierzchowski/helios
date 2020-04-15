@@ -16,7 +16,6 @@ create table timer_schedule (
     timer_id int not null,
     time time not null,
     days varchar(13) not null,
-    enabled boolean not null,
     created timestamp not null,
     updated timestamp not null,
     version int not null

@@ -2,6 +2,7 @@ package com.github.mwierzchowski.helios.service;
 
 import com.github.mwierzchowski.helios.core.HeliosEvent;
 import com.github.mwierzchowski.helios.core.timers.Timer;
+import com.github.mwierzchowski.helios.core.timers.TimerAlertLauncher;
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent;
 import com.github.mwierzchowski.helios.core.timers.TimerRepository;
 import com.github.mwierzchowski.helios.core.timers.TimerSchedule;
@@ -29,6 +30,7 @@ import static java.util.stream.Collectors.toList;
 public class TimerService {
     private final TimerServiceMapper serviceMapper;
     private final TimerRepository timerRepository;
+    private final TimerAlertLauncher timerAlertLauncher;
     private final ApplicationEventPublisher eventPublisher;
 
     public List<TimerDto> getTimers() {
@@ -105,6 +107,7 @@ public class TimerService {
         }
         timer.add(schedule);
         timerRepository.save(timer);
+        timerAlertLauncher.launchAlertFor(timer);
     }
 
     public void removeSchedule(Integer timerId, Integer scheduleId) {

@@ -19,10 +19,11 @@ import static java.util.Optional.of as optional
 class TimerServiceSpec extends Specification {
     TimerServiceMapper mapper = Mappers.getMapper(TimerServiceMapper)
     TimerRepository timerRepository = Mock()
+    TimerAlertLauncher alertLauncher = Mock()
     ApplicationEventPublisher eventPublisher = Mock()
 
     @Subject
-    TimerService timerService = new TimerService(mapper, timerRepository, eventPublisher)
+    TimerService timerService = new TimerService(mapper, timerRepository, alertLauncher, eventPublisher)
 
     def "Should return list of timers"() {
         given:
@@ -207,6 +208,11 @@ class TimerServiceSpec extends Specification {
                 schedules[0].days.contains(valueOf(scheduleDto.days[0]))
             }
         })
+        1 * alertLauncher.launchAlertFor({
+            verifyAll(it, Timer) {
+                id == timerId
+            }
+        })
     }
 
     def "Should add timer schedule if schedule for given day does not exist"() {
@@ -223,6 +229,11 @@ class TimerServiceSpec extends Specification {
                 schedules[2].id == null
                 schedules[2].time == LocalTime.parse(scheduleDto.time)
                 schedules[2].days.contains(valueOf(scheduleDto.days[0]))
+            }
+        })
+        1 * alertLauncher.launchAlertFor({
+            verifyAll(it, Timer) {
+                id == timerId
             }
         })
     }

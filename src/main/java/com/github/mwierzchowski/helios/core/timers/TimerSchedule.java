@@ -15,9 +15,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Set;
+
+import static java.time.LocalDate.now;
+import static java.time.ZoneId.systemDefault;
 
 @Data
 @Entity
@@ -53,5 +57,39 @@ public class TimerSchedule {
 
     public boolean isOverlapping(TimerSchedule other) {
         return this.days.stream().anyMatch(other.days::contains);
+    }
+
+    public Instant nearestOccurrence() {
+        LocalDate occurrenceDay = isToday() && isTimeNotOver() ? now() : nextDay();
+        return occurrenceDay.atTime(time).atZone(systemDefault()).toInstant();
+    }
+
+    private boolean isToday() {
+        DayOfWeek today = LocalDate.now().getDayOfWeek();
+        return days.contains(today);
+    }
+
+    private boolean isTimeNotOver() {
+        return LocalTime.now().isBefore(time);
+    }
+
+    private LocalDate nextDay() {
+        LocalDate thisDay = LocalDate.now();
+        int today = thisDay.getDayOfWeek().getValue();
+        int next = days.stream()
+                .map(DayOfWeek::getValue)
+                .filter(day -> day > today)
+                .sorted()
+                .findFirst()
+                .orElse(7 + firstDayNextWeek());
+        return thisDay.plusDays(next - today);
+    }
+
+    private Integer firstDayNextWeek() {
+        return days.stream()
+                .map(DayOfWeek::getValue)
+                .sorted()
+                .findFirst()
+                .orElseThrow();
     }
 }

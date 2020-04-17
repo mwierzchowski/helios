@@ -13,13 +13,11 @@ class TimerSpec extends Specification {
     def setup() {
         timer.add new TimerSchedule().tap {
             it.id = 1
-            it.enabled = true
             it.time = of(8, 0)
             it.days = [MONDAY, TUESDAY]
         }
         timer.add new TimerSchedule().tap {
             it.id = 2
-            it.enabled = false
             it.time = of(10, 0)
             it.days = [SATURDAY]
         }
@@ -28,7 +26,6 @@ class TimerSpec extends Specification {
     def "Should hasSame return true if one of the schedules is same logically"() {
         given:
         def schedule = new TimerSchedule().tap {
-            it.enabled = false
             it.time = of(8, 0)
             it.days = [MONDAY, TUESDAY]
         }
@@ -39,7 +36,6 @@ class TimerSpec extends Specification {
     def "Should hasSame return false if one of the schedules is not same logically"() {
         given:
         def schedule = new TimerSchedule().tap {
-            it.enabled = false
             it.time = of(8, 0)
             it.days = [MONDAY]
         }
@@ -50,7 +46,6 @@ class TimerSpec extends Specification {
     def "Should hasOverlapping return true if one of the schedules has a day in common"() {
         given:
         def schedule = new TimerSchedule().tap {
-            it.enabled = false
             it.time = of(10, 0)
             it.days = [SATURDAY]
         }
@@ -61,7 +56,6 @@ class TimerSpec extends Specification {
     def "Should hasOverlapping return false if one of the schedules has a day in common"() {
         given:
         def schedule = new TimerSchedule().tap {
-            it.enabled = false
             it.time = of(8, 0)
             it.days = [WEDNESDAY]
         }

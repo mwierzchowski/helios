@@ -55,7 +55,6 @@ class TimerRepositorySpec extends Specification {
                 it.id == 1
                 it.days.contains(MONDAY)
                 it.time == LocalTime.of(6, 30)
-                it.enabled
                 it.created != null
                 it.updated != null
                 it.version >= 0
@@ -95,7 +94,6 @@ class TimerRepositorySpec extends Specification {
         timer.add new TimerSchedule().tap {
             it.days = [MONDAY, TUESDAY, WEDNESDAY]
             it.time = LocalTime.of(8, 0)
-            it.enabled = true
         }
         when:
         timerRepository.save(timer)
@@ -114,7 +112,6 @@ class TimerRepositorySpec extends Specification {
                 it.version >= 0
                 it.time != null
                 it.days.containsAll([MONDAY, TUESDAY, WEDNESDAY] as Set)
-                it.enabled
             }
         }
     }

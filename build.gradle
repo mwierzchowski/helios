@@ -8,8 +8,8 @@ plugins {
 
 group = 'com.github.mwierzchowski'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.11'
-targetCompatibility = '1.11'
+sourceCompatibility = '1.13'
+targetCompatibility = '1.13'
 
 configurations {
 	developmentOnly

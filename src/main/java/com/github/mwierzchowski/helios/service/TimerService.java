@@ -37,7 +37,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Path("/v1/timers")
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
-@Tag(name = "Timers service", description = "Management service for timers")
+@Tag(name = "Timers", description = "Service for timers management")
 public class TimerService {
     /**
      * Entity to dto mapper
@@ -64,7 +64,7 @@ public class TimerService {
      * @return list of timers
      */
     @GET
-    @Operation(summary = "List of all timers", description = "Provides list of all timers.")
+    @Operation(summary = "List of all timers", description = "Provides list of all timers from repository")
     public List<TimerDto> getTimers() {
         log.debug("Searching for timers");
         return timerRepository.findAll().stream()

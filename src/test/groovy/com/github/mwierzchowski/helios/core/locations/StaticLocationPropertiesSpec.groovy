@@ -6,14 +6,14 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 @IntegrationSpec
-class StaticLocationProviderSpec extends Specification {
+class StaticLocationPropertiesSpec extends Specification {
     @Subject
     @Autowired
-    StaticLocationProvider locationProvider
+    StaticLocationProperties locationProperties
 
-    def "Provider returns configured location"() {
+    def "Should return location"() {
         when:
-        def location = locationProvider.locate()
+        def location = locationProperties.locate()
         then:
         location.city == 'Warsaw'
         location.latitude == 52.23

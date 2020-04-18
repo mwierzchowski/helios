@@ -36,7 +36,7 @@ public class LocationInfoContributor implements InfoContributor {
     private Map<String, Object> getDetails() {
         Location location = locationProvider.locate();
         Map<String, Object> details = new LinkedHashMap<>();
-        details.put("city", location.getCity() == null ? "unknown" : location.getCity());
+        details.put("city", location.getCity());
         details.put("latitude", location.getLatitude());
         details.put("longitude", location.getLongitude());
         details.put("provider", locationProvider.getClass());

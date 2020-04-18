@@ -1,6 +1,5 @@
 package com.github.mwierzchowski.helios.adapter.owm;
 
-import com.github.mwierzchowski.helios.HeliosProperties;
 import org.openweathermap.api.CurrentWeatherApi;
 import org.openweathermap.invoker.ApiClient;
 import org.springframework.context.annotation.Bean;
@@ -13,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OwmConfiguration {
     @Bean
-    public ApiClient owmApiClient(HeliosProperties properties) {
+    public ApiClient owmApiClient(OwmProperties owmProperties) {
         ApiClient apiClient = new ApiClient();
-        apiClient.setBasePath(properties.getOwm().getBasePath());
-        apiClient.setApiKey(properties.getOwm().getApiKey());
+        apiClient.setBasePath(owmProperties.getBasePath());
+        apiClient.setApiKey(owmProperties.getApiKey());
         return apiClient;
     }
 

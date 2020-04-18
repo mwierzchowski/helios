@@ -1,6 +1,5 @@
 package com.github.mwierzchowski.helios;
 
-import com.github.mwierzchowski.helios.service.TimerService;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -41,8 +40,8 @@ public class HeliosApplication extends ResourceConfig {
 	 */
 	@PostConstruct
     public void initializeEndpoints() {
+		packages(getClass().getPackageName());
 		register(OpenApiResource.class);
-        register(TimerService.class);
     }
 
 	/**

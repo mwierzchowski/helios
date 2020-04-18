@@ -1,6 +1,11 @@
 package com.github.mwierzchowski.helios;
 
+import com.github.mwierzchowski.helios.service.TimerService;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +29,22 @@ import javax.ws.rs.ApplicationPath;
 @EnableTransactionManagement
 @SpringBootApplication
 @ApplicationPath("/api")
+@OpenAPIDefinition(info = @Info(
+		version = "1.0",
+		title = "Helios",
+		description = "Sun blinds controller",
+		contact = @Contact(name = "Marcin Wierzchowski", url = "https://github.com/mwierzchowski/helios"),
+		license = @License(name = "MIT License", url = "https://opensource.org/licenses/MIT")))
 public class HeliosApplication extends ResourceConfig {
+	/**
+	 * Initialization of application endpoints.
+	 */
+	@PostConstruct
+    public void initializeEndpoints() {
+		register(OpenApiResource.class);
+        register(TimerService.class);
+    }
+
 	/**
 	 * Start application.
 	 * @param args application arguments
@@ -32,12 +52,4 @@ public class HeliosApplication extends ResourceConfig {
 	public static void main(String[] args) {
 		SpringApplication.run(HeliosApplication.class, args);
 	}
-
-	/**
-	 * Initialization of application endpoints.
-	 */
-	@PostConstruct
-    public void initializeEndpoints() {
-        packages("com.github.mwierzchowski.helios.service");
-    }
 }

@@ -6,28 +6,38 @@ import com.github.mwierzchowski.helios.core.timers.TimerRepository;
 import com.github.mwierzchowski.helios.service.dto.TimerDto;
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
 import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.text.MessageFormat.format;
 import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
- * Service that manages timers.
+ * Management service for timers.
  * @author Marcin WIerzchowski
  */
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Path("/v1/timers")
+@Consumes(APPLICATION_JSON)
+@Produces(APPLICATION_JSON)
+@Tag(name = "Timers service", description = "Management service for timers")
 public class TimerService {
     /**
      * Entity to dto mapper
@@ -53,6 +63,8 @@ public class TimerService {
      * Provides list of all registered timers.
      * @return list of timers
      */
+    @GET
+    @Operation(summary = "List of all timers", description = "Provides list of all timers.")
     public List<TimerDto> getTimers() {
         log.debug("Searching for timers");
         return timerRepository.findAll().stream()

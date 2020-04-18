@@ -3,6 +3,7 @@ package com.github.mwierzchowski.helios.core.timers;
 import com.github.mwierzchowski.helios.core.timers.converter.DaySetToStringConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,9 +20,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static java.time.LocalDate.now;
 import static java.time.ZoneId.systemDefault;
+import static lombok.AccessLevel.NONE;
 
 @Data
 @Entity
@@ -37,8 +40,9 @@ public class TimerSchedule {
 
     private LocalTime time;
 
+    @Setter(NONE)
     @Convert(converter = DaySetToStringConverter.class)
-    private Set<DayOfWeek> days;
+    private Set<DayOfWeek> days = new TreeSet<>();
 
     @CreatedDate
     private Instant created;
@@ -60,13 +64,13 @@ public class TimerSchedule {
     }
 
     public Instant nearestOccurrence() {
-        LocalDate occurrenceDay = isToday() && isTimeNotOver() ? now() : nextDay();
+        var occurrenceDay = isToday() && isTimeNotOver() ? now() : nextDay();
         return occurrenceDay.atTime(time).atZone(systemDefault()).toInstant();
     }
 
     private boolean isToday() {
-        DayOfWeek today = LocalDate.now().getDayOfWeek();
-        return days.contains(today);
+        var thisDayOfWeek = LocalDate.now().getDayOfWeek();
+        return days.contains(thisDayOfWeek);
     }
 
     private boolean isTimeNotOver() {
@@ -74,15 +78,15 @@ public class TimerSchedule {
     }
 
     private LocalDate nextDay() {
-        LocalDate thisDay = LocalDate.now();
-        int today = thisDay.getDayOfWeek().getValue();
-        int next = days.stream()
+        var thisDay = LocalDate.now();
+        var thisDayOfWeek = thisDay.getDayOfWeek().getValue();
+        var nextDayOfWeek = days.stream()
                 .map(DayOfWeek::getValue)
-                .filter(day -> day > today)
+                .filter(day -> day > thisDayOfWeek)
                 .sorted()
                 .findFirst()
                 .orElse(7 + firstDayNextWeek());
-        return thisDay.plusDays(next - today);
+        return thisDay.plusDays(nextDayOfWeek - thisDayOfWeek);
     }
 
     private Integer firstDayNextWeek() {

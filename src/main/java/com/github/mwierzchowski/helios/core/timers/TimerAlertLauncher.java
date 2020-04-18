@@ -3,7 +3,9 @@ package com.github.mwierzchowski.helios.core.timers;
 import com.github.mwierzchowski.helios.core.HeliosEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
@@ -21,7 +23,7 @@ public class TimerAlertLauncher {
     private final TaskScheduler taskScheduler;
     private final ApplicationEventPublisher eventPublisher;
 
-    // TODO start with application
+    @EventListener(classes = ApplicationReadyEvent.class)
     public void launchAlerts() {
         log.debug("Launching all alert tasks");
         timerRepository.findAll().forEach(this::launchAlertFor);

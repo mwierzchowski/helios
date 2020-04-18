@@ -319,12 +319,12 @@ class TimerServiceSpec extends Specification {
                 it.add new TimerSchedule().tap {
                     it.id = 1
                     it.time = LocalTime.of(6, 30)
-                    it.days = [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY]
+                    it.days.addAll MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY
                 }
                 it.add new TimerSchedule().tap {
                     it.id = 2
                     it.time = LocalTime.of(8, 0)
-                    it.days = [SATURDAY]
+                    it.days.addAll SATURDAY
                 }
             }
         }

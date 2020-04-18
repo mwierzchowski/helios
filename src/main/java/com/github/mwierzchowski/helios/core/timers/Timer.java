@@ -60,4 +60,11 @@ public class Timer {
                 .filter(schedule -> schedule.getId().equals(scheduleId))
                 .findFirst();
     }
+
+    public Optional<Instant> getNearestOccurrence() {
+        return schedules.stream()
+                .map(TimerSchedule::nearestOccurrence)
+                .sorted()
+                .findFirst();
+    }
 }

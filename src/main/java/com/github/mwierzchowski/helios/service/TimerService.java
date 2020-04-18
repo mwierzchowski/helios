@@ -2,7 +2,7 @@ package com.github.mwierzchowski.helios.service;
 
 import com.github.mwierzchowski.helios.core.HeliosEvent;
 import com.github.mwierzchowski.helios.core.timers.Timer;
-import com.github.mwierzchowski.helios.core.timers.TimerAlertLauncher;
+import com.github.mwierzchowski.helios.core.timers.TimerAlertStarter;
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent;
 import com.github.mwierzchowski.helios.core.timers.TimerRepository;
 import com.github.mwierzchowski.helios.core.timers.TimerSchedule;
@@ -43,9 +43,9 @@ public class TimerService {
     private final TimerRepository timerRepository;
 
     /**
-     * Timer alerts launcher
+     * Timer alerts starter
      */
-    private final TimerAlertLauncher timerAlertLauncher;
+    private final TimerAlertStarter timerAlertStarter;
 
     /**
      * Events publisher
@@ -156,7 +156,7 @@ public class TimerService {
         }
         timer.add(schedule);
         timerRepository.save(timer);
-        timerAlertLauncher.launchAlertFor(timer);
+        timerAlertStarter.startAlertFor(timer);
     }
 
     /**

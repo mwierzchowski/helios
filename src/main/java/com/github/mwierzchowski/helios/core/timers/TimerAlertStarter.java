@@ -15,14 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 /**
- * Component responsible for launching future timer alerts.
+ * Component responsible for starting timer alerts.
  * @author Marcin Wierzchowski
  */
 @Slf4j
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class TimerAlertLauncher {
+public class TimerAlertStarter {
     /**
      * Timer repository
      */
@@ -39,28 +39,28 @@ public class TimerAlertLauncher {
     private final ApplicationEventPublisher eventPublisher;
 
     /**
-     * Callback method called on application start. It launches alert tasks for all timers.
+     * Callback method called on application start. It starts alert tasks for all timers.
      */
     @EventListener(classes = ApplicationReadyEvent.class)
-    public void launchAlerts() {
-        log.debug("Launching all alert tasks");
-        timerRepository.findAll().forEach(this::launchAlertFor);
+    public void startAlerts() {
+        log.debug("Starting all alert tasks");
+        timerRepository.findAll().forEach(this::startAlertFor);
     }
 
     /**
-     * Launches alert task for all schedules of given timer.
+     * Start alert task for all schedules of given timer.
      * @param timer timer
      */
-    public void launchAlertFor(Timer timer) {
-        log.info("Launching '{}' timer task", timer.getDescription());
-        timer.getSchedules().forEach(this::startTask);
+    public void startAlertFor(Timer timer) {
+        log.info("Starting '{}' timer task", timer.getDescription());
+        timer.getSchedules().forEach(this::scheduleTask);
     }
 
     /**
      * Helper method that creates schedule tasks/trigger for schedule and registers them in the scheduler.
      * @param schedule schedule of the timer
      */
-    private void startTask(TimerSchedule schedule) {
+    private void scheduleTask(TimerSchedule schedule) {
         TaskTrigger trigger = new TaskTrigger(schedule);
         Task task = new Task(schedule.getTimer(), schedule, trigger);
         taskScheduler.schedule(task, trigger);

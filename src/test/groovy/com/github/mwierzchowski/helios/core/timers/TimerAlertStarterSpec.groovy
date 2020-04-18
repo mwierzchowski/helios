@@ -11,13 +11,13 @@ import java.time.LocalTime
 
 import static java.util.Optional.empty
 
-class TimerAlertLauncherSpec extends Specification {
+class TimerAlertStarterSpec extends Specification {
     TimerRepository timerRepository = Mock(TimerRepository)
     TaskScheduler taskScheduler = new ConcurrentTaskScheduler()
     ApplicationEventPublisher eventPublisher = Mock(ApplicationEventPublisher)
 
     @Subject
-    TimerAlertLauncher alertLauncher = new TimerAlertLauncher(timerRepository, taskScheduler, eventPublisher)
+    TimerAlertStarter alertStarter = new TimerAlertStarter(timerRepository, taskScheduler, eventPublisher)
 
     def "Should publish alert if timer is scheduled later today"() {
         given:
@@ -25,7 +25,7 @@ class TimerAlertLauncherSpec extends Specification {
         def timer = timerOf(1, true, delay)
         timerRepository.findById(timer.id) >> Optional.of(timer)
         when:
-        alertLauncher.launchAlertFor(timer)
+        alertStarter.startAlertFor(timer)
         sleepSeconds(delay)
         then:
         1 * eventPublisher.publishEvent({
@@ -40,7 +40,7 @@ class TimerAlertLauncherSpec extends Specification {
         def delay = 1
         def timer = timerOf(1, false, delay)
         when:
-        alertLauncher.launchAlertFor(timer)
+        alertStarter.startAlertFor(timer)
         sleepSeconds(delay)
         then:
         0 * eventPublisher.publishEvent(_ as TimerAlertEvent)
@@ -50,7 +50,7 @@ class TimerAlertLauncherSpec extends Specification {
         given:
         def timer = timerOf(1, true, 3600)
         when:
-        alertLauncher.launchAlertFor(timer)
+        alertStarter.startAlertFor(timer)
         sleepSeconds(1)
         then:
         0 * eventPublisher.publishEvent(_ as TimerAlertEvent)
@@ -63,7 +63,7 @@ class TimerAlertLauncherSpec extends Specification {
         def timer = timerOf(timerId, true, delay)
         timerRepository.findById(timerId) >> empty()
         when:
-        alertLauncher.launchAlertFor(timer)
+        alertStarter.startAlertFor(timer)
         sleepSeconds(delay)
         then:
         0 * eventPublisher.publishEvent(_ as TimerAlertEvent)
@@ -79,7 +79,7 @@ class TimerAlertLauncherSpec extends Specification {
         }
         timerRepository.findById(timerId) >> Optional.of(timerV2)
         when:
-        alertLauncher.launchAlertFor(timerV1)
+        alertStarter.startAlertFor(timerV1)
         sleepSeconds(delay)
         then:
         0 * eventPublisher.publishEvent(_ as TimerAlertEvent)

@@ -67,7 +67,7 @@ dependencies {
 def owmClientPackage = "org.openweathermap"
 swaggerSources {
 	owm {
-		inputFile = file('src/main/openapi/openapi-owm.yaml')
+		inputFile = file('src/main/specs/owm-spec.yaml')
 		code {
 			language = 'java'
 			library = "resttemplate"

@@ -14,53 +14,115 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+/**
+ * Component responsible for launching future timer alerts.
+ * @author Marcin Wierzchowski
+ */
 @Slf4j
 @Component
 @Transactional
 @RequiredArgsConstructor
 public class TimerAlertLauncher {
+    /**
+     * Timer repository
+     */
     private final TimerRepository timerRepository;
+
+    /**
+     * Tasks scheduler
+     */
     private final TaskScheduler taskScheduler;
+
+    /**
+     * Events publisher
+     */
     private final ApplicationEventPublisher eventPublisher;
 
+    /**
+     * Callback method called on application start. It launches alert tasks for all timers.
+     */
     @EventListener(classes = ApplicationReadyEvent.class)
     public void launchAlerts() {
         log.debug("Launching all alert tasks");
         timerRepository.findAll().forEach(this::launchAlertFor);
     }
 
+    /**
+     * Launches alert task for all schedules of given timer.
+     * @param timer timer
+     */
     public void launchAlertFor(Timer timer) {
         log.info("Launching '{}' timer task", timer.getDescription());
         timer.getSchedules().forEach(this::startTask);
     }
 
+    /**
+     * Helper method that creates schedule tasks/trigger for schedule and registers them in the scheduler.
+     * @param schedule schedule of the timer
+     */
     private void startTask(TimerSchedule schedule) {
         TaskTrigger trigger = new TaskTrigger(schedule);
         Task task = new Task(schedule.getTimer(), schedule, trigger);
         taskScheduler.schedule(task, trigger);
     }
 
+    /**
+     * Class of alert task triggers.
+     */
     @RequiredArgsConstructor
     static class TaskTrigger implements Trigger {
+        /**
+         * Schedule
+         */
         private final TimerSchedule schedule;
+
+        /**
+         * Flag informing if trigger is stopped
+         */
         private boolean stopped = false;
 
+        /**
+         * Main trigger method.
+         * @param triggerContext trigger context
+         * @return date of next execution or null when trigger is stopped
+         */
         @Override
         public synchronized Date nextExecutionTime(TriggerContext triggerContext) {
             return stopped ? null : Date.from(schedule.nearestOccurrence());
         }
 
+        /**
+         * Stops trigger (next call to {@link TaskTrigger#nextExecutionTime(TriggerContext)} will give null).
+         */
         public synchronized void stop() {
             this.stopped = true;
         }
     }
 
+    /**
+     * Class of alert tasks.
+     */
     @RequiredArgsConstructor
     class Task implements Runnable {
+        /**
+         * Timer
+         */
         private final Timer timer;
+
+        /**
+         * Schedule
+         */
         private final TimerSchedule schedule;
+
+        /**
+         * Trigger
+         */
         private final TaskTrigger trigger;
 
+        /**
+         * Main task method. On the beginning, method checks if given schedule is still valid. If not, trigger is
+         * being stopped.
+         */
         @Override
         public void run() {
             if (!isValid()) {
@@ -73,6 +135,10 @@ public class TimerAlertLauncher {
             eventPublisher.publishEvent(event);
         }
 
+        /**
+         * Helper method that checks if task is still valid.
+         * @return result of the check
+         */
         private boolean isValid() {
             return timerRepository.findById(timer.getId())
                     .flatMap(foundTimer -> foundTimer.getSchedule(schedule.getId()))

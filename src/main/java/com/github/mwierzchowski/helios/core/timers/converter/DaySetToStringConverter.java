@@ -11,10 +11,22 @@ import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 
+/**
+ * Converts set of {@link DayOfWeek} objects into a string where each of days is represented by a number
+ * (e.g. {@link DayOfWeek#MONDAY} is 1), separated by {@link DaySetToStringConverter#DAY_DELIMITER}.
+ */
 @Converter
 public class DaySetToStringConverter implements AttributeConverter<Set<DayOfWeek>, String> {
+    /**
+     * Delimiter
+     */
     private static final String DAY_DELIMITER = ",";
 
+    /**
+     * Converts set to string
+     * @param days days set
+     * @return string
+     */
     @Override
     public String convertToDatabaseColumn(Set<DayOfWeek> days) {
         if (days == null) {
@@ -28,6 +40,11 @@ public class DaySetToStringConverter implements AttributeConverter<Set<DayOfWeek
         }
     }
 
+    /**
+     * Converts string to days set
+     * @param daysString string
+     * @return set of days
+     */
     @Override
     public Set<DayOfWeek> convertToEntityAttribute(String daysString) {
         if (daysString == null) {

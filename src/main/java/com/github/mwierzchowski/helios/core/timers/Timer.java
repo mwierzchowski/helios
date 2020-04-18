@@ -19,48 +19,96 @@ import java.util.Set;
 import static javax.persistence.CascadeType.ALL;
 import static lombok.AccessLevel.NONE;
 
+/**
+ * Entity representing timers. Each timer needs to have unique description. It may also have zero or more
+ * schedules (see {@link TimerSchedule}).
+ * @author Marcin Wierzchowski
+ */
 @Data
 @Entity
 public class Timer {
+    /**
+     * Id of the entity
+     */
     @Id
     @GeneratedValue(generator = "timer_id_sequence")
     private Integer id;
 
+    /**
+     * Timer description
+     */
     @NotNull
     private String description;
 
+    /**
+     * Schedules when timer gives alert.
+     */
     @Setter(NONE)
     @OneToMany(mappedBy = "timer", cascade = ALL)
     private Set<TimerSchedule> schedules = new LinkedHashSet<>();
 
+    /**
+     * Timestamp of the creation for auditing purposes.
+     */
     @CreatedDate
     private Instant created;
 
+    /**
+     * Timestamp of the update for auditing purposes.
+     */
     @LastModifiedDate
     private Instant updated;
 
+    /**
+     * Version of the entity for auditing and optimistic locking purposes.
+     */
     @Version
     private Integer version;
 
+    /**
+     * Add schedule to the timer. As a result, new schedule is linked with the timer.
+     * @param schedule schedule
+     */
     public void add(TimerSchedule schedule) {
         schedule.setTimer(this);
         schedules.add(schedule);
     }
 
+    /**
+     * Returns true if timer already has a schedule that is same (in terms of business data) as given schedule. See
+     * {@link TimerSchedule#isSame(TimerSchedule)} for details.
+     * @param schedule schedule
+     * @return result
+     */
     public boolean hasSame(TimerSchedule schedule) {
         return schedules.stream().anyMatch(schedule::isSame);
     }
 
+    /**
+     * Returns true if timer already has at least 1 schedule that overlaps with given schedule. See
+     * {@link TimerSchedule#isOverlapping(TimerSchedule)} for details.
+     * @param schedule schedule
+     * @return result
+     */
     public boolean hasOverlapping(TimerSchedule schedule) {
         return schedules.stream().anyMatch(schedule::isOverlapping);
     }
 
+    /**
+     * Provides optional with schedule of given id.
+     * @param scheduleId schedule id
+     * @return optional schedule or empty if schedule is missing
+     */
     public Optional<TimerSchedule> getSchedule(Integer scheduleId) {
         return schedules.stream()
                 .filter(schedule -> schedule.getId().equals(scheduleId))
                 .findFirst();
     }
 
+    /**
+     * Provides optional with timestamp of the nearest timer alert.
+     * @return optional with timestamp or empty if timer has no schedules
+     */
     public Optional<Instant> getNearestOccurrence() {
         return schedules.stream()
                 .map(TimerSchedule::nearestOccurrence)

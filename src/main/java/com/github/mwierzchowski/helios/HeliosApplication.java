@@ -1,5 +1,6 @@
 package com.github.mwierzchowski.helios;
 
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.ws.rs.ApplicationPath;
 
 /**
- * Main application config.
+ * Application boot configuration.
  * @author Marcin Wierzchowski
  */
 @EnableCaching
@@ -21,19 +22,22 @@ import javax.ws.rs.ApplicationPath;
 @EnableJpaAuditing
 @EnableJpaRepositories
 @EnableTransactionManagement
-@ApplicationPath("/api")
 @SpringBootApplication
+@ApplicationPath("/api")
 public class HeliosApplication extends ResourceConfig {
-	@PostConstruct
-    public void init() {
-        packages("com.github.mwierzchowski.helios.service");
-    }
-
 	/**
-	 * Main application method.
-	 * @param args app arguments
+	 * Start application.
+	 * @param args application arguments
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(HeliosApplication.class, args);
 	}
+
+	/**
+	 * Initialization of application endpoints.
+	 */
+	@PostConstruct
+    public void initializeEndpoints() {
+        packages("com.github.mwierzchowski.helios.service");
+    }
 }

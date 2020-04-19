@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Version;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -32,12 +33,13 @@ import static lombok.AccessLevel.NONE;
  */
 @Data
 @Entity
+@SequenceGenerator(name = "timer_schedule_id_generator", sequenceName = "timer_schedule_id_seq", allocationSize = 10)
 public class TimerSchedule {
     /**
      * Id of the entity
      */
     @Id
-    @GeneratedValue(generator = "timerschedule_id_sequence")
+    @GeneratedValue(generator = "timer_schedule_id_generator")
     private Integer id;
 
     /**

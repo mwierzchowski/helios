@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.NONE;
 
 /**
@@ -26,12 +28,13 @@ import static lombok.AccessLevel.NONE;
  */
 @Data
 @Entity
+@SequenceGenerator(name = "timer_id_generator", sequenceName = "timer_id_seq", allocationSize = 10)
 public class Timer {
     /**
      * Id of the entity
      */
     @Id
-    @GeneratedValue(generator = "timer_id_sequence")
+    @GeneratedValue(generator = "timer_id_generator")
     private Integer id;
 
     /**
@@ -44,7 +47,7 @@ public class Timer {
      * Schedules when timer gives alert.
      */
     @Setter(NONE)
-    @OneToMany(mappedBy = "timer", cascade = ALL)
+    @OneToMany(mappedBy = "timer", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<TimerSchedule> schedules = new LinkedHashSet<>();
 
     /**

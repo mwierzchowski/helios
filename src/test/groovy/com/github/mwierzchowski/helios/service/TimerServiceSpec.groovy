@@ -1,5 +1,6 @@
 package com.github.mwierzchowski.helios.service
 
+import com.github.mwierzchowski.helios.core.NotFoundException
 import com.github.mwierzchowski.helios.core.timers.*
 import com.github.mwierzchowski.helios.service.dto.TimerDto
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto
@@ -151,7 +152,8 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.changeTimerDescription(timerId, "some description")
         then:
-        thrown NoSuchElementException
+        def ex = thrown NotFoundException
+        ex.id == timerId
     }
 
     def "Should return timer schedule list"() {
@@ -187,7 +189,8 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.getSchedules(timerId)
         then:
-        thrown NoSuchElementException
+        def ex = thrown NotFoundException
+        ex.id == timerId
     }
 
     def "Should add timer schedule if schedules do not exist"() {
@@ -256,7 +259,8 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.addSchedule(timerId, timerScheduleDtoOf("6:30", ["MONDAY"]))
         then:
-        thrown NoSuchElementException
+        def ex = thrown NotFoundException
+        ex.id == timerId
     }
 
     def "Should throw exception on adding schedule if it conflicts with others"() {
@@ -306,7 +310,8 @@ class TimerServiceSpec extends Specification {
         when:
         timerService.removeSchedule(timerId, scheduleId)
         then:
-        thrown NoSuchElementException
+        def ex = thrown NotFoundException
+        ex.id == timerId
     }
 
     /** Helper methods ************************************************************************************************/

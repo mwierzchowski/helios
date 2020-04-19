@@ -11,6 +11,7 @@ import com.github.mwierzchowski.helios.service.dto.ServiceErrorDto;
 import com.github.mwierzchowski.helios.service.dto.TimerDto;
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
 import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -54,7 +55,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Path("/v1/timers")
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
-@Tag(name = "Timers", description = "Service for timers management")
+@OpenAPIDefinition(tags = {
+        @Tag(name = "Timers", description = "Timers management"),
+        @Tag(name = "Timer Schedules", description = "Timer schedules management")})
 @ApiResponse(description = "Success")
 @ApiResponse(description = "Bad request", responseCode = "4xx",
         content = @Content(schema = @Schema(implementation = RequestErrorDto.class)))
@@ -86,6 +89,7 @@ public class TimerService {
      * @return list of timers
      */
     @GET
+    @Tag(name = "Timers")
     @Operation(summary = "List of timers", description = "Provides list of defined timers")
     public List<TimerDto> getTimers() {
         log.debug("Searching for timers");
@@ -99,6 +103,7 @@ public class TimerService {
      * @param timerDto timer to be registered
      */
     @POST
+    @Tag(name = "Timers")
     @Operation(summary = "Add timer", description = "Adds new timer if it does not exist")
     public void addTimer(@NotNull @Valid @RequestBody(description = "Timer to be added") TimerDto timerDto) {
         log.debug("Adding timer with description '{}'", timerDto.getDescription());
@@ -118,7 +123,8 @@ public class TimerService {
      */
     @DELETE
     @Path("/{timerId}")
-    @Operation(summary = "Delete timer", description = "Deletes timer if it exists")
+    @Tag(name = "Timers")
+    @Operation(summary = "Remove timer", description = "Remove timer if it exists")
     public void removeTimer(
             @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId) {
         log.debug("Removing timer {}", timerId);
@@ -141,6 +147,7 @@ public class TimerService {
      */
     @PUT
     @Path("/{timerId}")
+    @Tag(name = "Timers")
     @Operation(summary = "Update timer's description", description = "Update timer's description if it was not update")
     public void changeTimerDescription(
             @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
@@ -170,6 +177,7 @@ public class TimerService {
      */
     @GET
     @Path("/{timerId}/schedules")
+    @Tag(name = "Timer Schedules")
     @Operation(summary = "List of timer's schedules", description = "Provides list of timer's schedules")
     public List<TimerScheduleDto> getSchedules(
             @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId) {
@@ -190,7 +198,8 @@ public class TimerService {
      */
     @POST
     @Path("/{timerId}/schedules")
-    @Operation(summary = "Add schedule", description = "Adds new timer's schedule if it does not exist")
+    @Tag(name = "Timer Schedules")
+    @Operation(summary = "Add schedule to timer", description = "Adds new timer's schedule if it does not exist")
     public void addSchedule(
             @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
             @NotNull @Valid @RequestBody(description = "Schedule to be added") TimerScheduleDto scheduleDto) {
@@ -218,7 +227,8 @@ public class TimerService {
      */
     @DELETE
     @Path("/{timerId}/schedules/{scheduleId}")
-    @Operation(summary = "Delete schedule", description = "Deletes timer's schedule if it exists")
+    @Tag(name = "Timer Schedules")
+    @Operation(summary = "Remove schedule from timer", description = "Removes timer's schedule if it exists")
     public void removeSchedule(
             @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
             @PathParam("scheduleId") @Parameter(description = "Id of the schedule", example = "1") Integer scheduleId) {

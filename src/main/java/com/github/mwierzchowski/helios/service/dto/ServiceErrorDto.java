@@ -17,24 +17,24 @@ public class ServiceErrorDto {
      * Error message
      */
     @NotNull
-    @Schema(description = "Error message", accessMode = READ_ONLY)
+    @Schema(description = "Error message", example = "Unhandled exception", accessMode = READ_ONLY)
     private String message;
 
     /**
      * Exception
      */
-    @Schema(description = "Exception that caused error", accessMode = READ_ONLY)
+    @Schema(description = "Exception that caused error", example = "java.lang.NullPointerException", accessMode = READ_ONLY)
     private String exception;
 
     /**
      * Timestamp
      */
-    @Schema(description = "Timestamp of the exception", accessMode = READ_ONLY)
+    @Schema(description = "Timestamp of the exception", example = "2020-04-19 20:20:44.702", accessMode = READ_ONLY)
     private String timestamp;
 
     /**
      * Correlation id of failed execution
      */
-    @Schema(description = "Correlation id of failed execution", accessMode = READ_ONLY)
+    @Schema(description = "Correlation id of failed execution", example = "MISSING", accessMode = READ_ONLY)
     private String correlationId;
 }

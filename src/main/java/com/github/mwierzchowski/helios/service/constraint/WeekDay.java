@@ -20,6 +20,10 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.stream.Collectors.toSet;
 
+/**
+ * Constraint for Strings that should contain name of week.
+ * @author Marcin Wierzchowski
+ */
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Documented
@@ -29,11 +33,23 @@ public @interface WeekDay {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default { };
 
+    /**
+     * Validator implementation
+     */
     class Validator implements ConstraintValidator<WeekDay, String> {
+        /**
+         * Keeps list of allowed values (day names)
+         */
         private static Set<String> daysOfWeek = Stream.of(DayOfWeek.values())
                 .map(Enum::toString)
                 .collect(toSet());
 
+        /**
+         * Main validator method
+         * @param dayName string with day name
+         * @param context validation context
+         * @return validation result
+         */
         @Override
         public boolean isValid(String dayName, ConstraintValidatorContext context) {
             return dayName == null || daysOfWeek.contains(dayName);

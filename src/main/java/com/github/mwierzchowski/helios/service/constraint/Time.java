@@ -17,6 +17,10 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.time.LocalTime.parse;
 
+/**
+ * Constraint for Strings that should contain time.
+ * @author Marcin Wierzchowski
+ */
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Documented
@@ -26,12 +30,26 @@ public @interface Time {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
+    /**
+     * Validator implementation
+     */
     class Validator implements ConstraintValidator<Time, String> {
+        /**
+         * Main validator method
+         * @param timeValue string with time
+         * @param context validation context
+         * @return validation result
+         */
         @Override
         public boolean isValid(String timeValue, ConstraintValidatorContext context) {
             return timeValue == null || isParsable(timeValue);
         }
 
+        /**
+         * Helper method that checks if string can be parsed to {@link java.time.LocalTime}.
+         * @param timeValue string to check
+         * @return true if parsable, false otherwise
+         */
         boolean isParsable(String timeValue) {
             try {
                 return parse(timeValue) != null;

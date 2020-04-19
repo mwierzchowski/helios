@@ -1,11 +1,13 @@
 package com.github.mwierzchowski.helios.service.dto;
 
+import com.github.mwierzchowski.helios.service.validation.WeekDay;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
@@ -31,10 +33,9 @@ public class TimerScheduleDto {
     /**
      * Days when timer is scheduled
      */
+    @NotNull
     @Size(min = 1, max = 7)
-    @ArraySchema(uniqueItems = true, schema = @Schema(
-            description = "English day names in uppercase when timer is scheduled.",
-            allowableValues = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"})
-    )
-    private String[] days;
+    @ArraySchema(uniqueItems = true, schema = @Schema(description = "Timer's schedule days in uppercase.",
+            allowableValues = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"}))
+    private Set<@WeekDay String> days;
 }

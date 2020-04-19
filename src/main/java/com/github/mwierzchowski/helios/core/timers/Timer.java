@@ -45,7 +45,7 @@ public class Timer {
      * Schedules when timer gives alert.
      */
     @Setter(NONE)
-    @OneToMany(mappedBy = "timer", fetch = EAGER, cascade = ALL)
+    @OneToMany(mappedBy = "timer", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<TimerSchedule> schedules = new LinkedHashSet<>();
 
     /**

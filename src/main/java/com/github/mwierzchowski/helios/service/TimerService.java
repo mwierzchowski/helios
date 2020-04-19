@@ -40,7 +40,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
  * Management service for timers.
- * @author Marcin WIerzchowski
+ * @author Marcin Wierzchowski
  */
 @Slf4j
 @Service

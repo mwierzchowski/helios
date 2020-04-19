@@ -1,10 +1,10 @@
 package com.github.mwierzchowski.helios.service.dto;
 
+import com.github.mwierzchowski.helios.service.constraint.TimerDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
@@ -24,7 +24,7 @@ public class TimerDto {
      * Description
      */
     @NotNull
-    @Size(min = 1, max = 30)
+    @TimerDescription
     @Schema(description = "Unique description of timer", example = "Wake up")
     private String description;
 

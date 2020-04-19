@@ -3,6 +3,7 @@ package com.github.mwierzchowski.helios.service;
 import com.github.mwierzchowski.helios.core.timers.TimerAlertStarter;
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent;
 import com.github.mwierzchowski.helios.core.timers.TimerRepository;
+import com.github.mwierzchowski.helios.service.constraint.TimerDescription;
 import com.github.mwierzchowski.helios.service.dto.TimerDto;
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
 import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper;
@@ -134,9 +135,8 @@ public class TimerService {
     @Operation(summary = "Update timer's description", description = "Update timer's description if it was not update")
     public void changeTimerDescription(
             @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
-            @RequestBody(description = "Timer description", content = @Content(examples = {
-                    @ExampleObject(summary = "Example timer", value = "New test timer")}))
-                    String newDescription) {
+            @NotNull @TimerDescription @RequestBody(description = "Timer description", content = @Content(examples = {
+                    @ExampleObject(summary = "Example timer", value = "New test timer")})) String newDescription) {
         log.debug("Changing timer {} description to '{}'", timerId, newDescription);
         var timer = timerRepository.findById(timerId).orElseThrow(notFound(timerId));
         if (timer.getDescription().equals(newDescription)) {

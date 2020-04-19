@@ -47,7 +47,8 @@ public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintViol
     private ErrorDto toErrorDto(ConstraintViolation<?> violation) {
         var errorDto = new ErrorDto();
         errorDto.setMessage(violation.getMessage());
-        errorDto.setProperty(violation.getPropertyPath().toString());
+        errorDto.setObject(violation.getPropertyPath().toString());
+        errorDto.setValue(violation.getInvalidValue());
         return errorDto;
     }
 }

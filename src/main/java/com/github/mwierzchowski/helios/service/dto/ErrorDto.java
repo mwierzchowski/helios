@@ -21,8 +21,14 @@ public class ErrorDto {
     private String message;
 
     /**
-     * Optional property name
+     * Optional object name
      */
-    @Schema(description = "Optional property name that caused error", accessMode = READ_ONLY)
-    private String property;
+    @Schema(description = "Object name that caused error", accessMode = READ_ONLY)
+    private String object;
+
+    /**
+     * Optional object value
+     */
+    @Schema(description = "Object value that caused error", accessMode = READ_ONLY)
+    private Object value;
 }

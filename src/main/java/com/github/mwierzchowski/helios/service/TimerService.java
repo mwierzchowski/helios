@@ -61,7 +61,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @ApiResponse(description = "Success")
 @ApiResponse(description = "Bad request", responseCode = "4xx",
         content = @Content(schema = @Schema(implementation = RequestErrorDto.class)))
-@ApiResponse(description = "Server error", responseCode = "5xx",
+@ApiResponse(description = "Service failure", responseCode = "5xx",
         content = @Content(schema = @Schema(implementation = ServiceErrorDto.class)))
 public class TimerService {
     /**

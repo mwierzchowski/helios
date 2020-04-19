@@ -148,7 +148,7 @@ public class TimerService {
     @PUT
     @Path("/{timerId}")
     @Tag(name = "Timers")
-    @Operation(summary = "Update timer's description", description = "Update timer's description if it was not update")
+    @Operation(summary = "Update timer's description", description = "Update timer's description if it was not updated")
     public void changeTimerDescription(
             @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
             @NotNull @TimerDescription @RequestBody(description = "Timer description", content = @Content(examples = {
@@ -231,7 +231,7 @@ public class TimerService {
     @Operation(summary = "Remove schedule from timer", description = "Removes timer's schedule if it exists")
     public void removeSchedule(
             @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
-            @PathParam("scheduleId") @Parameter(description = "Id of the schedule", example = "1") Integer scheduleId) {
+            @PathParam("scheduleId") @Parameter(description = "Schedule id", example = "1") Integer scheduleId) {
         log.debug("Removing schedule {} from timer {}", scheduleId, timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(() -> new NotFoundException(Timer.class, timerId));
         var foundSchedule = timer.getSchedule(scheduleId);

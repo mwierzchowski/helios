@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.NONE;
 
 /**
@@ -44,7 +45,7 @@ public class Timer {
      * Schedules when timer gives alert.
      */
     @Setter(NONE)
-    @OneToMany(mappedBy = "timer", cascade = ALL)
+    @OneToMany(mappedBy = "timer", fetch = EAGER, cascade = ALL)
     private Set<TimerSchedule> schedules = new LinkedHashSet<>();
 
     /**

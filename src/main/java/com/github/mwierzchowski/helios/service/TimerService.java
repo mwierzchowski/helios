@@ -5,12 +5,12 @@ import com.github.mwierzchowski.helios.core.timers.Timer;
 import com.github.mwierzchowski.helios.core.timers.TimerAlertStarter;
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent;
 import com.github.mwierzchowski.helios.core.timers.TimerRepository;
+import com.github.mwierzchowski.helios.core.timers.TimerSchedule;
 import com.github.mwierzchowski.helios.service.constraint.TimerDescription;
 import com.github.mwierzchowski.helios.service.dto.RequestErrorDto;
 import com.github.mwierzchowski.helios.service.dto.ServiceErrorDto;
 import com.github.mwierzchowski.helios.service.dto.TimerDto;
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
-import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,6 +22,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +45,7 @@ import java.util.List;
 import static java.text.MessageFormat.format;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.mapstruct.ReportingPolicy.IGNORE;
 
 /**
  * Management service for timers.
@@ -65,9 +69,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Produces(APPLICATION_JSON)
 public class TimerService {
     /**
-     * Entity to dto mapper
+     * Mapper
      */
-    private final TimerServiceMapper serviceMapper;
+    private final static TimerMapper mapper = Mappers.getMapper(TimerMapper.class);
 
     /**
      * Timer repository
@@ -94,7 +98,7 @@ public class TimerService {
     public List<TimerDto> getTimers() {
         log.debug("Searching for timers");
         return timerRepository.findAll().stream()
-                .map(serviceMapper::toTimerDto)
+                .map(mapper::toTimerDto)
                 .collect(toList());
     }
 
@@ -113,7 +117,7 @@ public class TimerService {
                     timerDto.getDescription(), foundTimer.get().getId());
             return;
         }
-        var timer = serviceMapper.toTimer(timerDto);
+        var timer = mapper.toTimer(timerDto);
         timerRepository.save(timer);
     }
 
@@ -185,7 +189,7 @@ public class TimerService {
         return timerRepository.findById(timerId)
                 .orElseThrow(() -> new NotFoundException(Timer.class, timerId))
                 .getSchedules().stream()
-                .map(serviceMapper::toTimerScheduleDto)
+                .map(mapper::toTimerScheduleDto)
                 .collect(toList());
     }
 
@@ -205,7 +209,7 @@ public class TimerService {
             @NotNull @Valid @RequestBody(description = "Schedule to be added") TimerScheduleDto scheduleDto) {
         log.debug("Adding schedule to timer {}", timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(() -> new NotFoundException(Timer.class, timerId));
-        var schedule = serviceMapper.toTimerSchedule(scheduleDto);
+        var schedule = mapper.toTimerSchedule(scheduleDto);
         if (timer.hasSame(schedule)) {
             log.warn("Did not add schedule to timer {} as it exist", timerId);
             return;
@@ -242,5 +246,22 @@ public class TimerService {
         }
         timer.getSchedules().remove(foundSchedule.get());
         timerRepository.save(timer);
+    }
+
+    /**
+     * Maps domain entities and DTOs.
+     */
+    @Mapper(unmappedTargetPolicy = IGNORE)
+    interface TimerMapper {
+        @Mapping(target = "id", ignore = true)
+        Timer toTimer(TimerDto timerDto);
+
+        @Mapping(target = "id", ignore = true)
+        TimerSchedule toTimerSchedule(TimerScheduleDto scheduleDto);
+
+        @Mapping(target = "scheduled", expression = "java(timer.getSchedules().size() > 0)")
+        TimerDto toTimerDto(Timer timer);
+
+        TimerScheduleDto toTimerScheduleDto(TimerSchedule schedule);
     }
 }

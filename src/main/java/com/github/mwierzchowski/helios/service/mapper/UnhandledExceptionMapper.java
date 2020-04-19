@@ -1,4 +1,4 @@
-package com.github.mwierzchowski.helios.service.exception;
+package com.github.mwierzchowski.helios.service.mapper;
 
 import com.github.mwierzchowski.helios.service.dto.ServiceErrorDto;
 import lombok.extern.slf4j.Slf4j;

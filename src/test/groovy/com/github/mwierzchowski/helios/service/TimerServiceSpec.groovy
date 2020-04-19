@@ -4,8 +4,6 @@ import com.github.mwierzchowski.helios.core.NotFoundException
 import com.github.mwierzchowski.helios.core.timers.*
 import com.github.mwierzchowski.helios.service.dto.TimerDto
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto
-import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper
-import org.mapstruct.factory.Mappers
 import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 import spock.lang.Subject
@@ -18,13 +16,12 @@ import static java.util.Optional.empty
 import static java.util.Optional.of as optional
 
 class TimerServiceSpec extends Specification {
-    TimerServiceMapper mapper = Mappers.getMapper(TimerServiceMapper)
     TimerRepository timerRepository = Mock()
     TimerAlertStarter alertStarter = Mock()
     ApplicationEventPublisher eventPublisher = Mock()
 
     @Subject
-    TimerService timerService = new TimerService(mapper, timerRepository, alertStarter, eventPublisher)
+    TimerService timerService = new TimerService(timerRepository, alertStarter, eventPublisher)
 
     def "Should return list of timers"() {
         given:

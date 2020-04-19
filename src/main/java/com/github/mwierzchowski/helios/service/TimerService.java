@@ -7,6 +7,10 @@ import com.github.mwierzchowski.helios.service.dto.TimerDto;
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
 import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -64,7 +72,7 @@ public class TimerService {
      * @return list of timers
      */
     @GET
-    @Operation(summary = "List of all timers", description = "Provides list of all timers from repository")
+    @Operation(summary = "List of timers", description = "Provides list of defined timers")
     public List<TimerDto> getTimers() {
         log.debug("Searching for timers");
         return timerRepository.findAll().stream()
@@ -76,7 +84,12 @@ public class TimerService {
      * Registers new timer. It does nothing if timer with given description already exists.
      * @param timerDto timer to be registered
      */
-    public void addTimer(TimerDto timerDto) {
+    @POST
+    @Operation(summary = "Add timer", description = "Adds new timer if it does not exist")
+    public void addTimer(
+            @RequestBody(description = "Timer to be added", content = @Content(examples = {
+                    @ExampleObject(summary = "Example timer", value = "{\"description\": \"Test timer\"}")}))
+                    TimerDto timerDto) {
         log.debug("Adding timer with description '{}'", timerDto.getDescription());
         var foundTimer = timerRepository.findByDescription(timerDto.getDescription());
         if (foundTimer.isPresent()) {
@@ -89,10 +102,14 @@ public class TimerService {
     }
 
     /**
-     * De-registers timer. It does nothing, if timer is already deregistered.
-     * @param timerId id of timer to be deregistered
+     * De-registers timer. It does nothing, if timer is already de-registered.
+     * @param timerId id of timer to be de-registered
      */
-    public void removeTimer(Integer timerId) {
+    @DELETE
+    @Path("/{timerId}")
+    @Operation(summary = "Delete timer", description = "Deletes timer if it exists")
+    public void removeTimer(
+            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId) {
         log.debug("Removing timer {}", timerId);
         var foundTimer = timerRepository.findById(timerId);
         if (foundTimer.isEmpty()) {
@@ -111,7 +128,15 @@ public class TimerService {
      * @param timerId id of timer that should have new description
      * @param newDescription new description
      */
-    public void changeTimerDescription(Integer timerId, String newDescription) {
+    @PUT
+    @Path("/{timerId}")
+    @Operation(summary = "Update timer's description", description = "Update timer's description if it was not update")
+    public void changeTimerDescription(
+            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1")
+                    Integer timerId,
+            @RequestBody(description = "Timer description", content = @Content(examples = {
+                    @ExampleObject(summary = "Example timer", value = "New test timer")}))
+                    String newDescription) {
         log.debug("Changing timer {} description to '{}'", timerId, newDescription);
         var timer = timerRepository.findById(timerId).orElseThrow(notFound(timerId));
         if (timer.getDescription().equals(newDescription)) {
@@ -134,7 +159,11 @@ public class TimerService {
      * @param timerId id of timer
      * @return list of schedules
      */
-    public List<TimerScheduleDto> getSchedules(Integer timerId) {
+    @GET
+    @Path("/{timerId}/schedules")
+    @Operation(summary = "List of timer's schedules", description = "Provides list of timer's schedules")
+    public List<TimerScheduleDto> getSchedules(
+            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId) {
         log.debug("Searching for schedules of timer {}", timerId);
         return timerRepository.findById(timerId)
                 .orElseThrow(notFound(timerId))
@@ -150,7 +179,15 @@ public class TimerService {
      * @param timerId id of the timer
      * @param scheduleDto schedule
      */
-    public void addSchedule(Integer timerId, TimerScheduleDto scheduleDto) {
+    @POST
+    @Path("/{timerId}/schedules")
+    @Operation(summary = "Add schedule", description = "Adds new timer's schedule if it does not exist")
+    public void addSchedule(
+            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
+            @RequestBody(description = "Schedule to be added", content = @Content(examples = {
+                    @ExampleObject(summary = "Example timer's schedule",
+                            value = "{\"time\": \"06:30:00\", \"days\": [\"MONDAY\", \"TUESDAY\"]}")}))
+                    TimerScheduleDto scheduleDto) {
         log.debug("Adding schedule to timer {}", timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(notFound(timerId));
         var schedule = serviceMapper.toTimerSchedule(scheduleDto);
@@ -173,7 +210,12 @@ public class TimerService {
      * @param timerId id of timer
      * @param scheduleId id of schedule
      */
-    public void removeSchedule(Integer timerId, Integer scheduleId) {
+    @DELETE
+    @Path("/{timerId}/schedules/{scheduleId}")
+    @Operation(summary = "Delete schedule", description = "Deletes timer's schedule if it exists")
+    public void removeSchedule(
+            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
+            @PathParam("scheduleId") @Parameter(description = "Id of the schedule", example = "1") Integer scheduleId) {
         log.debug("Removing schedule {} from timer {}", scheduleId, timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(notFound(timerId));
         var foundSchedule = timer.getSchedule(scheduleId);

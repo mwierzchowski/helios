@@ -1,16 +1,16 @@
 --liquibase formatted sql
 
 --changeset mwierzchowski:create-timer-tables
-create sequence timer_id_sequence;
+create sequence timer_id_seq increment by 10;
 create table timer (
     id int primary key,
-    description varchar(255) unique not null,
+    description varchar(30) unique not null,
     created timestamp not null,
     updated timestamp not null,
     version int not null
 );
 
-create sequence timerschedule_id_sequence;
+create sequence timer_schedule_id_seq increment by 10;
 create table timer_schedule (
     id int primary key,
     timer_id int not null,

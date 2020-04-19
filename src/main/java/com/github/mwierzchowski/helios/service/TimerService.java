@@ -52,9 +52,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Validated
 @Transactional
 @RequiredArgsConstructor
-@Path("/v1/timers")
-@Consumes(APPLICATION_JSON)
-@Produces(APPLICATION_JSON)
 @OpenAPIDefinition(tags = {
         @Tag(name = "Timers", description = "Timers management"),
         @Tag(name = "Timer Schedules", description = "Timer schedules management")})
@@ -63,6 +60,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
         content = @Content(schema = @Schema(implementation = RequestErrorDto.class)))
 @ApiResponse(description = "Service failure", responseCode = "5xx",
         content = @Content(schema = @Schema(implementation = ServiceErrorDto.class)))
+@Path("/v1/timers")
+@Consumes(APPLICATION_JSON)
+@Produces(APPLICATION_JSON)
 public class TimerService {
     /**
      * Entity to dto mapper

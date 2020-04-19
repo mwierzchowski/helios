@@ -86,10 +86,7 @@ public class TimerService {
      */
     @POST
     @Operation(summary = "Add timer", description = "Adds new timer if it does not exist")
-    public void addTimer(
-            @RequestBody(description = "Timer to be added", content = @Content(examples = {
-                    @ExampleObject(summary = "Example timer", value = "{\"description\": \"Test timer\"}")}))
-                    TimerDto timerDto) {
+    public void addTimer(@RequestBody(description = "Timer to be added") TimerDto timerDto) {
         log.debug("Adding timer with description '{}'", timerDto.getDescription());
         var foundTimer = timerRepository.findByDescription(timerDto.getDescription());
         if (foundTimer.isPresent()) {
@@ -132,8 +129,7 @@ public class TimerService {
     @Path("/{timerId}")
     @Operation(summary = "Update timer's description", description = "Update timer's description if it was not update")
     public void changeTimerDescription(
-            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1")
-                    Integer timerId,
+            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
             @RequestBody(description = "Timer description", content = @Content(examples = {
                     @ExampleObject(summary = "Example timer", value = "New test timer")}))
                     String newDescription) {
@@ -184,10 +180,7 @@ public class TimerService {
     @Operation(summary = "Add schedule", description = "Adds new timer's schedule if it does not exist")
     public void addSchedule(
             @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
-            @RequestBody(description = "Schedule to be added", content = @Content(examples = {
-                    @ExampleObject(summary = "Example timer's schedule",
-                            value = "{\"time\": \"06:30:00\", \"days\": [\"MONDAY\", \"TUESDAY\"]}")}))
-                    TimerScheduleDto scheduleDto) {
+            @RequestBody(description = "Schedule to be added") TimerScheduleDto scheduleDto) {
         log.debug("Adding schedule to timer {}", timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(notFound(timerId));
         var schedule = serviceMapper.toTimerSchedule(scheduleDto);

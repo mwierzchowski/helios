@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.service.dto;
 
-import com.github.mwierzchowski.helios.service.validation.WeekDay;
+import com.github.mwierzchowski.helios.service.constraint.Time;
+import com.github.mwierzchowski.helios.service.constraint.WeekDay;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class TimerScheduleDto {
      * Time of schedule
      */
     @NotNull
+    @Time
     @Schema(description = "Timer's schedule time in ISO format", example = "06:30:00")
     private String time;
 

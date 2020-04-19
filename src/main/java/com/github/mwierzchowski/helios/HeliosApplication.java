@@ -28,10 +28,7 @@ import javax.ws.rs.ApplicationPath;
 @EnableTransactionManagement
 @SpringBootApplication
 @ApplicationPath("/api")
-@OpenAPIDefinition(info = @Info(
-		version = "1.0",
-		title = "Helios",
-		description = "Sun blinds controller",
+@OpenAPIDefinition(info = @Info(version = "1.0", title = "Helios", description = "Sun blinds controller",
 		contact = @Contact(name = "Marcin Wierzchowski", url = "https://github.com/mwierzchowski/helios"),
 		license = @License(name = "MIT License", url = "https://opensource.org/licenses/MIT")))
 public class HeliosApplication extends ResourceConfig {

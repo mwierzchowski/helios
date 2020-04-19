@@ -17,7 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -40,6 +43,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  */
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 @Path("/v1/timers")
@@ -86,7 +90,7 @@ public class TimerService {
      */
     @POST
     @Operation(summary = "Add timer", description = "Adds new timer if it does not exist")
-    public void addTimer(@RequestBody(description = "Timer to be added") TimerDto timerDto) {
+    public void addTimer(@Valid @NotNull @RequestBody(description = "Timer to be added") TimerDto timerDto) {
         log.debug("Adding timer with description '{}'", timerDto.getDescription());
         var foundTimer = timerRepository.findByDescription(timerDto.getDescription());
         if (foundTimer.isPresent()) {
@@ -180,7 +184,7 @@ public class TimerService {
     @Operation(summary = "Add schedule", description = "Adds new timer's schedule if it does not exist")
     public void addSchedule(
             @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
-            @RequestBody(description = "Schedule to be added") TimerScheduleDto scheduleDto) {
+            @Valid @NotNull @RequestBody(description = "Schedule to be added") TimerScheduleDto scheduleDto) {
         log.debug("Adding schedule to timer {}", timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(notFound(timerId));
         var schedule = serviceMapper.toTimerSchedule(scheduleDto);

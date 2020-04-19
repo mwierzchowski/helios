@@ -31,6 +31,6 @@ public class TimerDto {
     /**
      * Flag telling if timer is scheduled (contains any schedules).
      */
-    @Schema(description = "Flag informing it timer has schedules", example = "true", accessMode = READ_ONLY)
+    @Schema(description = "Flag informing that timer has schedules", example = "true", accessMode = READ_ONLY)
     private Boolean scheduled;
 }

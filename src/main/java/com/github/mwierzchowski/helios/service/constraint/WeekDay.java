@@ -1,4 +1,4 @@
-package com.github.mwierzchowski.helios.service.validation;
+package com.github.mwierzchowski.helios.service.constraint;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toSet;
 @Documented
 @Constraint(validatedBy = WeekDay.Validator.class)
 public @interface WeekDay {
-    String message() default "{helios.constraints.WeekDay}";
+    String message() default "{helios.constraint.WeekDay}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default { };
 

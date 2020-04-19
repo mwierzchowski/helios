@@ -21,7 +21,7 @@ import static javax.ws.rs.core.Response.status;
  */
 @Provider
 @Component
-public class ValidationExceptionMapper implements ExceptionMapper<ConstraintViolationException>  {
+public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintViolationException>  {
     /**
      * Main mapper method
      * @param exception exception

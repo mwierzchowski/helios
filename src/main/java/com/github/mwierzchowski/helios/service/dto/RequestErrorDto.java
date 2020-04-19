@@ -8,11 +8,11 @@ import javax.validation.constraints.NotNull;
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
 /**
- * DTO for errors.
+ * DTO for request errors.
  * @author Marcin Wierzchowski
  */
 @Data
-public class ErrorDto {
+public class RequestErrorDto {
     /**
      * Error message
      */

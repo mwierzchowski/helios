@@ -1,7 +1,7 @@
 package com.github.mwierzchowski.helios.service.exception;
 
 import com.github.mwierzchowski.helios.core.NotFoundException;
-import com.github.mwierzchowski.helios.service.dto.ErrorDto;
+import com.github.mwierzchowski.helios.service.dto.RequestErrorDto;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
@@ -13,8 +13,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.status;
 
 /**
- * Exception mapper for translating {@link NotFoundException} to
- * {@link com.github.mwierzchowski.helios.service.dto.ErrorDto}.
+ * Exception mapper for translating {@link NotFoundException} to {@link RequestErrorDto}.
  * @author Marcin Wierzchowski
  */
 @Provider
@@ -27,7 +26,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
      */
     @Override
     public Response toResponse(NotFoundException exception) {
-        var errorDto = new ErrorDto();
+        var errorDto = new RequestErrorDto();
         errorDto.setMessage(exception.getMessage());
         errorDto.setObject(exception.getClazz().getSimpleName());
         errorDto.setValue(exception.getId());

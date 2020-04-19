@@ -1,6 +1,6 @@
 package com.github.mwierzchowski.helios.service.exception;
 
-import com.github.mwierzchowski.helios.service.dto.ErrorDto;
+import com.github.mwierzchowski.helios.service.dto.RequestErrorDto;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
@@ -16,7 +16,7 @@ import static javax.ws.rs.core.Response.status;
 
 /**
  * Exception mapper for translating {@link ConstraintViolationException} to
- * {@link com.github.mwierzchowski.helios.service.dto.ErrorDto}.
+ * {@link RequestErrorDto}.
  * @author Marcin Wierzchowski
  */
 @Provider
@@ -44,8 +44,8 @@ public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintViol
      * @param violation violation
      * @return error DTO
      */
-    private ErrorDto toErrorDto(ConstraintViolation<?> violation) {
-        var errorDto = new ErrorDto();
+    private RequestErrorDto toErrorDto(ConstraintViolation<?> violation) {
+        var errorDto = new RequestErrorDto();
         errorDto.setMessage(violation.getMessage());
         errorDto.setObject(violation.getPropertyPath().toString());
         errorDto.setValue(violation.getInvalidValue());

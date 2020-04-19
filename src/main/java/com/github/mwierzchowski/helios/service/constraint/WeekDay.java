@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toSet;
 @Documented
 @Constraint(validatedBy = WeekDay.Validator.class)
 public @interface WeekDay {
-    String message() default "{helios.constraint.WeekDay}";
+    String message() default "{helios.constraints.WeekDay}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default { };
 

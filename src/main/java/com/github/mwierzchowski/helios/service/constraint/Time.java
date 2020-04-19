@@ -26,7 +26,7 @@ import static java.time.LocalTime.parse;
 @Documented
 @Constraint(validatedBy = Time.Validator.class)
 public @interface Time {
-    String message() default "{helios.constraint.Time}";
+    String message() default "{helios.constraints.Time}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

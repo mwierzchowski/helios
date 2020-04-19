@@ -6,6 +6,8 @@ import com.github.mwierzchowski.helios.core.timers.TimerAlertStarter;
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent;
 import com.github.mwierzchowski.helios.core.timers.TimerRepository;
 import com.github.mwierzchowski.helios.service.constraint.TimerDescription;
+import com.github.mwierzchowski.helios.service.dto.RequestErrorDto;
+import com.github.mwierzchowski.helios.service.dto.ServiceErrorDto;
 import com.github.mwierzchowski.helios.service.dto.TimerDto;
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto;
 import com.github.mwierzchowski.helios.service.mapper.TimerServiceMapper;
@@ -13,7 +15,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +55,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
 @Tag(name = "Timers", description = "Service for timers management")
+@ApiResponse(description = "Success")
+@ApiResponse(description = "Bad request", responseCode = "4xx",
+        content = @Content(schema = @Schema(implementation = RequestErrorDto.class)))
+@ApiResponse(description = "Server error", responseCode = "5xx",
+        content = @Content(schema = @Schema(implementation = ServiceErrorDto.class)))
 public class TimerService {
     /**
      * Entity to dto mapper
@@ -111,7 +120,7 @@ public class TimerService {
     @Path("/{timerId}")
     @Operation(summary = "Delete timer", description = "Deletes timer if it exists")
     public void removeTimer(
-            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId) {
+            @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId) {
         log.debug("Removing timer {}", timerId);
         var foundTimer = timerRepository.findById(timerId);
         if (foundTimer.isEmpty()) {
@@ -134,7 +143,7 @@ public class TimerService {
     @Path("/{timerId}")
     @Operation(summary = "Update timer's description", description = "Update timer's description if it was not update")
     public void changeTimerDescription(
-            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
+            @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
             @NotNull @TimerDescription @RequestBody(description = "Timer description", content = @Content(examples = {
                     @ExampleObject(summary = "Example timer", value = "New test timer")})) String newDescription) {
         log.debug("Changing timer {} description to '{}'", timerId, newDescription);
@@ -163,7 +172,7 @@ public class TimerService {
     @Path("/{timerId}/schedules")
     @Operation(summary = "List of timer's schedules", description = "Provides list of timer's schedules")
     public List<TimerScheduleDto> getSchedules(
-            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId) {
+            @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId) {
         log.debug("Searching for schedules of timer {}", timerId);
         return timerRepository.findById(timerId)
                 .orElseThrow(() -> new NotFoundException(Timer.class, timerId))
@@ -183,7 +192,7 @@ public class TimerService {
     @Path("/{timerId}/schedules")
     @Operation(summary = "Add schedule", description = "Adds new timer's schedule if it does not exist")
     public void addSchedule(
-            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
+            @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
             @NotNull @Valid @RequestBody(description = "Schedule to be added") TimerScheduleDto scheduleDto) {
         log.debug("Adding schedule to timer {}", timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(() -> new NotFoundException(Timer.class, timerId));
@@ -211,7 +220,7 @@ public class TimerService {
     @Path("/{timerId}/schedules/{scheduleId}")
     @Operation(summary = "Delete schedule", description = "Deletes timer's schedule if it exists")
     public void removeSchedule(
-            @PathParam("timerId") @Parameter(description = "Id of the timer", example = "1") Integer timerId,
+            @PathParam("timerId") @Parameter(description = "Timer id", example = "1") Integer timerId,
             @PathParam("scheduleId") @Parameter(description = "Id of the schedule", example = "1") Integer scheduleId) {
         log.debug("Removing schedule {} from timer {}", scheduleId, timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(() -> new NotFoundException(Timer.class, timerId));

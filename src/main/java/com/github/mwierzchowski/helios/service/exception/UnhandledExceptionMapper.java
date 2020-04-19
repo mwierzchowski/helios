@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
@@ -30,7 +30,7 @@ public class UnhandledExceptionMapper implements ExceptionMapper<Exception> {
         var errorDto = new ServiceErrorDto();
         errorDto.setMessage(exception.getMessage());
         errorDto.setException(exception.getClass().getName());
-        errorDto.setTimestamp(Instant.now().toString());
+        errorDto.setTimestamp(LocalDateTime.now().toString());
         errorDto.setCorrelationId("MISSING");
         return Response.status(INTERNAL_SERVER_ERROR)
                 .entity(errorDto)

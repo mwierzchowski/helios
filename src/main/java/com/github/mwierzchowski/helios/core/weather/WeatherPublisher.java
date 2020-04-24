@@ -1,9 +1,9 @@
 package com.github.mwierzchowski.helios.core.weather;
 
-import com.github.mwierzchowski.helios.core.HeliosEvent;
+import com.github.mwierzchowski.helios.core.commons.EventStore;
+import com.github.mwierzchowski.helios.core.commons.HeliosEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +29,9 @@ public class WeatherPublisher {
     private final WeatherProvider weatherProvider;
 
     /**
-     * Events publisher
+     * Events store
      */
-    private final ApplicationEventPublisher eventPublisher;
+    private final EventStore eventStore;
 
     /**
      * Last published event or null when its not available
@@ -42,7 +42,8 @@ public class WeatherPublisher {
      * Scheduled method that executes weather check and publish event. New weather event is published when conditions
      * have changed. Otherwise no event is published.
      */
-    @Scheduled(fixedDelayString = "#{weatherProperties.checkInterval}")
+    @Scheduled(fixedRateString = "#{weatherProperties.checkInterval}",
+            initialDelayString = "#{weatherProperties.checkDelayAfterStartup}")
     public void publishWeather() {
         weatherProvider.currentWeather()
                 .map(this::toWeatherNotification)
@@ -79,7 +80,7 @@ public class WeatherPublisher {
     }
 
     private void send(HeliosEvent event) {
-        eventPublisher.publishEvent(event);
+        eventStore.publish(event);
         this.lastEvent = event;
     }
 

@@ -1,6 +1,6 @@
 package com.github.mwierzchowski.helios.core.timers
 
-import org.springframework.context.ApplicationEventPublisher
+import com.github.mwierzchowski.helios.core.commons.EventStore
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler
 import spock.lang.Specification
@@ -14,10 +14,10 @@ import static java.util.Optional.empty
 class TimerAlertStarterSpec extends Specification {
     TimerRepository timerRepository = Mock(TimerRepository)
     TaskScheduler taskScheduler = new ConcurrentTaskScheduler()
-    ApplicationEventPublisher eventPublisher = Mock(ApplicationEventPublisher)
+    EventStore eventStore = Mock(EventStore)
 
     @Subject
-    TimerAlertStarter alertStarter = new TimerAlertStarter(timerRepository, taskScheduler, eventPublisher)
+    TimerAlertPublisher alertPublisher = new TimerAlertPublisher(timerRepository, taskScheduler, eventStore)
 
     def "Should publish alert if timer is scheduled later today"() {
         given:
@@ -25,10 +25,10 @@ class TimerAlertStarterSpec extends Specification {
         def timer = timerOf(1, true, delay)
         timerRepository.findById(timer.id) >> Optional.of(timer)
         when:
-        alertStarter.startAlertFor(timer)
+        alertPublisher.startAlertFor(timer)
         sleepSeconds(delay)
         then:
-        1 * eventPublisher.publishEvent({
+        1 * eventStore.publish({
             verifyAll(it, TimerAlertEvent) {
                 it.timer == timer
             }
@@ -40,20 +40,20 @@ class TimerAlertStarterSpec extends Specification {
         def delay = 1
         def timer = timerOf(1, false, delay)
         when:
-        alertStarter.startAlertFor(timer)
+        alertPublisher.startAlertFor(timer)
         sleepSeconds(delay)
         then:
-        0 * eventPublisher.publishEvent(_ as TimerAlertEvent)
+        0 * eventStore.publish(_ as TimerAlertEvent)
     }
 
     def "Should not publish alert before schedule time"() {
         given:
         def timer = timerOf(1, true, 3600)
         when:
-        alertStarter.startAlertFor(timer)
+        alertPublisher.startAlertFor(timer)
         sleepSeconds(1)
         then:
-        0 * eventPublisher.publishEvent(_ as TimerAlertEvent)
+        0 * eventStore.publish(_ as TimerAlertEvent)
     }
 
     def "Should not publish alert if timer was removed"() {
@@ -63,10 +63,10 @@ class TimerAlertStarterSpec extends Specification {
         def timer = timerOf(timerId, true, delay)
         timerRepository.findById(timerId) >> empty()
         when:
-        alertStarter.startAlertFor(timer)
+        alertPublisher.startAlertFor(timer)
         sleepSeconds(delay)
         then:
-        0 * eventPublisher.publishEvent(_ as TimerAlertEvent)
+        0 * eventStore.publish(_ as TimerAlertEvent)
     }
 
     def "Should not publish alert if schedule was removed"() {
@@ -79,10 +79,10 @@ class TimerAlertStarterSpec extends Specification {
         }
         timerRepository.findById(timerId) >> Optional.of(timerV2)
         when:
-        alertStarter.startAlertFor(timerV1)
+        alertPublisher.startAlertFor(timerV1)
         sleepSeconds(delay)
         then:
-        0 * eventPublisher.publishEvent(_ as TimerAlertEvent)
+        0 * eventStore.publish(_ as TimerAlertEvent)
     }
 
     /** Helper methods ************************************************************************************************/

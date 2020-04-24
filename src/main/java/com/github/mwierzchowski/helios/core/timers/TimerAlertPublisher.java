@@ -1,10 +1,10 @@
 package com.github.mwierzchowski.helios.core.timers;
 
-import com.github.mwierzchowski.helios.core.HeliosEvent;
+import com.github.mwierzchowski.helios.core.commons.EventStore;
+import com.github.mwierzchowski.helios.core.commons.HeliosEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
@@ -15,14 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 /**
- * Component responsible for starting timer alerts.
+ * Component responsible for publishing timer alerts.
  * @author Marcin Wierzchowski
  */
 @Slf4j
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class TimerAlertStarter {
+public class TimerAlertPublisher {
     /**
      * Timer repository
      */
@@ -34,14 +34,14 @@ public class TimerAlertStarter {
     private final TaskScheduler taskScheduler;
 
     /**
-     * Events publisher
+     * Events store
      */
-    private final ApplicationEventPublisher eventPublisher;
+    private final EventStore eventStore;
 
     /**
      * Callback method called on application start. It starts alert tasks for all timers.
      */
-    @EventListener(classes = ApplicationReadyEvent.class)
+    @EventListener(classes = ApplicationReadyEvent.class, condition = "@commonProperties.publishEventsOnStartup")
     public void startAlerts() {
         log.debug("Starting all alert tasks");
         timerRepository.findAll().forEach(this::startAlertFor);
@@ -132,7 +132,7 @@ public class TimerAlertStarter {
             }
             log.info("Publishing alert for timer '{}' (id: {})", timer.getDescription(), timer.getId());
             HeliosEvent event = new TimerAlertEvent(timer);
-            eventPublisher.publishEvent(event);
+            eventStore.publish(event);
         }
 
         /**

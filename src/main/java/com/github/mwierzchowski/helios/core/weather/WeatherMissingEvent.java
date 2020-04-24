@@ -1,10 +1,8 @@
 package com.github.mwierzchowski.helios.core.weather;
 
-import com.github.mwierzchowski.helios.core.HeliosEvent;
+import com.github.mwierzchowski.helios.core.commons.HeliosEvent;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class WeatherMissingEvent extends HeliosEvent {
+public class WeatherMissingEvent implements HeliosEvent {
 }

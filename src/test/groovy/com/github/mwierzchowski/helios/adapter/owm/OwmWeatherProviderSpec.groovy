@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern
 import org.openweathermap.model.CurrentWeatherResponse
 import org.spockframework.spring.SpringSpy
 import org.springframework.beans.factory.annotation.Autowired
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -20,7 +19,6 @@ class OwmWeatherProviderSpec extends Specification {
     @SpringSpy
     OwmHealthIndicator healthIndicator
 
-    @Shared
     UrlPattern weatherUrl = urlMatching("/data/2.5/weather.*")
 
     def setup() {

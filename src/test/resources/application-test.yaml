@@ -11,8 +11,13 @@ decorator.datasource.p6spy.enable-logging: true
 # Circuit breaking
 resilience4j.retry.instances.owm.maxRetryAttempts: 3
 
-# Open Weather Map canned responses from WireMock
+# Canned responses from WireMock
 helios.owm.base-path: http://localhost:${wiremock.server.port}/data/2.5
+helios.sunapi.base-path: http://localhost:${wiremock.server.port}
+
+# Disable automatic processes binded to application start
+helios.common.publish-events-on-startup: false
+helios.weather.check-delay-after-startup: 6000000
 
 # Static location for tests
 helios.location:

@@ -3,6 +3,7 @@ package com.github.mwierzchowski.helios
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
+import org.springframework.cloud.contract.wiremock.WireMockConfiguration
 import org.springframework.core.annotation.AliasFor
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestContext
@@ -35,6 +36,10 @@ import static org.springframework.test.context.TestExecutionListeners.MergeMode.
     @AliasFor(annotation = ActiveProfiles, attribute = "profiles") String[] profiles() default ["test"]
 
     static class WireMockResetListener implements TestExecutionListener {
+        void beforeTestClass(TestContext testContext) throws Exception {
+            testContext.applicationContext.getBean(WireMockConfiguration).init()
+        }
+
         void beforeTestMethod(TestContext testContext) throws Exception {
             testContext.applicationContext.getBean(WireMockServer).resetAll()
         }

@@ -19,7 +19,7 @@ class OwmWeatherProviderSpec extends Specification {
     @SpringSpy
     OwmHealthIndicator healthIndicator
 
-    UrlPattern weatherUrl = urlMatching("/data/2.5/weather.*")
+    UrlPattern weatherUrl = urlMatching("/owm-mock/.*")
 
     def setup() {
         weatherProvider.expireCachedResponse()

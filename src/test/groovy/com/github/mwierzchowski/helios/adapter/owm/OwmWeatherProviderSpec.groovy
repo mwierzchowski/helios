@@ -1,23 +1,23 @@
 package com.github.mwierzchowski.helios.adapter.owm
 
-import com.github.mwierzchowski.helios.IntegrationSpec
+import com.github.mwierzchowski.helios.LightIntegrationSpec
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import org.openweathermap.model.CurrentWeatherResponse
-import org.spockframework.spring.SpringSpy
+import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
 import spock.lang.Subject
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-@IntegrationSpec
+@LightIntegrationSpec([OwmConfiguration, OwmProperties, OwmWeatherProvider])
 class OwmWeatherProviderSpec extends Specification {
     @Subject
     @Autowired
     OwmWeatherProvider weatherProvider
 
-    @SpringSpy
-    OwmHealthIndicator healthIndicator
+    @SpringBean
+    OwmHealthIndicator healthIndicator = Mock()
 
     UrlPattern weatherUrl = urlMatching("/owm-mock/.*")
 

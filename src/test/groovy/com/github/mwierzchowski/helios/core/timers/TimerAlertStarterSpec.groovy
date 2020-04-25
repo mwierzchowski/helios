@@ -26,7 +26,7 @@ class TimerAlertStarterSpec extends Specification {
         timerRepository.findById(timer.id) >> Optional.of(timer)
         when:
         alertPublisher.startAlertFor(timer)
-        sleepSeconds(delay)
+        sleep(1500)
         then:
         1 * eventStore.publish({
             verifyAll(it, TimerAlertEvent) {

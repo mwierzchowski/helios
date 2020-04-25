@@ -1,7 +1,7 @@
 package com.github.mwierzchowski.helios.adapter.owm;
 
-import com.github.mwierzchowski.helios.core.locations.Location;
-import com.github.mwierzchowski.helios.core.locations.LocationProvider;
+import com.github.mwierzchowski.helios.core.commons.Location;
+import com.github.mwierzchowski.helios.core.commons.LocationProvider;
 import com.github.mwierzchowski.helios.core.weather.Weather;
 import com.github.mwierzchowski.helios.core.weather.WeatherProvider;
 import io.github.resilience4j.retry.annotation.Retry;

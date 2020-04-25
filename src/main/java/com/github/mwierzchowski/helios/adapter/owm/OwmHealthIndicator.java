@@ -25,8 +25,8 @@ import static org.springframework.boot.actuate.health.Status.UP;
  * Health indicator for OWM adapter.
  * @author Marcin Wierzchowski
  */
-@Component
 @Data
+@Component
 public class OwmHealthIndicator implements HealthIndicator {
     /**
      * Constant for maximum history capacity.

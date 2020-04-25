@@ -12,8 +12,8 @@ decorator.datasource.p6spy.enable-logging: true
 resilience4j.retry.instances.owm.maxRetryAttempts: 3
 
 # Canned responses from WireMock
-helios.owm.base-path: http://localhost:${wiremock.server.port}/data/2.5
-helios.sunapi.base-path: http://localhost:${wiremock.server.port}
+helios.owm.base-path: http://localhost:${wiremock.server.port}/owm-mock/data/2.5/
+helios.sunapi.base-path: http://localhost:${wiremock.server.port}/sun-mock
 
 # Disable automatic processes binded to application start
 helios.common.publish-events-on-startup: false

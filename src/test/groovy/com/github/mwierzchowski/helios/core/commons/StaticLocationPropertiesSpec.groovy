@@ -1,4 +1,4 @@
-package com.github.mwierzchowski.helios.core.locations
+package com.github.mwierzchowski.helios.core.commons
 
 import com.github.mwierzchowski.helios.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired

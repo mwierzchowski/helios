@@ -1,14 +1,8 @@
 package com.github.mwierzchowski.helios
 
-import com.github.tomakehurst.wiremock.WireMockServer
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-import org.springframework.cloud.contract.wiremock.WireMockConfiguration
 import org.springframework.core.annotation.AliasFor
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestContext
-import org.springframework.test.context.TestExecutionListener
-import org.springframework.test.context.TestExecutionListeners
 import org.springframework.transaction.annotation.Transactional
 
 import java.lang.annotation.Inherited
@@ -17,7 +11,6 @@ import java.lang.annotation.Target
 
 import static java.lang.annotation.ElementType.TYPE
 import static java.lang.annotation.RetentionPolicy.RUNTIME
-import static org.springframework.test.context.TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 
 /**
  * Meta-annotation for integration tests that require Spring context.
@@ -26,22 +19,11 @@ import static org.springframework.test.context.TestExecutionListeners.MergeMode.
 @Inherited
 @Target(TYPE)
 @Retention(RUNTIME)
-@Transactional
 @SpringBootTest
 @ActiveProfiles
-@AutoConfigureWireMock(port = 0)
-@TestExecutionListeners(mergeMode = MERGE_WITH_DEFAULTS, listeners = WireMockResetListener)
+@Transactional
+@EnableWireMock
 @interface IntegrationSpec {
     @AliasFor(annotation = SpringBootTest, attribute = "properties") String[] properties() default []
     @AliasFor(annotation = ActiveProfiles, attribute = "profiles") String[] profiles() default ["test"]
-
-    static class WireMockResetListener implements TestExecutionListener {
-        void beforeTestClass(TestContext testContext) throws Exception {
-            testContext.applicationContext.getBean(WireMockConfiguration).init()
-        }
-
-        void beforeTestMethod(TestContext testContext) throws Exception {
-            testContext.applicationContext.getBean(WireMockServer).resetAll()
-        }
-    }
 }

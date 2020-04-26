@@ -11,5 +11,5 @@ public class CommonProperties {
     /**
      * Flag saying if helios events should be published on application startup.
      */
-    private boolean publishEventsOnStartup = true;
+    private boolean processingOnStartupEnabled = true;
 }

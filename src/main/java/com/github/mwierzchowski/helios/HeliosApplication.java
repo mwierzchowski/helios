@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -21,6 +22,7 @@ import javax.ws.rs.ApplicationPath;
  * Application boot configuration.
  * @author Marcin Wierzchowski
  */
+@EnableAsync
 @EnableCaching
 @EnableScheduling
 @EnableJpaAuditing
@@ -37,7 +39,7 @@ public class HeliosApplication extends ResourceConfig {
 	 */
 	@PostConstruct
     public void initializeEndpoints() {
-		packages(getClass().getPackageName());
+		packages("com.github.mwierzchowski.helios.service");
 		register(OpenApiResource.class);
     }
 

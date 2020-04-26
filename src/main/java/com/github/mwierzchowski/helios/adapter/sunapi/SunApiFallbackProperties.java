@@ -12,6 +12,9 @@ import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Sun
 import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Sunset;
 import static java.time.LocalTime.parse;
 
+/**
+ * Properties for Sun API fallback
+ */
 @Data
 public class SunApiFallbackProperties {
     /**
@@ -39,6 +42,10 @@ public class SunApiFallbackProperties {
      */
     private String dusk = "22:00:00";
 
+    /**
+     * Creates {@link SunEphemeris} from configured fallback
+     * @return sun ephemeris
+     */
     public SunEphemeris getSunEphemeris() {
         var ephemeris = new SunEphemeris();
         ephemeris.setDay(LocalDate.now());

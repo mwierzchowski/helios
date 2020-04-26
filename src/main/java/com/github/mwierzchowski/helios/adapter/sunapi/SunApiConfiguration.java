@@ -7,6 +7,10 @@ import org.sunrisesunset.api.SunriseSunsetApi;
 import org.sunrisesunset.invoker.ApiClient;
 import org.sunrisesunset.model.SunriseSunsetResponse;
 
+/**
+ * Sun API adapter configuration.
+ * @author Marcin Wierzchowski
+ */
 @Configuration
 public class SunApiConfiguration {
     @Bean

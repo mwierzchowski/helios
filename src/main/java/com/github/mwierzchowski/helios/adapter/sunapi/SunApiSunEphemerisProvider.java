@@ -31,12 +31,17 @@ import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Sun
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Implementation of {@link SunEphemerisProvider} that provides {@link SunEphemeris} from https://sunrise-sunset.org/
+ * service.
+ * @author Marcin Wierzchowski
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
     /**
-     * SunApi properties
+     * Sun Api properties
      */
     private final SunApiProperties sunProperties;
 
@@ -58,6 +63,11 @@ public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
     @Getter
     private final Map<LocalDate, SunEphemeris> cache = new ConcurrentHashMap<>();
 
+    /**
+     * Populates cache with configured number of future sun ephemeris and removes old (from past) data. Method should be
+     * called on application startup and everyday on the same time (configured by cron). In case of communication
+     * issues method is automatically retried but should not block calling scheduler thread.
+     */
     @Retry(name = "sun-api-cache")
     @Scheduled(cron = "#{sunApiProperties.cacheCron}")
     @Async
@@ -73,6 +83,14 @@ public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
         outdatedEntries.forEach(cache::remove);
     }
 
+    /**
+     * Main provider method. Calls Sun API service and stores result in cache. It returns value from cache if it
+     * already contains ephemeris for given day. In case of communication issues, call is retried according to the
+     * configuration. In the worst case scenario, fallback method provides configured fallback ephemeris (but its not
+     * stored in the cache).
+     * @param day day for which ephemeris should be calculated
+     * @return ephemeris
+     */
     @Override
     @Retry(name = "sun-api", fallbackMethod = "missingEphemeris")
     public SunEphemeris sunEphemerisFor(LocalDate day) {
@@ -96,12 +114,22 @@ public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
         return ephemeris;
     }
 
+    /**
+     * Fallback method that provides ephemeris from properties
+     * @param throwable error
+     * @return fallback ephmeris
+     */
     public SunEphemeris missingEphemeris(Throwable throwable) {
         log.error("Ephemeris request failed, providing fallback", throwable);
         healthIndicator.register(throwable);
         return sunProperties.getFallback().getSunEphemeris();
     }
 
+    /**
+     * Helper method that mapps Sun API response to {@link SunEphemeris}.
+     * @param sunApiResponse service response
+     * @return sun ephemeris
+     */
     private SunEphemeris toSunEphemeris(SunriseSunsetResponse sunApiResponse) {
         SunEphemeris ephemeris = new SunEphemeris();
         ephemeris.setDay(sunApiResponse.getResults().getSolarNoon()
@@ -120,6 +148,11 @@ public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
         return ephemeris;
     }
 
+    /**
+     * Helper method that maps {@link OffsetDateTime} to {@link LocalTime}
+     * @param odt offset date time
+     * @return local time
+     */
     private LocalTime toLocalTime(OffsetDateTime odt) {
         return odt.atZoneSameInstant(ZoneId.systemDefault()).toLocalTime();
     }

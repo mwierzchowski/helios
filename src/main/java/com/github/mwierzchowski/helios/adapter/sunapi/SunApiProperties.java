@@ -5,6 +5,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
+/**
+ * Sun API adapter configuration.
+ * @author Marcin Wierzchowski
+ */
 @Data
 @Component
 @ConfigurationProperties("helios.sunapi")
@@ -24,6 +28,9 @@ public class SunApiProperties {
      */
     private Integer cacheDays = 7;
 
+    /**
+     * Fallback properties
+     */
     @NestedConfigurationProperty
     private SunApiFallbackProperties fallback = new SunApiFallbackProperties();
 }

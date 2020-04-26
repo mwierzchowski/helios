@@ -5,15 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
 import spock.lang.Subject
 
-@LightIntegrationSpec(FixedLocationProperties)
-class FixedLocationPropertiesSpec extends Specification {
+@LightIntegrationSpec(FixedLocationProvider)
+class FixedLocationProviderSpec extends Specification {
     @Subject
     @Autowired
-    FixedLocationProperties locationProperties
+    FixedLocationProvider locationProvider
 
-    def "Should return location"() {
+    def "Should return fixed location"() {
         when:
-        def location = locationProperties.locate()
+        def location = locationProvider.locate()
         then:
         location.city == 'Warsaw'
         location.latitude == 52.23

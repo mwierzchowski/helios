@@ -20,7 +20,7 @@ import static java.util.Optional.ofNullable;
 @Component("locationProvider")
 @ConfigurationProperties("helios.location")
 @ConditionalOnProperty(name = "helios.location.fixed")
-public class FixedLocationProperties implements LocationProvider {
+public class FixedLocationProvider implements LocationProvider {
     /**
      * Default city name to be used when city was not provided.
      */

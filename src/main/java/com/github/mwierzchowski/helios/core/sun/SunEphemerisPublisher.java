@@ -13,6 +13,10 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+/**
+ * Publisher of ephemeris events. Each event is published at the time when given type of event happens.
+ * @author Marcin Wierzchowski
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -42,12 +46,18 @@ public class SunEphemerisPublisher {
      */
     private SunEphemerisEvent event;
 
+    /**
+     * Starts publishing events. Method could be automatically called on application startup.
+     */
     @EventListener(classes = ApplicationReadyEvent.class, condition = "@commonProperties.processingOnStartupEnabled")
     public void startPublishingEvents() {
         log.info("Starting sun events");
         scheduleNextEventPublish();
     }
 
+    /**
+     * Helper method that configures schedule of next event.
+     */
     private void scheduleNextEventPublish() {
         var today = LocalDate.now(clock);
         event = ephemerisProvider.sunEphemerisFor(today).firstEventAfterPreviousOrNow(event, clock)
@@ -58,6 +68,9 @@ public class SunEphemerisPublisher {
         executorService.schedule(this::publishEvent, delay.toMillis(), MILLISECONDS);
     }
 
+    /**
+     * Publish event.
+     */
     private synchronized void publishEvent() {
         log.info("Publishing {} event", event.getType());
         eventStore.publish(event);

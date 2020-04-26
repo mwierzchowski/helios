@@ -1,12 +1,10 @@
-package com.github.mwierzchowski.helios.adapter.owm;
+package com.github.mwierzchowski.helios.adapter.commons;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.openweathermap.model.CurrentWeatherResponse;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.health.Status;
-import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -21,13 +19,8 @@ import static org.springframework.boot.actuate.health.Status.DOWN;
 import static org.springframework.boot.actuate.health.Status.UNKNOWN;
 import static org.springframework.boot.actuate.health.Status.UP;
 
-/**
- * Health indicator for OWM adapter.
- * @author Marcin Wierzchowski
- */
 @Data
-@Component
-public class OwmHealthIndicator implements HealthIndicator {
+public class ExternalServiceHealthIndicator<R> implements HealthIndicator {
     /**
      * Constant for maximum history capacity.
      */
@@ -66,15 +59,15 @@ public class OwmHealthIndicator implements HealthIndicator {
     }
 
     /**
-     * Registers successful call to OWM API.
-     * @param currentWeatherResponse successful response
+     * Registers successful call to external service.
+     * @param response successful response
      */
-    public synchronized void register(CurrentWeatherResponse currentWeatherResponse) {
-        updateHistory(currentWeatherResponse);
+    public synchronized void register(R response) {
+        updateHistory(response);
     }
 
     /**
-     * Registers failed call to OWM API.
+     * Registers failed call to external service.
      * @param throwable failure reason
      */
     public synchronized void register(Throwable throwable) {
@@ -108,7 +101,7 @@ public class OwmHealthIndicator implements HealthIndicator {
     }
 
     /**
-     * Updates history with given result ({@link CurrentWeatherResponse} or {@link Throwable}).
+     * Updates history with given response or {@link Throwable}).
      * @param object request attempt result
      */
     private void updateHistory(Object object) {
@@ -167,7 +160,7 @@ public class OwmHealthIndicator implements HealthIndicator {
      */
     @Data
     @RequiredArgsConstructor
-    static class RequestAttempt {
+    static class RequestAttempt<R> {
         /**
          * Timestamp of logging given request attempt.
          */
@@ -187,11 +180,11 @@ public class OwmHealthIndicator implements HealthIndicator {
         }
 
         /**
-         * Casts result to {@link CurrentWeatherResponse}.
+         * Casts result to target class.
          * @return successful result
          */
-        CurrentWeatherResponse getResponse() {
-            return (CurrentWeatherResponse) object;
+        R getResponse() {
+            return (R) object;
         }
 
         /**
@@ -204,7 +197,7 @@ public class OwmHealthIndicator implements HealthIndicator {
 
         /**
          * Maps given request attempt to health status detail.
-         * @param includeObject should detail map include complete object ({@link CurrentWeatherResponse} or
+         * @param includeObject should detail map include complete object (response or
          * {@link Throwable}) or just information about success.
          * @return details map
          */

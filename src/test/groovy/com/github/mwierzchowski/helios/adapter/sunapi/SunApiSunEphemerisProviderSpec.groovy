@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.adapter.sunapi
 
 import com.github.mwierzchowski.helios.LightIntegrationSpec
+import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +25,7 @@ class SunApiSunEphemerisProviderSpec extends Specification {
     SunApiProperties sunProperties
 
     @SpringBean
-    SunApiHealthIndicator healthIndicator = Mock()
+    ExternalServiceHealthIndicator<SunriseSunsetResponse> healthIndicator = Mock()
 
     UrlPattern sunapiUrl = urlPathMatching("/sun-mock/.*")
 

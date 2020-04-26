@@ -1,5 +1,6 @@
 package com.github.mwierzchowski.helios.adapter.sunapi;
 
+import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator;
 import com.github.mwierzchowski.helios.core.commons.LocationProvider;
 import com.github.mwierzchowski.helios.core.sun.SunEphemeris;
 import com.github.mwierzchowski.helios.core.sun.SunEphemerisProvider;
@@ -52,7 +53,7 @@ public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
     /**
      * Health indicator
      */
-    private final SunApiHealthIndicator healthIndicator;
+    private final ExternalServiceHealthIndicator<SunriseSunsetResponse> healthIndicator;
 
     @Getter
     private final Map<LocalDate, SunEphemeris> cache = new ConcurrentHashMap<>();

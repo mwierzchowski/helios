@@ -1,7 +1,9 @@
 package com.github.mwierzchowski.helios.adapter.owm;
 
+import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator;
 import org.openweathermap.api.CurrentWeatherApi;
 import org.openweathermap.invoker.ApiClient;
+import org.openweathermap.model.CurrentWeatherResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,5 +24,10 @@ public class OwmConfiguration {
     @Bean
     public CurrentWeatherApi currentWeatherApi(ApiClient apiClient) {
         return new CurrentWeatherApi(apiClient);
+    }
+
+    @Bean
+    public ExternalServiceHealthIndicator<CurrentWeatherResponse> owmHealthIndicator() {
+        return new ExternalServiceHealthIndicator<>();
     }
 }

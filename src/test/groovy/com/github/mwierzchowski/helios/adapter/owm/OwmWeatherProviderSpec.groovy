@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.adapter.owm
 
 import com.github.mwierzchowski.helios.LightIntegrationSpec
+import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import org.openweathermap.model.CurrentWeatherResponse
 import org.spockframework.spring.SpringBean
@@ -17,7 +18,7 @@ class OwmWeatherProviderSpec extends Specification {
     OwmWeatherProvider weatherProvider
 
     @SpringBean
-    OwmHealthIndicator healthIndicator = Mock()
+    ExternalServiceHealthIndicator<CurrentWeatherResponse> healthIndicator = Mock()
 
     UrlPattern weatherUrl = urlMatching("/owm-mock/.*")
 

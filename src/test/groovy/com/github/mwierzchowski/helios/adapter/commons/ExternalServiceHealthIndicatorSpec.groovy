@@ -1,14 +1,13 @@
-package com.github.mwierzchowski.helios.adapter.owm
+package com.github.mwierzchowski.helios.adapter.commons
 
-import org.openweathermap.model.CurrentWeatherResponse
 import spock.lang.Specification
 import spock.lang.Subject
 
 import static org.springframework.boot.actuate.health.Status.*
 
-class OwmHealthIndicatorSpec extends Specification {
+class ExternalServiceHealthIndicatorSpec extends Specification {
     @Subject
-    def healthIndicator = new OwmHealthIndicator()
+    def healthIndicator = new ExternalServiceHealthIndicator<String>()
 
     def "Health indicator provides UNKNOWN status when request history is empty"() {
         expect:
@@ -18,14 +17,14 @@ class OwmHealthIndicatorSpec extends Specification {
     def "Health indicator provides UP status when last request was a successful"() {
         given:
         healthIndicator.register(new RuntimeException())
-        healthIndicator.register(new CurrentWeatherResponse())
+        healthIndicator.register("success")
         expect:
         healthIndicator.health().status == UP
     }
 
     def "Health indicator provides DOWN status when last request was a failure"() {
         given:
-        healthIndicator.register(new CurrentWeatherResponse())
+        healthIndicator.register("success")
         healthIndicator.register(new RuntimeException())
         expect:
         healthIndicator.health().status == DOWN
@@ -35,23 +34,22 @@ class OwmHealthIndicatorSpec extends Specification {
         given:
         def requestsCount = 11
         (requestsCount).times {
-            healthIndicator.register(new CurrentWeatherResponse().dt(it))
+            healthIndicator.register("success")
         }
         when:
         def history = healthIndicator.recentHistory
         then:
-        history.size() == OwmHealthIndicator.HISTORY_MAX
+        history.size() == ExternalServiceHealthIndicator.HISTORY_MAX
         def id = requestsCount - 1
         history.forEach {
-            assert it.response.getDt() == id
             id -= 1
         }
     }
 
     def "Health indicator provides last successful response"() {
         given:
-        def successResponse1 = new CurrentWeatherResponse().dt(100)
-        def successResponse2 = new CurrentWeatherResponse().dt(200)
+        def successResponse1 = "success1"
+        def successResponse2 = "success2"
         healthIndicator.register(successResponse1)
         healthIndicator.register(successResponse2)
         15.times {
@@ -74,7 +72,7 @@ class OwmHealthIndicatorSpec extends Specification {
         healthIndicator.register(failureReason1)
         healthIndicator.register(failureReason2)
         15.times {
-            healthIndicator.register(new CurrentWeatherResponse())
+            healthIndicator.register("success")
         }
         expect:
         healthIndicator.lastFailure.throwable != failureReason1
@@ -92,7 +90,7 @@ class OwmHealthIndicatorSpec extends Specification {
         def failureCount = 5
         when:
         successCount.times {
-            healthIndicator.register(new CurrentWeatherResponse())
+            healthIndicator.register("success")
         }
         failureCount.times {
             healthIndicator.register(new RuntimeException())
@@ -112,7 +110,7 @@ class OwmHealthIndicatorSpec extends Specification {
         given:
         def requestCounter = new Random().nextInt(10)
         requestCounter.times {
-            healthIndicator.register(new CurrentWeatherResponse())
+            healthIndicator.register("success")
         }
         expect:
         healthIndicator.allRequestCounter == requestCounter

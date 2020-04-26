@@ -1,9 +1,11 @@
 package com.github.mwierzchowski.helios.adapter.sunapi;
 
+import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.sunrisesunset.api.SunriseSunsetApi;
 import org.sunrisesunset.invoker.ApiClient;
+import org.sunrisesunset.model.SunriseSunsetResponse;
 
 @Configuration
 public class SunApiConfiguration {
@@ -17,5 +19,10 @@ public class SunApiConfiguration {
     @Bean
     public SunriseSunsetApi sunriseSunsetApi(ApiClient apiClient) {
         return new SunriseSunsetApi(apiClient);
+    }
+
+    @Bean
+    public ExternalServiceHealthIndicator<SunriseSunsetResponse> sunApiHealthIndicator() {
+        return new ExternalServiceHealthIndicator<>();
     }
 }

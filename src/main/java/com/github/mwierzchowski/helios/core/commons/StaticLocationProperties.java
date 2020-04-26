@@ -41,11 +41,18 @@ public class StaticLocationProperties implements LocationProvider {
      */
     private Double longitude;
 
+    /**
+     * Callback method for reporting location on application start.
+     */
     @PostConstruct
     public void reportLocation() {
         log.info("Static location is {} (lat={}, lon={})", cityOrDefault(), latitude, longitude);
     }
 
+    /**
+     * Main business method
+     * @return location
+     */
     @Override
     @Cacheable("static-location")
     public Location locate() {

@@ -4,6 +4,10 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * Common properties
+ * @author Marcin Wierzchowski
+ */
 @Data
 @Component
 @ConfigurationProperties("helios.common")

@@ -10,6 +10,10 @@ import java.time.Clock;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+/**
+ * Configuration for common components.
+ * @author Marcin Wierzchowski
+ */
 @Configuration
 public class CommonConfiguration {
     @Bean

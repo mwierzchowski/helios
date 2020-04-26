@@ -9,14 +9,16 @@ spring.jpa.properties.org.hibernate.flushMode: ALWAYS
 decorator.datasource.p6spy.enable-logging: true
 
 # Circuit breaking
-resilience4j.retry.instances.owm.maxRetryAttempts: 3
+resilience4j.retry.instances:
+  owm.maxRetryAttempts: 3
+  sun-api.maxRetryAttempts: 3
 
 # Canned responses from WireMock
 helios.owm.base-path: http://localhost:${wiremock.server.port}/owm-mock/data/2.5/
 helios.sunapi.base-path: http://localhost:${wiremock.server.port}/sun-mock
 
 # Disable automatic processes binded to application start
-helios.common.publish-events-on-startup: false
+helios.common.processing-on-startup-enabled: false
 helios.weather.check-delay-after-startup: 6000000
 
 # Static location for tests

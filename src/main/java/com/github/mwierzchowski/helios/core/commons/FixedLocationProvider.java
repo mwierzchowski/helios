@@ -27,7 +27,7 @@ public class FixedLocationProvider implements LocationProvider {
     private String defaultCity = "unknown city";
 
     /**
-     * Flag informing that application should use fixed location values
+     * Feature flag for fixed location
      */
     private Boolean fixed = false;
 

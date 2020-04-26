@@ -35,6 +35,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME
 @EnableCaching
 @EnableWireMock
 @ComponentScan(basePackageClasses = [CommonConfiguration])
-@interface LightIntegrationSpec {
+@interface LiteIntegrationSpec {
     @AliasFor(annotation = SpringBootTest, attribute = "classes") Class<?>[] value() default []
 }

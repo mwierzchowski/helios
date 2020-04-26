@@ -1,6 +1,6 @@
 package com.github.mwierzchowski.helios.adapter.sunapi
 
-import com.github.mwierzchowski.helios.LightIntegrationSpec
+import com.github.mwierzchowski.helios.LiteIntegrationSpec
 import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import org.spockframework.spring.SpringBean
@@ -15,7 +15,7 @@ import java.time.LocalTime
 import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Dawn
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-@LightIntegrationSpec([SunApiConfiguration, SunApiProperties, SunApiSunEphemerisProvider])
+@LiteIntegrationSpec([SunApiConfiguration, SunApiProperties, SunApiSunEphemerisProvider])
 class SunApiSunEphemerisProviderSpec extends Specification {
     @Subject
     @Autowired

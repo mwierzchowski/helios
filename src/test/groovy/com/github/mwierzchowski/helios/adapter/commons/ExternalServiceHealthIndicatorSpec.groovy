@@ -1,17 +1,38 @@
 package com.github.mwierzchowski.helios.adapter.commons
 
+import com.github.mwierzchowski.helios.core.commons.EventStore
+import com.github.mwierzchowski.helios.core.commons.FailureEvent
 import spock.lang.Specification
 import spock.lang.Subject
+
+import java.time.Instant
 
 import static org.springframework.boot.actuate.health.Status.*
 
 class ExternalServiceHealthIndicatorSpec extends Specification {
+    EventStore eventStore = Mock()
     @Subject
-    def healthIndicator = new ExternalServiceHealthIndicator<String>()
+    def healthIndicator = new ExternalServiceHealthIndicator<String>(ExternalServiceHealthIndicatorSpec, eventStore)
 
     def "Health indicator provides UNKNOWN status when request history is empty"() {
         expect:
         healthIndicator.health().status == UNKNOWN
+    }
+
+    def "Health indicator publish failure event when throwable is registered"() {
+        given:
+        def start = Instant.now()
+        def exception = new RuntimeException()
+        when:
+        healthIndicator.register(exception)
+        then:
+        1 * eventStore.publish({
+            verifyAll(it, FailureEvent) {
+                source == ExternalServiceHealthIndicatorSpec
+                timestamp.isAfter(start)
+                throwable == exception
+            }
+        })
     }
 
     def "Health indicator provides UP status when last request was a successful"() {

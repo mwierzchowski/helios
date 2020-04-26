@@ -1,5 +1,7 @@
 package com.github.mwierzchowski.helios.adapter.commons;
 
+import com.github.mwierzchowski.helios.core.commons.EventStore;
+import com.github.mwierzchowski.helios.core.commons.FailureEvent;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.health.Health;
@@ -32,19 +34,29 @@ public class ExternalServiceHealthIndicator<R> implements HealthIndicator {
     static final int HISTORY_MAX = 10;
 
     /**
+     * Name of component using this health indicator
+     */
+    private final Class<?> source;
+
+    /**
+     * Event store
+     */
+    private final EventStore eventStore;
+
+    /**
      * Recent history. It is implemented as FIFO queue.
      */
-    private List<RequestAttempt> recentHistory = new ArrayList<>(HISTORY_MAX);
+    private List<RequestAttempt<R>> recentHistory = new ArrayList<>(HISTORY_MAX);
 
     /**
      * Details of last successful request attempt.
      */
-    private RequestAttempt lastSuccess = null;
+    private RequestAttempt<R> lastSuccess = null;
 
     /**
      * Details of last failed request attempt.
      */
-    private RequestAttempt lastFailure = null;
+    private RequestAttempt<R> lastFailure = null;
 
     /**
      * Counter of all successful request attempts since start of application.
@@ -77,6 +89,7 @@ public class ExternalServiceHealthIndicator<R> implements HealthIndicator {
      */
     public synchronized void register(Throwable throwable) {
         updateHistory(throwable);
+        eventStore.publish(new FailureEvent(source, throwable));
     }
 
     /** Helpers *******************************************************************************************************/
@@ -110,7 +123,7 @@ public class ExternalServiceHealthIndicator<R> implements HealthIndicator {
      * @param object request attempt result
      */
     private void updateHistory(Object object) {
-        RequestAttempt requestAttempt = new RequestAttempt(object);
+        RequestAttempt<R> requestAttempt = new RequestAttempt<>(object);
         recentHistory.add(0, requestAttempt);
         if (recentHistory.size() > HISTORY_MAX) {
             recentHistory.remove(HISTORY_MAX);

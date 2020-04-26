@@ -49,6 +49,7 @@ dependencies {
 	implementation 'io.github.resilience4j:resilience4j-spring-boot2:0.16.0'
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'com.maxmind.geoip2:geoip2:2.13.1'
 
 	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

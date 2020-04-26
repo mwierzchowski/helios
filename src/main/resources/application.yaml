@@ -25,6 +25,15 @@ decorator.datasource.p6spy:
   enable-logging: false
   log-format: '(connection %(connectionId) - %(category)) %(sql)'
 
+# Mail configuration, to enable please provide host (e.g. smtp.gmail.com)
+spring.mail:
+  port: 587
+  username: 'REPLACE_WITH_YOUR_USER'
+  password: 'REPLACE_WITH_YOUR_USER_PASSWORD'
+  properties:
+    mail.smtp.auth: true
+    mail.smtp.starttls.enable: true
+
 # Fault tolerance
 resilience4j.retry.instances:
   owm:
@@ -47,6 +56,3 @@ resilience4j.retry.instances:
     exponentialBackoffMultiplier: 2
     retryExceptions:
       - java.lang.Exception
-
-
-

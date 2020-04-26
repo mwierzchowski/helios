@@ -19,6 +19,11 @@ import static org.springframework.boot.actuate.health.Status.DOWN;
 import static org.springframework.boot.actuate.health.Status.UNKNOWN;
 import static org.springframework.boot.actuate.health.Status.UP;
 
+/**
+ * Generic health indicator for adapters that communicate with external services.
+ * @param <R> type or successful result
+ * @author Marcin Wierzchowski
+ */
 @Data
 public class ExternalServiceHealthIndicator<R> implements HealthIndicator {
     /**

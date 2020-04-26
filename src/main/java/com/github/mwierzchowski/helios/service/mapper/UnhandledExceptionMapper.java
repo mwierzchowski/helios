@@ -1,13 +1,14 @@
 package com.github.mwierzchowski.helios.service.mapper;
 
+import com.github.mwierzchowski.helios.core.commons.CommonProperties;
 import com.github.mwierzchowski.helios.service.dto.ServiceErrorDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.time.format.DateTimeFormatter;
 
 import static java.time.LocalDateTime.now;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
@@ -19,11 +20,12 @@ import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 @Slf4j
 @Provider
 @Component
+@RequiredArgsConstructor
 public class UnhandledExceptionMapper implements ExceptionMapper<Exception> {
     /**
      * Timestamp formatter
      */
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss.SSS");
+    private final CommonProperties commonProperties;
 
     /**
      * Main mapper method
@@ -36,7 +38,7 @@ public class UnhandledExceptionMapper implements ExceptionMapper<Exception> {
         var errorDto = new ServiceErrorDto();
         errorDto.setMessage(exception.getMessage());
         errorDto.setException(exception.getClass().getName());
-        errorDto.setTimestamp(formatter.format(now()));
+        errorDto.setTimestamp(commonProperties.timeFormatter().format(now()));
         errorDto.setCorrelationId("MISSING");
         return Response.status(INTERNAL_SERVER_ERROR)
                 .entity(errorDto)

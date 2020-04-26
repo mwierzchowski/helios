@@ -18,8 +18,9 @@ import java.util.TreeMap;
 public class SunEphemeris {
     private LocalDate day;
     private Map<SunEphemerisEventType, LocalTime> times = new TreeMap<>();
+    private Boolean approximated = false;
 
-    public Optional<SunEphemerisEvent> firstEventAfterNowOr(SunEphemerisEvent prevEvent, Clock clock) {
+    public Optional<SunEphemerisEvent> firstEventAfterPreviousOrNow(SunEphemerisEvent prevEvent, Clock clock) {
         var deadline = Optional.ofNullable(prevEvent).map(SunEphemerisEvent::getTimestamp)
                 .orElseGet(clock::instant)
                 .atZone(clock.getZone()).toLocalTime();

@@ -1,6 +1,6 @@
 package com.github.mwierzchowski.helios.adapter.owm
 
-import com.github.mwierzchowski.helios.LightIntegrationSpec
+import com.github.mwierzchowski.helios.LiteIntegrationSpec
 import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import org.openweathermap.model.CurrentWeatherResponse
@@ -11,7 +11,7 @@ import spock.lang.Subject
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-@LightIntegrationSpec([OwmConfiguration, OwmProperties, OwmWeatherProvider])
+@LiteIntegrationSpec([OwmConfiguration, OwmProperties, OwmWeatherProvider])
 class OwmWeatherProviderSpec extends Specification {
     @Subject
     @Autowired

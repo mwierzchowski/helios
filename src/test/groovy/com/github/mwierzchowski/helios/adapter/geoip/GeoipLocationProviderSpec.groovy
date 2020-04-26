@@ -1,12 +1,12 @@
 package com.github.mwierzchowski.helios.adapter.geoip
 
-import com.github.mwierzchowski.helios.LightIntegrationSpec
+import com.github.mwierzchowski.helios.LiteIntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
 import spock.lang.Subject
 
-@LightIntegrationSpec([GeoipProperties, GeoipLocationProvider])
+@LiteIntegrationSpec([GeoipProperties, GeoipLocationProvider])
 @TestPropertySource(properties = "helios.location.fixed=false")
 class GeoipLocationProviderSpec extends Specification {
     @Subject

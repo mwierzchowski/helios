@@ -1,11 +1,11 @@
 package com.github.mwierzchowski.helios.core.commons
 
-import com.github.mwierzchowski.helios.LightIntegrationSpec
+import com.github.mwierzchowski.helios.LiteIntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
 import spock.lang.Subject
 
-@LightIntegrationSpec(FixedLocationProvider)
+@LiteIntegrationSpec(FixedLocationProvider)
 class FixedLocationProviderSpec extends Specification {
     @Subject
     @Autowired

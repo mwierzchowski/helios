@@ -8,14 +8,12 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.sunrisesunset.api.SunriseSunsetApi;
 import org.sunrisesunset.model.SunriseSunsetResponse;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
@@ -68,10 +66,9 @@ public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
      * called on application startup and everyday on the same time (configured by cron). In case of communication
      * issues method is automatically retried but should not block calling scheduler thread.
      */
+    @PostConstruct
     @Retry(name = "sun-api-cache")
     @Scheduled(cron = "#{sunApiProperties.cacheCron}")
-    @Async
-    @EventListener(classes = ApplicationReadyEvent.class, condition = "@commonProperties.processingOnStartupEnabled")
     public void manageCache() {
         log.debug("Caching ephemeris for next {} days", sunProperties.getCacheDays());
         var today = LocalDate.now();

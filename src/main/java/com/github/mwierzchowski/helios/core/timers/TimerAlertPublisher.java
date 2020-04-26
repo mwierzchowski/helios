@@ -41,7 +41,7 @@ public class TimerAlertPublisher {
     /**
      * Callback method called on application start. It starts alert tasks for all timers.
      */
-    @EventListener(classes = ApplicationReadyEvent.class, condition = "@commonProperties.publishEventsOnStartup")
+    @EventListener(classes = ApplicationReadyEvent.class, condition = "@commonProperties.processingOnStartupEnabled")
     public void startAlerts() {
         log.debug("Starting all alert tasks");
         timerRepository.findAll().forEach(this::startAlertFor);

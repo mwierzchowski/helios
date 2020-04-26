@@ -1,0 +1,31 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "urlPattern": "/sun-mock/json\\?lat=52.23&lng=21.01&date=([a-zA-Z0-9_\\-]*)&formatted=0"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody" : {
+          "results": {
+            "sunrise": "2019-07-04T02:21:48+00:00",
+            "sunset": "2019-07-04T18:58:42+00:00",
+            "solar_noon": "2019-07-04T10:40:15+00:00",
+            "day_length": 59814,
+            "civil_twilight_begin": "2019-07-04T01:33:47+00:00",
+            "civil_twilight_end": "2019-07-04T19:46:43+00:00",
+            "nautical_twilight_begin": "2019-07-04T00:18:27+00:00",
+            "nautical_twilight_end": "2019-07-04T21:02:04+00:00",
+            "astronomical_twilight_begin": "1970-01-01T00:00:01+00:00",
+            "astronomical_twilight_end": "1970-01-01T00:00:01+00:00"
+          },
+          "status": "OK"
+        }
+      }
+    }
+  ]
+}

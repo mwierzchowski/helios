@@ -64,10 +64,12 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
+def specsDir = 'src/main/specs'
 def owmClientPackage = "org.openweathermap"
+def sunapiClientPackage = "org.sunrisesunset"
 swaggerSources {
 	owm {
-		inputFile = file('src/main/specs/owm-spec.yaml')
+		inputFile = file("${specsDir}/owm-spec.yaml")
 		code {
 			language = 'java'
 			library = "resttemplate"
@@ -80,10 +82,27 @@ swaggerSources {
 			]
 		}
 	}
+	sunapi {
+		inputFile = file("${specsDir}/sunapi-spec.yaml")
+		code {
+			language = 'java'
+			library = "resttemplate"
+			outputDir = file("$buildDir/generated/sources/sunapiSwagger")
+			additionalProperties = [
+					dateLibrary : "java8",
+					apiPackage : "${sunapiClientPackage}.api",
+					modelPackage : "${sunapiClientPackage}.model",
+					invokerPackage : "${sunapiClientPackage}.invoker"
+			]
+		}
+	}
 }
 compileJava.dependsOn swaggerSources.owm.code
 sourceSets.main.java.srcDirs += "${swaggerSources.owm.code.outputDir}/src/main/java"
 sourceSets.main.resources.srcDirs += "${swaggerSources.owm.code.outputDir}/src/main/resources"
+compileJava.dependsOn swaggerSources.sunapi.code
+sourceSets.main.java.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/resources"
 
 // todo maybe this can be removed as build is not silent anyway
 test {

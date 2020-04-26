@@ -1,6 +1,6 @@
 package com.github.mwierzchowski.helios.core.timers
 
-import com.github.mwierzchowski.helios.DatabaseSpec
+import com.github.mwierzchowski.helios.DatabaseIntegrationSpec
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
@@ -15,7 +15,7 @@ import java.time.LocalTime
 
 import static java.time.DayOfWeek.*
 
-@DatabaseSpec
+@DatabaseIntegrationSpec
 class TimerRepositorySpec extends Specification {
     @Subject
     @Autowired

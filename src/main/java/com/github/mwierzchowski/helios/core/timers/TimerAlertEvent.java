@@ -1,8 +1,7 @@
 package com.github.mwierzchowski.helios.core.timers;
 
-import com.github.mwierzchowski.helios.core.HeliosEvent;
+import com.github.mwierzchowski.helios.core.commons.HeliosEvent;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -11,8 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Data
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class TimerAlertEvent extends HeliosEvent {
+public class TimerAlertEvent implements HeliosEvent {
     /**
      * Timer that triggered this alert.
      */

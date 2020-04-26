@@ -1,6 +1,6 @@
 package com.github.mwierzchowski.helios.core.weather
 
-import org.springframework.context.ApplicationEventPublisher
+import com.github.mwierzchowski.helios.core.commons.EventStore
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -13,10 +13,10 @@ import static java.util.Optional.of
 class WeatherPublisherSpec extends Specification {
     WeatherProperties weatherProperties = new WeatherProperties()
     WeatherProvider weatherProvider = Mock()
-    ApplicationEventPublisher eventPublisher = Mock()
+    EventStore eventStore = Mock()
 
     @Subject
-    WeatherPublisher weatherPublisher = new WeatherPublisher(weatherProperties, weatherProvider, eventPublisher)
+    WeatherPublisher weatherPublisher = new WeatherPublisher(weatherProperties, weatherProvider, eventStore)
 
     def "Publisher sends weather notification when first observation is available"() {
         given:
@@ -26,10 +26,9 @@ class WeatherPublisherSpec extends Specification {
         when:
         weatherPublisher.publishWeather()
         then:
-        1 * eventPublisher.publishEvent({
+        1 * eventStore.publish({
             verifyAll(it, WeatherObservationEvent) {
                 currentWeather == weather
-                timestamp.isAfter start
             }
         })
     }
@@ -44,8 +43,8 @@ class WeatherPublisherSpec extends Specification {
             weatherPublisher.publishWeather()
         }
         then:
-        2 * eventPublisher.publishEvent(_ as WeatherObservationEvent)
-        0 * eventPublisher.publishEvent(_ as WeatherMissingEvent)
+        2 * eventStore.publish(_ as WeatherObservationEvent)
+        0 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
     def "Publisher does not send notification when next observation is the same as previous one"() {
@@ -58,8 +57,8 @@ class WeatherPublisherSpec extends Specification {
             weatherPublisher.publishWeather()
         }
         then:
-        1 * eventPublisher.publishEvent(_ as WeatherObservationEvent)
-        0 * eventPublisher.publishEvent(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherObservationEvent)
+        0 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
     def "Publisher sends warning notification when first observation is missing"() {
@@ -68,7 +67,7 @@ class WeatherPublisherSpec extends Specification {
         when:
         weatherPublisher.publishWeather()
         then:
-        1 * eventPublisher.publishEvent(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
     def "Publisher does not send next warning notification when previous was sent"() {
@@ -81,8 +80,8 @@ class WeatherPublisherSpec extends Specification {
             weatherPublisher.publishWeather()
         }
         then:
-        1 * eventPublisher.publishEvent(_ as WeatherMissingEvent)
-        0 * eventPublisher.publishEvent(_ as WeatherObservationEvent)
+        1 * eventStore.publish(_ as WeatherMissingEvent)
+        0 * eventStore.publish(_ as WeatherObservationEvent)
     }
 
     def "Publisher sends warning notification when observations are missing for a long time"() {
@@ -95,8 +94,8 @@ class WeatherPublisherSpec extends Specification {
             weatherPublisher.publishWeather()
         }
         then:
-        1 * eventPublisher.publishEvent(_ as WeatherObservationEvent)
-        1 * eventPublisher.publishEvent(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherObservationEvent)
+        1 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
     def "Publisher does not send warning notification when observations are missing for a short time"() {
@@ -109,8 +108,8 @@ class WeatherPublisherSpec extends Specification {
             weatherPublisher.publishWeather()
         }
         then:
-        1 * eventPublisher.publishEvent(_ as WeatherObservationEvent)
-        0 * eventPublisher.publishEvent(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherObservationEvent)
+        0 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
     def "Publisher always sends weather notification when observation is back after warning was sent"() {
@@ -124,8 +123,8 @@ class WeatherPublisherSpec extends Specification {
             weatherPublisher.publishWeather()
         }
         then:
-        2 * eventPublisher.publishEvent(_ as WeatherObservationEvent)
-        1 * eventPublisher.publishEvent(_ as WeatherMissingEvent)
+        2 * eventStore.publish(_ as WeatherObservationEvent)
+        1 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
     def weather(timestamp = now(), clouds = 0) {

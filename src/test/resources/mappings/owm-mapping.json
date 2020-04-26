@@ -3,14 +3,14 @@
     {
       "request": {
         "method": "GET",
-        "urlPattern": "/data/2.5/weather\\?lat=52.23&lon=21.01&units=metric&lang=pl&appid=([a-zA-Z0-9_]*)"
+        "urlPattern": "/owm-mock/data/2.5/weather\\?lat=52.23&lon=21.01&units=metric&lang=pl&appid=([a-zA-Z0-9_]*)"
       },
       "response": {
         "status": 200,
         "headers": {
           "Content-Type": "application/json"
         },
-        "jsonBody" : {
+        "jsonBody": {
           "coord": {
             "lon": 21.01,
             "lat": 52.23

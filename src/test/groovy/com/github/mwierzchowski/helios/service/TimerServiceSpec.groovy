@@ -1,10 +1,10 @@
 package com.github.mwierzchowski.helios.service
 
-import com.github.mwierzchowski.helios.core.NotFoundException
+import com.github.mwierzchowski.helios.core.commons.EventStore
+import com.github.mwierzchowski.helios.core.commons.NotFoundException
 import com.github.mwierzchowski.helios.core.timers.*
 import com.github.mwierzchowski.helios.service.dto.TimerDto
 import com.github.mwierzchowski.helios.service.dto.TimerScheduleDto
-import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -17,11 +17,11 @@ import static java.util.Optional.of as optional
 
 class TimerServiceSpec extends Specification {
     TimerRepository timerRepository = Mock()
-    TimerAlertStarter alertStarter = Mock()
-    ApplicationEventPublisher eventPublisher = Mock()
+    TimerAlertPublisher alertStarter = Mock()
+    EventStore eventStore = Mock()
 
     @Subject
-    TimerService timerService = new TimerService(timerRepository, alertStarter, eventPublisher)
+    TimerService timerService = new TimerService(timerRepository, alertStarter, eventStore)
 
     def "Should return list of timers"() {
         given:
@@ -84,7 +84,7 @@ class TimerServiceSpec extends Specification {
         timerService.removeTimer(timerId)
         then:
         1 * timerRepository.delete(_ as Timer)
-        1 * eventPublisher.publishEvent(_ as TimerRemovedEvent)
+        1 * eventStore.publish(_ as TimerRemovedEvent)
     }
 
     def "Should not remove timer if it does not exist"() {
@@ -95,7 +95,7 @@ class TimerServiceSpec extends Specification {
         timerService.removeTimer(timerId)
         then:
         0 * timerRepository.delete(_ as Timer)
-        0 * eventPublisher.publishEvent(_ as TimerRemovedEvent)
+        0 * eventStore.publish(_ as TimerRemovedEvent)
     }
 
     def "Should change timer description if new description does not exist"() {

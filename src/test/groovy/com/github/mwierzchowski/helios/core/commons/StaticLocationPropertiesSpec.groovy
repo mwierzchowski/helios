@@ -1,11 +1,11 @@
-package com.github.mwierzchowski.helios.core.locations
+package com.github.mwierzchowski.helios.core.commons
 
-import com.github.mwierzchowski.helios.IntegrationSpec
+import com.github.mwierzchowski.helios.LightIntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
 import spock.lang.Subject
 
-@IntegrationSpec
+@LightIntegrationSpec(StaticLocationProperties)
 class StaticLocationPropertiesSpec extends Specification {
     @Subject
     @Autowired

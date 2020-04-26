@@ -1,4 +1,4 @@
-package com.github.mwierzchowski.helios.core.locations;
+package com.github.mwierzchowski.helios.core.commons;
 
 /**
  * Functional interface for obtaining geographical location. It is assumed that location does not change during

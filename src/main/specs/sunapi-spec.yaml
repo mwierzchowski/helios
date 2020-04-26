@@ -1,0 +1,132 @@
+openapi: "3.0.2"
+
+info:
+  title: "Sunrise Sunset"
+  version: "1.0"
+
+servers:
+  - url: "https://api.sunrise-sunset.org:443"
+
+tags:
+  - name: Sunrise Sunset
+    description: "Sunrise and sunset times API"
+
+paths:
+  /json:
+    get:
+      tags:
+        - Sunrise Sunset
+      operationId: SunriseSunset
+      parameters:
+        - name: lat
+          in: query
+          description: "Latitude"
+          schema:
+            type: number
+            format: double
+            example: 52.23
+        - name: lng
+          in: query
+          description: "Longitude"
+          schema:
+            type: number
+            format: double
+            example: 21.01
+        - name: date
+          in: query
+          description: "Date (YYYY-MM-DD) or today"
+          schema:
+            type: string
+            default: "today"
+        - name: formatted
+          in: query
+          description: 'Format flag'
+          schema:
+            type: integer
+            default: 0
+      responses:
+        200:
+          description: Successful Sunrise Sunset response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SunriseSunsetResponse'
+        404:
+          description: Not found
+          content:
+            text/plain:
+              schema:
+                title: Data not found
+                type: string
+
+components:
+  schemas:
+    SunriseSunsetResponse:
+      title: Successful sunrise sunset response
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the sunrise sunset times calculation
+          example: OK
+        results:
+          type: object
+          properties:
+            sunrise:
+              type: string
+              format: date-time
+              description: "Sunrise time"
+              example: "2015-05-21T05:05:35+00:00"
+
+            sunset:
+              type: string
+              format: date-time
+              description: "Sunset time"
+              example: "2015-05-21T19:22:59+00:00"
+
+            solar_noon:
+              type: string
+              format: date-time
+              description: "Solar noon time"
+              example: "2015-05-21T12:14:17+00:00"
+
+            civil_twilight_begin:
+              type: string
+              format: date-time
+              description: "Civil twilight begin time"
+              example: "2015-05-21T04:36:17+00:00"
+
+            civil_twilight_end:
+              type: string
+              format: date-time
+              description: "Civil twilight end time"
+              example: "2015-05-21T19:52:17+00:00"
+
+            nautical_twilight_begin:
+              type: string
+              format: date-time
+              description: "Nautical twilight begin time"
+              example: "2015-05-21T04:00:13+00:00"
+
+            nautical_twilight_end:
+              type: string
+              format: date-time
+              description: "Nautical twilight end time"
+              example: "2015-05-21T20:28:21+00:00"
+
+            astronomical_twilight_begin:
+              type: string
+              format: date-time
+              description: "Astronomical twilight begin time"
+              example: "2015-05-21T03:20:49+00:00"
+
+            astronomical_twilight_end:
+              type: string
+              format: date-time
+              description: "Astronomical twilight end time"
+              example: "2015-05-21T21:07:45+00:00"
+
+            day_length:
+              type: Integer
+              description: "Day length in seconds"
+              example: 51444

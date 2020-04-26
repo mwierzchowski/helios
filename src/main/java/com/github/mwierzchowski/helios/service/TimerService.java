@@ -1,8 +1,9 @@
 package com.github.mwierzchowski.helios.service;
 
-import com.github.mwierzchowski.helios.core.NotFoundException;
+import com.github.mwierzchowski.helios.core.commons.EventStore;
+import com.github.mwierzchowski.helios.core.commons.NotFoundException;
 import com.github.mwierzchowski.helios.core.timers.Timer;
-import com.github.mwierzchowski.helios.core.timers.TimerAlertStarter;
+import com.github.mwierzchowski.helios.core.timers.TimerAlertPublisher;
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent;
 import com.github.mwierzchowski.helios.core.timers.TimerRepository;
 import com.github.mwierzchowski.helios.core.timers.TimerSchedule;
@@ -25,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -81,12 +81,12 @@ public class TimerService {
     /**
      * Timer alerts starter
      */
-    private final TimerAlertStarter timerAlertStarter;
+    private final TimerAlertPublisher alertPublisher;
 
     /**
      * Events publisher
      */
-    private final ApplicationEventPublisher eventPublisher;
+    private final EventStore eventStore;
 
     /**
      * Provides list of all registered timers.
@@ -140,7 +140,7 @@ public class TimerService {
         var timer = foundTimer.get();
         timerRepository.delete(timer);
         var timerRemovedEvent = new TimerRemovedEvent(timer);
-        eventPublisher.publishEvent(timerRemovedEvent);
+        eventStore.publish(timerRemovedEvent);
     }
 
     /**
@@ -221,7 +221,7 @@ public class TimerService {
         }
         timer.add(schedule);
         timerRepository.save(timer);
-        timerAlertStarter.startAlertFor(timer);
+        alertPublisher.startAlertFor(timer);
     }
 
     /**

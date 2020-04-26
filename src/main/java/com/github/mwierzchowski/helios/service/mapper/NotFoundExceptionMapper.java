@@ -1,6 +1,6 @@
 package com.github.mwierzchowski.helios.service.mapper;
 
-import com.github.mwierzchowski.helios.core.NotFoundException;
+import com.github.mwierzchowski.helios.core.commons.NotFoundException;
 import com.github.mwierzchowski.helios.service.dto.RequestErrorDto;
 import org.springframework.stereotype.Component;
 

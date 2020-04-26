@@ -34,3 +34,19 @@ resilience4j.retry.instances:
     exponentialBackoffMultiplier: 2
     retryExceptions:
     - java.lang.Exception
+  sun-api-cache:
+    maxRetryAttempts: 240
+    waitDuration: 15s
+    enableExponentialBackoff: false
+    retryExceptions:
+      - java.lang.Exception
+  sun-api:
+    maxRetryAttempts: 6
+    waitDuration: 1s
+    enableExponentialBackoff: true
+    exponentialBackoffMultiplier: 2
+    retryExceptions:
+      - java.lang.Exception
+
+
+

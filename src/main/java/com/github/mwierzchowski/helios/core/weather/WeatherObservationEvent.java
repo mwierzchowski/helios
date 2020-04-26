@@ -1,8 +1,7 @@
 package com.github.mwierzchowski.helios.core.weather;
 
-import com.github.mwierzchowski.helios.core.HeliosEvent;
+import com.github.mwierzchowski.helios.core.commons.HeliosEvent;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -10,9 +9,8 @@ import lombok.RequiredArgsConstructor;
  * @author Marcin Wierzchowski
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
-public class WeatherObservationEvent extends HeliosEvent {
+public class WeatherObservationEvent implements HeliosEvent {
     /**
      * Current weather observation
      */

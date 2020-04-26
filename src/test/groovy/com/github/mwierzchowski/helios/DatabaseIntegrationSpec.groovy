@@ -4,7 +4,6 @@ import com.github.gavlyukovskiy.boot.jdbc.decorator.DataSourceDecoratorAutoConfi
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.core.annotation.AliasFor
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,10 +19,9 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @Target(TYPE)
 @Retention(RUNTIME)
 @Transactional
-@ActiveProfiles
 @DataJpaTest(showSql = false)
 @ImportAutoConfiguration(DataSourceDecoratorAutoConfiguration)
 @AutoConfigureTestDatabase(replace = NONE)
-@interface DatabaseSpec {
-    @AliasFor(annotation = ActiveProfiles, attribute = "profiles") String[] profiles() default ["test"]
+@ActiveProfiles(profiles = "test")
+@interface DatabaseIntegrationSpec {
 }

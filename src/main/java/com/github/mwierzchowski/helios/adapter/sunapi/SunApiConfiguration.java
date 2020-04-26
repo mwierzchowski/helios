@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.adapter.sunapi;
 
 import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator;
+import com.github.mwierzchowski.helios.core.commons.EventStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.sunrisesunset.api.SunriseSunsetApi;
@@ -26,7 +27,7 @@ public class SunApiConfiguration {
     }
 
     @Bean
-    public ExternalServiceHealthIndicator<SunriseSunsetResponse> sunApiHealthIndicator() {
-        return new ExternalServiceHealthIndicator<>();
+    public ExternalServiceHealthIndicator<SunriseSunsetResponse> sunApiHealthIndicator(EventStore eventStore) {
+        return new ExternalServiceHealthIndicator<>(SunApiSunEphemerisProvider.class, eventStore);
     }
 }

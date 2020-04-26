@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.adapter.owm;
 
 import com.github.mwierzchowski.helios.adapter.commons.ExternalServiceHealthIndicator;
+import com.github.mwierzchowski.helios.core.commons.EventStore;
 import org.openweathermap.api.CurrentWeatherApi;
 import org.openweathermap.invoker.ApiClient;
 import org.openweathermap.model.CurrentWeatherResponse;
@@ -27,7 +28,7 @@ public class OwmConfiguration {
     }
 
     @Bean
-    public ExternalServiceHealthIndicator<CurrentWeatherResponse> owmHealthIndicator() {
-        return new ExternalServiceHealthIndicator<>();
+    public ExternalServiceHealthIndicator<CurrentWeatherResponse> owmHealthIndicator(EventStore eventStore) {
+        return new ExternalServiceHealthIndicator<>(OwmWeatherProvider.class, eventStore);
     }
 }

@@ -4,6 +4,7 @@ import com.github.mwierzchowski.helios.core.commons.CommonProperties;
 import com.github.mwierzchowski.helios.core.commons.FailureEvent;
 import com.github.mwierzchowski.helios.core.commons.TimestampedHeliosEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,7 +34,7 @@ import static java.util.stream.Collectors.joining;
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "spring.mail.host")
-public class MailFacade {
+public class MailListener {
     /**
      * Common properties
      */
@@ -52,12 +53,14 @@ public class MailFacade {
     /**
      * Username sending emails
      */
+    @Setter
     @Value("${spring.mail.username}")
     private String userName;
 
     /**
      * Application name sending emails
      */
+    @Setter
     @Value("${info.app.name}")
     private String applicationName;
 

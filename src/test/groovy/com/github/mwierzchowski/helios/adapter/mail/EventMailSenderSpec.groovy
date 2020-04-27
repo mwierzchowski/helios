@@ -8,41 +8,38 @@ import spock.lang.Subject
 
 import javax.mail.internet.MimeMessage
 
-class MailListenerSpec extends Specification {
+class EventMailSenderSpec extends Specification {
     def commonProperties = new CommonProperties()
     def mailProperties = new MailProperties()
     def mailSender = Mock(JavaMailSender)
     def mimeMessage = Mock(MimeMessage)
 
     @Subject
-    def mailListener = new MailListener(commonProperties, mailProperties, mailSender).tap {
+    def eventMailSender = new EventMailSender(commonProperties, mailProperties, mailSender).tap {
         userName = "username"
         applicationName = "app"
     }
 
-    def "Should send email if events were published"() {
+    def "Should send email if events were enqueued"() {
         given:
-        def message1 = "failure 1"
-        def event1 = new FailureEvent(MailListenerSpec, new RuntimeException(message1))
-        def message2 = "failure 2"
-        def event2 = new FailureEvent(MailListenerSpec, new RuntimeException(message2))
+        def event1 = new FailureEvent(EventMailSenderSpec, new RuntimeException())
+        def event2 = new FailureEvent(EventMailSenderSpec, new RuntimeException())
         mailSender.createMimeMessage() >> mimeMessage
         when:
-        mailListener.onFailure(event1)
-        mailListener.onFailure(event2)
-        mailListener.sendMail()
+        eventMailSender.enqueue(event1)
+        eventMailSender.enqueue(event2)
+        eventMailSender.sendMail()
         then:
         1 * mailSender.send({
             verifyAll(it, MimeMessage) {
                 it == mimeMessage
             }
         })
-        1 * mimeMessage.setSubject({it.contains('2')})
     }
 
-    def "Should not send email if events were not published"() {
+    def "Should not send email if events were not enqueued"() {
         when:
-        mailListener.sendMail()
+        eventMailSender.sendMail()
         then:
         0 * mailSender.send(_ as MimeMessage)
     }
@@ -50,25 +47,21 @@ class MailListenerSpec extends Specification {
     def "Should not send email if mail was already sent"() {
         given:
         mailSender.createMimeMessage() >> mimeMessage
-        mailListener.onFailure(new FailureEvent(MailListenerSpec, new RuntimeException()))
-        mailListener.sendMail()
+        eventMailSender.enqueue(new FailureEvent(EventMailSenderSpec, new RuntimeException()))
+        eventMailSender.sendMail()
         when:
-        mailListener.sendMail()
+        eventMailSender.sendMail()
         then:
         0 * mailSender.send(_ as MimeMessage)
     }
 
-    def "Should send email if previous mail failed"() {
+    def "Should send email if previous mail sending failed"() {
         given:
         mailSender.createMimeMessage() >>> [null, mimeMessage]
-        mailListener.onFailure(new FailureEvent(MailListenerSpec, new RuntimeException()))
-        try {
-            mailListener.sendMail()
-        } catch (Exception ex) {
-            // ignore
-        }
+        eventMailSender.enqueue(new FailureEvent(EventMailSenderSpec, new RuntimeException()))
+        eventMailSender.sendMail()
         when:
-        mailListener.sendMail()
+        eventMailSender.sendMail()
         then:
         1 * mailSender.send(_ as MimeMessage)
     }

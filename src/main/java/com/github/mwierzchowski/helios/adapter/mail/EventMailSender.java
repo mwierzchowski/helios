@@ -34,7 +34,7 @@ import static java.util.stream.Collectors.joining;
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "spring.mail.host")
-public class MailListener {
+public class EventMailSender {
     /**
      * Common properties
      */
@@ -78,12 +78,12 @@ public class MailListener {
     }
 
     /**
-     * Listener callback that adds failure event to the queue of events for next mail.
+     * Add to queue failure event
      * @param failureEvent event
      */
     @EventListener
-    public synchronized void onFailure(FailureEvent failureEvent) {
-        log.debug("Adding failure event to the queue: {}", failureEvent);
+    public synchronized void enqueue(FailureEvent failureEvent) {
+        log.debug("Enqueuing failure event: {}", failureEvent);
         eventQueue.add(failureEvent);
     }
 
@@ -106,10 +106,10 @@ public class MailListener {
             var text = buildText(sendQueue);
             var message = buildMessage(subject, text);
             mailSender.send(message);
-            log.debug("Mail with subject '{}' was sent", subject);
+            log.info("Mail '{}' was sent", subject);
         } catch (Exception ex) {
             eventQueue.addAll(sendQueue);
-            throw new RuntimeException("Mail was not send", ex);
+            log.error("Mail sending failed", ex);
         }
     }
 

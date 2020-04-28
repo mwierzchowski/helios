@@ -3,10 +3,11 @@ plugins {
 	id 'groovy'
 	id 'org.springframework.boot' version '2.2.5.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.2'
 	id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
-group = 'com.github.mwierzchowski'
+group = 'com.github.mwierzchowski.helios'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.13'
 targetCompatibility = '1.13'
@@ -105,3 +106,14 @@ sourceSets.main.resources.srcDirs += "${swaggerSources.owm.code.outputDir}/src/m
 compileJava.dependsOn swaggerSources.sunapi.code
 sourceSets.main.java.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/java"
 sourceSets.main.resources.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/resources"
+
+// Open-API generation
+resolve {
+	openApiFile = file("$project.rootDir/openapi.yaml")
+	outputDir = file("$sourceSets.main.output.resourcesDir/static")
+	classpath = sourceSets.main.runtimeClasspath
+	resourcePackages = [project.group.toString()]
+	prettyPrint = true
+	outputFormat = 'JSON'
+	tasks.jar.dependsOn resolve
+}

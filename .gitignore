@@ -3,7 +3,7 @@
 build/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/*
 !.idea/runConfigurations
 *.iws
 *.iml
@@ -41,4 +41,3 @@ out/
 ### Others ###
 *.log
 hs_err_pid*
-

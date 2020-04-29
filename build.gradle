@@ -123,9 +123,8 @@ resolve {
 	resourcePackages = [project.group.toString()]
 	prettyPrint = true
 	outputFormat = 'JSON'
-	tasks.jar.dependsOn resolve
 }
-task unpackSwaggerUi(type: Copy) {
+task addSwaggerUi(type: Copy) {
 	from zipTree(configurations.swagerUiBundle.singleFile).matching {
 		include "/META-INF/resources/webjars/swagger-ui/**/*.*"
 		eachFile {
@@ -137,5 +136,6 @@ task unpackSwaggerUi(type: Copy) {
 	filter {
 		it.replaceAll('https://petstore.swagger.io/v2/swagger.json', 'openapi.json')
 	}
-	tasks.jar.dependsOn unpackSwaggerUi
+	addSwaggerUi.dependsOn resolve
 }
+tasks.jar.dependsOn addSwaggerUi

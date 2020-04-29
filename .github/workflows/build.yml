@@ -17,6 +17,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assemble
   Test:
+    runs-on: ubuntu-latest
     steps:
       - name: Test with Gradle
         run: ./gradlew test

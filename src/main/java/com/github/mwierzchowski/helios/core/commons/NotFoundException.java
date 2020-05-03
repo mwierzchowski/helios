@@ -15,7 +15,7 @@ public class NotFoundException extends RuntimeException {
     /**
      * Template of the message
      */
-    public final static String TEMPLATE = "{0} with id {1} was not found";
+    public static final String TEMPLATE = "{0} with id {1} was not found";
 
     /**
      * Class of missing entity

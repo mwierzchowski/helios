@@ -31,7 +31,7 @@ jobs:
 
     - name: Test
       run: ./gradlew test --quiet --stacktrace
-      uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v1
       with:
         name: Test report
         path: /home/runner/work/helios/helios/build/reports/tests/test/index.html

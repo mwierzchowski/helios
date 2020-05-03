@@ -5,11 +5,11 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Dawn;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Dusk;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Noon;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Sunrise;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Sunset;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DAWN;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DUSK;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.NOON;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.SUNRISE;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.SUNSET;
 import static java.time.LocalTime.parse;
 
 /**
@@ -49,11 +49,11 @@ public class SunApiFallbackProperties {
     public SunEphemeris getSunEphemeris() {
         var ephemeris = new SunEphemeris();
         ephemeris.setDay(LocalDate.now());
-        ephemeris.getTimes().put(Dawn, parse(dawn));
-        ephemeris.getTimes().put(Sunrise, parse(sunrise));
-        ephemeris.getTimes().put(Noon, parse(noon));
-        ephemeris.getTimes().put(Sunset, parse(sunset));
-        ephemeris.getTimes().put(Dusk, parse(dusk));
+        ephemeris.getTimes().put(DAWN, parse(dawn));
+        ephemeris.getTimes().put(SUNRISE, parse(sunrise));
+        ephemeris.getTimes().put(NOON, parse(noon));
+        ephemeris.getTimes().put(SUNSET, parse(sunset));
+        ephemeris.getTimes().put(DUSK, parse(dusk));
         ephemeris.setApproximated(true);
         return ephemeris;
     }

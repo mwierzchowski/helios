@@ -12,7 +12,7 @@ import spock.lang.Subject
 import java.time.LocalDate
 import java.time.LocalTime
 
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Dawn
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DAWN
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 @LiteIntegrationSpec([SunApiConfiguration, SunApiProperties, SunApiSunEphemerisProvider])
@@ -94,7 +94,7 @@ class SunApiSunEphemerisProviderSpec extends Specification {
         def fallback = ephemerisProvider.sunEphemerisFor(today)
         then:
         fallback.day == today
-        fallback.times.get(Dawn) == LocalTime.parse(sunProperties.fallback.dawn)
+        fallback.times.get(DAWN) == LocalTime.parse(sunProperties.fallback.dawn)
         fallback.approximated
         ephemerisProvider.cache.size() == 0
         1 * healthIndicator.register(_ as Throwable)

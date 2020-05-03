@@ -39,7 +39,7 @@ public class OwmWeatherProvider implements WeatherProvider {
     /**
      * Mapper instance
      */
-    private final static OwmMapper mapper = Mappers.getMapper(OwmMapper.class);
+    private static final OwmMapper MAPPER = Mappers.getMapper(OwmMapper.class);
 
     /**
      * OWM properties
@@ -73,7 +73,7 @@ public class OwmWeatherProvider implements WeatherProvider {
                 owmProperties.getLanguage()
         );
         log.debug("Current weather response: {}", weatherResponse);
-        Weather weather = mapper.toWeather(weatherResponse);
+        Weather weather = MAPPER.toWeather(weatherResponse);
         healthIndicator.register(weatherResponse);
         return Optional.of(weather);
     }
@@ -109,9 +109,9 @@ public class OwmWeatherProvider implements WeatherProvider {
     interface OwmMapper {
         @Mapping(target = "timestamp", expression = "java(java.time.Instant.ofEpochSecond(response.getDt()))") // TODO
         @Mapping(target = "temperature.value", source = "response.main.temp")
-        @Mapping(target = "temperature.unit", constant = "Celsius") // TODO
+        @Mapping(target = "temperature.unit", constant = "CELSIUS") // TODO
         @Mapping(target = "wind.speed.value", source ="response.wind.speed")
-        @Mapping(target = "wind.speed.unit", constant = "MetersPerSecond") // TODO
+        @Mapping(target = "wind.speed.unit", constant = "METERS_PER_SECOND") // TODO
         @Mapping(target = "wind.direction", source ="response.wind.deg")
         @Mapping(target = "cloudsCoverage", source ="response.clouds.all")
         Weather toWeather(CurrentWeatherResponse response);

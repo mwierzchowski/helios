@@ -11,9 +11,9 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public enum SpeedUnit {
-    KilometersPerHour("km/h"),
-    MetersPerSecond("m/s"),
-    MilesPerHour("mph");
+    KILOMETERS_PER_HOUR("km/h"),
+    METERS_PER_SECOND("m/s"),
+    MILES_PER_HOUR("mph");
 
     /**
      * Symbol of unit.

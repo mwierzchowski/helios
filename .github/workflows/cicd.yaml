@@ -33,7 +33,7 @@ jobs:
       uses: actions/upload-artifact@v1
       if: always()
       with:
-        name: Test Summary ${{ GITHUB_RUN_ID }}
+        name: Test Summary
         path: /home/runner/work/helios/helios/build/reports/tests/test
 
     - name: Update Sonar

@@ -6,11 +6,11 @@ import javax.validation.Validation
 import java.time.Instant
 
 import static SpeedUnit.KilometersPerHour
-import static TemperatureUnit.Celsius
+import static TemperatureUnit.CELSIUS
 
 class WeatherSpec extends Specification {
     def timestamp = Instant.now()
-    def temperature = new Temperature(20, Celsius)
+    def temperature = new Temperature(20, CELSIUS)
     def wind = new Wind(new Speed(100, KilometersPerHour), 125)
     def validator = Validation.buildDefaultValidatorFactory().getValidator()
 

@@ -9,7 +9,7 @@ class TemperatureSpec extends Specification {
 
     def "Temperature could be created when values are correct"() {
         given:
-        def temperature = new Temperature(0, TemperatureUnit.Celsius)
+        def temperature = new Temperature(0, TemperatureUnit.CELSIUS)
         when:
         def errors = validator.validate(temperature)
         then:
@@ -18,7 +18,7 @@ class TemperatureSpec extends Specification {
 
     def "Temperature's value can not be null"() {
         given:
-        def temperature = new Temperature(null, TemperatureUnit.Celsius)
+        def temperature = new Temperature(null, TemperatureUnit.CELSIUS)
         when:
         def errors = validator.validate(temperature)
         then:

@@ -109,7 +109,7 @@ public class OwmWeatherProvider implements WeatherProvider {
     interface OwmMapper {
         @Mapping(target = "timestamp", expression = "java(java.time.Instant.ofEpochSecond(response.getDt()))") // TODO
         @Mapping(target = "temperature.value", source = "response.main.temp")
-        @Mapping(target = "temperature.unit", constant = "Celsius") // TODO
+        @Mapping(target = "temperature.unit", constant = "CELSIUS") // TODO
         @Mapping(target = "wind.speed.value", source ="response.wind.speed")
         @Mapping(target = "wind.speed.unit", constant = "MetersPerSecond") // TODO
         @Mapping(target = "wind.direction", source ="response.wind.deg")

@@ -141,3 +141,10 @@ task addSwaggerUi(type: Copy) {
 	addSwaggerUi.dependsOn resolve
 }
 tasks.jar.dependsOn addSwaggerUi
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		html.enabled false
+	}
+}

@@ -23,4 +23,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
     - name: Build
-      run: ./gradlew build sonarqube --stacktrace -Dsonar.login=$SONAR_LOGIN
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_LOGIN }}
+      run: ./gradlew build sonarqube -x test --stacktrace

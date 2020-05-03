@@ -29,16 +29,16 @@ jobs:
     - name: Test
       run: ./gradlew test jacocoTestReport
 
-    - name: Check if testing report is available
-      id: check_test_summary
+    - name: Check if tests report is available
+      id: check_tests_report
       if: always()
       uses: andstor/file-existence-action@v1
       with:
         files: "/home/runner/work/helios/helios/build/reports/tests/test"
 
-    - name: Export testing report
+    - name: Export tests report
       uses: actions/upload-artifact@v2
-      if: steps.check_test_summary.outputs.files_exists == 'true'
+      if: steps.check_tests_report.outputs.files_exists == 'true'
       with:
         name: Test Summary
         path: /home/runner/work/helios/helios/build/reports/tests/test

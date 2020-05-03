@@ -151,7 +151,8 @@ public class EventMailSender {
      * @throws UnsupportedEncodingException
      * @throws MessagingException
      */
-    private MimeMessage buildMessage(String subject, String text) throws UnsupportedEncodingException, MessagingException {
+    private MimeMessage buildMessage(String subject, String text) throws UnsupportedEncodingException,
+            MessagingException {
         var sender = format("{0}@{1}", userName, mailProperties.getService());
         var message = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(message, false);

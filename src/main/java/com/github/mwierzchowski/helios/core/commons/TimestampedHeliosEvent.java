@@ -16,9 +16,9 @@ public interface TimestampedHeliosEvent extends HeliosEvent, Comparable<Timestam
     }
 
     @Override
-    default int compareTo(TimestampedHeliosEvent other) {
+    default int compareTo(TimestampedHeliosEvent that) {
         var timestamp1 = this.getTimestamp().toEpochMilli();
-        var timestamp2 = other.getTimestamp().toEpochMilli();
+        var timestamp2 = that.getTimestamp().toEpochMilli();
         return (int) (timestamp1 - timestamp2);
     }
 }

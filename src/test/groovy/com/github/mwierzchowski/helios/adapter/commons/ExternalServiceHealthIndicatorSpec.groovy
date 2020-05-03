@@ -26,7 +26,7 @@ class ExternalServiceHealthIndicatorSpec extends Specification {
         when:
         healthIndicator.register(exception)
         then:
-        1 * eventStore.publish({
+        2 * eventStore.publish({
             verifyAll(it, FailureEvent) {
                 source == ExternalServiceHealthIndicatorSpec
                 timestamp.isAfter(start)

@@ -111,7 +111,7 @@ public class OwmWeatherProvider implements WeatherProvider {
         @Mapping(target = "temperature.value", source = "response.main.temp")
         @Mapping(target = "temperature.unit", constant = "CELSIUS") // TODO
         @Mapping(target = "wind.speed.value", source ="response.wind.speed")
-        @Mapping(target = "wind.speed.unit", constant = "MetersPerSecond") // TODO
+        @Mapping(target = "wind.speed.unit", constant = "METERS_PER_SECOND") // TODO
         @Mapping(target = "wind.direction", source ="response.wind.deg")
         @Mapping(target = "cloudsCoverage", source ="response.clouds.all")
         Weather toWeather(CurrentWeatherResponse response);

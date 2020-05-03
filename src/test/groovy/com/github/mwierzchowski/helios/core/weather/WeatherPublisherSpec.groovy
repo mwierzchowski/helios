@@ -4,7 +4,7 @@ import com.github.mwierzchowski.helios.core.commons.EventStore
 import spock.lang.Specification
 import spock.lang.Subject
 
-import static com.github.mwierzchowski.helios.core.weather.SpeedUnit.KilometersPerHour
+import static com.github.mwierzchowski.helios.core.weather.SpeedUnit.KILOMETERS_PER_HOUR
 import static com.github.mwierzchowski.helios.core.weather.TemperatureUnit.CELSIUS
 import static java.time.Instant.now
 import static java.util.Optional.empty
@@ -131,7 +131,7 @@ class WeatherPublisherSpec extends Specification {
         return Weather.builder()
             .timestamp(timestamp)
             .temperature(new Temperature(new BigDecimal(20), CELSIUS))
-            .wind(new Wind(new Speed(new BigDecimal(5), KilometersPerHour), 270))
+            .wind(new Wind(new Speed(new BigDecimal(5), KILOMETERS_PER_HOUR), 270))
             .cloudsCoverage(clouds)
             .build()
     }

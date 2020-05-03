@@ -93,6 +93,6 @@ public class WeatherPublisher {
     }
 
     private boolean lastEventWasWarning() {
-        return lastEvent != null && lastEvent instanceof WeatherMissingEvent;
+        return lastEvent instanceof WeatherMissingEvent;
     }
 }

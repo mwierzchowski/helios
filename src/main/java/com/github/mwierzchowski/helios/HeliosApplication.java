@@ -40,5 +40,5 @@ public class HeliosApplication extends ResourceConfig {
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(HeliosApplication.class, args);
-	}
+
 }

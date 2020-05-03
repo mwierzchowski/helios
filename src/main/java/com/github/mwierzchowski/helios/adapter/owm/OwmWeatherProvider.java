@@ -39,7 +39,7 @@ public class OwmWeatherProvider implements WeatherProvider {
     /**
      * Mapper instance
      */
-    private final static OwmMapper mapper = Mappers.getMapper(OwmMapper.class);
+    private static final OwmMapper MAPPER = Mappers.getMapper(OwmMapper.class);
 
     /**
      * OWM properties
@@ -73,7 +73,7 @@ public class OwmWeatherProvider implements WeatherProvider {
                 owmProperties.getLanguage()
         );
         log.debug("Current weather response: {}", weatherResponse);
-        Weather weather = mapper.toWeather(weatherResponse);
+        Weather weather = MAPPER.toWeather(weatherResponse);
         healthIndicator.register(weatherResponse);
         return Optional.of(weather);
     }

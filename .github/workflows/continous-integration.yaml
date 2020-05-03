@@ -34,7 +34,7 @@ jobs:
       id: check_test_summary
       uses: andstor/file-existence-action@v1
       with:
-        files: "/home/runner/work/helios/helios/build/reports/tests/tes"
+        files: "/home/runner/work/helios/helios/build/reports/tests/test"
 
     - name: Export Test Summary
       uses: actions/upload-artifact@v2

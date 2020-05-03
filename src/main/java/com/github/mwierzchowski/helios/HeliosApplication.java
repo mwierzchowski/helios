@@ -1,10 +1,5 @@
 package com.github.mwierzchowski.helios;
 
-import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.License;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,9 +25,6 @@ import javax.ws.rs.ApplicationPath;
 @EnableTransactionManagement
 @SpringBootApplication
 @ApplicationPath("/api")
-@OpenAPIDefinition(info = @Info(version = "1.0", title = "Helios", description = "Sun blinds controller",
-		contact = @Contact(name = "Marcin Wierzchowski", url = "https://github.com/mwierzchowski/helios"),
-		license = @License(name = "MIT License", url = "https://opensource.org/licenses/MIT")))
 public class HeliosApplication extends ResourceConfig {
 	/**
 	 * Initialization of application endpoints.
@@ -40,7 +32,6 @@ public class HeliosApplication extends ResourceConfig {
 	@PostConstruct
     public void initializeEndpoints() {
 		packages("com.github.mwierzchowski.helios.service");
-		register(OpenApiResource.class);
     }
 
 	/**

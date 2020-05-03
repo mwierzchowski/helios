@@ -2,6 +2,8 @@ package com.github.mwierzchowski.helios.core.commons;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 import static java.text.MessageFormat.format;
 
 /**
@@ -13,7 +15,7 @@ public class NotFoundException extends RuntimeException {
     /**
      * Template of the message
      */
-    public final static String template = "{0} with id {1} was not found";
+    public static final String TEMPLATE = "{0} with id {1} was not found";
 
     /**
      * Class of missing entity
@@ -23,14 +25,14 @@ public class NotFoundException extends RuntimeException {
     /**
      * Id of missing entity
      */
-    private final Object id;
+    private final Serializable id;
     /**
      * Constructor
      * @param clazz class of missing entity
      * @param id id of missing entity
      */
-    public NotFoundException(Class<?> clazz, Object id) {
-        super(format(template, clazz.getSimpleName(), id));
+    public NotFoundException(Class<?> clazz, Serializable id) {
+        super(format(TEMPLATE, clazz.getSimpleName(), id));
         this.clazz = clazz;
         this.id = id;
     }

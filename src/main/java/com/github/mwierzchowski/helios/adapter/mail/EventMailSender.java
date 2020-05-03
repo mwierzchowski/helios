@@ -130,7 +130,7 @@ public class EventMailSender {
      * @return text
      */
     private String buildText(Queue<TimestampedHeliosEvent> sendQueue) {
-        Function<TimestampedHeliosEvent, String> eventToText = (e) -> {
+        Function<TimestampedHeliosEvent, String> eventToText = e -> {
             var event = (FailureEvent) e;
             var time = event.getZonedDateTime().format(commonProperties.timeFormatter());
             var clazz = event.getSource().getSimpleName();

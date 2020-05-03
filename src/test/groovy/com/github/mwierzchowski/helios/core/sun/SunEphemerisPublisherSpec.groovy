@@ -26,11 +26,11 @@ class SunEphemerisPublisherSpec extends Specification {
         def today = LocalDate.now(clock)
         ephemerisProvider.sunEphemerisFor(today) >> new SunEphemeris().tap {
             it.day = today
-            it.times.put Dawn, timeOf(0)
-            it.times.put Sunrise, timeOf(4)
-            it.times.put Noon, timeOf(12)
-            it.times.put Sunset, timeOf(20)
-            it.times.put Dusk, timeOf(22)
+            it.times.put DAWN, timeOf(0)
+            it.times.put SUNRISE, timeOf(4)
+            it.times.put NOON, timeOf(12)
+            it.times.put SUNSET, timeOf(20)
+            it.times.put DUSK, timeOf(22)
         }
         def ephemerisPublisher = new SunEphemerisPublisher(clock, ephemerisProvider, executorService, eventStore)
         when:
@@ -39,7 +39,7 @@ class SunEphemerisPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, SunEphemerisEvent) {
-                type == Noon
+                type == NOON
             }
         })
     }
@@ -50,12 +50,12 @@ class SunEphemerisPublisherSpec extends Specification {
         def today = LocalDate.now(clock)
         ephemerisProvider.sunEphemerisFor(today) >> new SunEphemeris().tap {
             it.day = today
-            it.times.put Dusk, timeOf(22)
+            it.times.put DUSK, timeOf(22)
         }
         ephemerisProvider.sunEphemerisFor(today.plusDays(1)) >> new SunEphemeris().tap {
             it.day = today.plusDays(1)
-            it.times.put Dawn, timeOf(0)
-            it.times.put Sunrise, timeOf(4)
+            it.times.put DAWN, timeOf(0)
+            it.times.put SUNRISE, timeOf(4)
         }
         def ephemerisPublisher = new SunEphemerisPublisher(clock, ephemerisProvider, executorService, eventStore)
         when:
@@ -64,7 +64,7 @@ class SunEphemerisPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, SunEphemerisEvent) {
-                type == Dawn
+                type == DAWN
             }
         })
     }

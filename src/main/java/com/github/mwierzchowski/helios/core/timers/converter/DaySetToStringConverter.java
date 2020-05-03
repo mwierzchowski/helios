@@ -3,6 +3,7 @@ package com.github.mwierzchowski.helios.core.timers.converter;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.time.DayOfWeek;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -48,7 +49,7 @@ public class DaySetToStringConverter implements AttributeConverter<Set<DayOfWeek
     @Override
     public Set<DayOfWeek> convertToEntityAttribute(String daysString) {
         if (daysString == null) {
-            return null;
+            return Collections.emptySet();
         } else if (daysString.trim().isEmpty()) {
             return emptySet();
         } else {

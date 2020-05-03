@@ -1,4 +1,4 @@
-# Helios <a href="https://github.com/mwierzchowski/helios/actions"><img src="https://github.com/mwierzchowski/helios/workflows/CI/badge.svg?branch=feature%2Fadd-cicd" alt="CI Status" style="max-width:100%;"></a>
+# Helios <a href="https://github.com/mwierzchowski/helios/actions?query=workflow%3ACI"><img src="https://github.com/mwierzchowski/helios/workflows/CI/badge.svg?branch=feature%2Fadd-cicd" alt="CI Status" style="max-width:100%;"></a>
 
 Sun blinds controller written in Java as a Spring Boot microservice running on Raspberry Pi.
 

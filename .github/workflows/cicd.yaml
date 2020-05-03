@@ -29,7 +29,7 @@ jobs:
     - name: Test
       run: ./gradlew test
 
-    - name: Export test summary
+    - name: Export Test Summary
       uses: actions/upload-artifact@v1
       if: always()
       with:

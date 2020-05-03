@@ -13,7 +13,7 @@ public class NotFoundException extends RuntimeException {
     /**
      * Template of the message
      */
-    public final static String template = "{0} with id {1} was not found";
+    public final static String TEMPLATE = "{0} with id {1} was not found";
 
     /**
      * Class of missing entity
@@ -30,7 +30,7 @@ public class NotFoundException extends RuntimeException {
      * @param id id of missing entity
      */
     public NotFoundException(Class<?> clazz, Object id) {
-        super(format(template, clazz.getSimpleName(), id));
+        super(format(TEMPLATE, clazz.getSimpleName(), id));
         this.clazz = clazz;
         this.id = id;
     }

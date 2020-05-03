@@ -1,4 +1,5 @@
-# Helios ![Build](https://github.com/mwierzchowski/helios/workflows/Build/badge.svg)
+# Helios ![CI/CD](https://github.com/mwierzchowski/helios/workflows/CI/CD/badge.svg?branch=feature%2Fadd-cicd)
+
 Sun blinds controller written in Java as a Spring Boot microservice running on Raspberry Pi.
 
 This is the very early version, real documentation is coming soon (hopefully). 

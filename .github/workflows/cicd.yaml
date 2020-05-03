@@ -32,11 +32,11 @@ jobs:
     - name: Test
       run: ./gradlew test
 
-    - name: Export tests report
+    - name: Export test summary
       uses: actions/upload-artifact@v1
       if: always()
       with:
-        name: Test report
+        name: Test Summary
         path: /home/runner/work/helios/helios/build/reports/tests/test
 
     - name: Update Sonar

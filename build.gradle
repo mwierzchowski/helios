@@ -141,11 +141,9 @@ task addSwaggerUi(type: Copy) {
 }
 tasks.jar.dependsOn addSwaggerUi
 
-//sonarqube {
-//	properties {
-//		property "sonar.projectKey", "mwierzchowski_helios" // todo remove?
-//		property "sonar.organization", "mwierzchowski" // todo remove?
-//		property "sonar.host.url", "https://sonarcloud.io"
-//		property "sonar.login", System.getenv('SONAR_LOGIN')
-//	}
-//}
+sonarqube {
+	properties {
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.login", System.getenv('SONAR_LOGIN')
+	}
+}

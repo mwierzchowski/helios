@@ -27,10 +27,10 @@ jobs:
           ${{ runner.os }}-gradle-
 
     - name: Assemble
-      run: ./gradlew assemble --quiet --stacktrace
+      run: ./gradlew assemble
 
     - name: Test
-      run: ./gradlew test --quiet --stacktrace
+      run: ./gradlew test
 
     - name: Export tests report
       uses: actions/upload-artifact@v1
@@ -43,4 +43,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew sonarqube --quiet --stacktrace
+      run: ./gradlew sonarqube

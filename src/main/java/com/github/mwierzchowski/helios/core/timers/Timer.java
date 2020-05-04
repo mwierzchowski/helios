@@ -124,6 +124,5 @@ public class Timer {
         String x = null;
         System.out.println(x.indexOf('c'));
         System.out.println(y);
-        // todo remove
     }
 }

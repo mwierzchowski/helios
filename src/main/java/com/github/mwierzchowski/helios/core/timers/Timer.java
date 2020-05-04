@@ -118,4 +118,8 @@ public class Timer {
                 .sorted()
                 .findFirst();
     }
+
+    public void dupa() {
+        // todo remove
+    }
 }

@@ -1,6 +1,6 @@
 # Helios [![CI Status](https://github.com/mwierzchowski/helios/workflows/CI/badge.svg)](https://github.com/mwierzchowski/helios/actions?query=workflow%3ACI) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mwierzchowski_helios&metric=alert_status)](https://sonarcloud.io/dashboard?id=mwierzchowski_helios) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mwierzchowski_helios&metric=coverage)](https://sonarcloud.io/component_measures?id=mwierzchowski_helios&metric=coverage&view=list)
 
-Sun blinds controller written in Java as a Spring Boot microservice running on Raspberry Pi.
+Sun blinds controller written in Java as a Spring Boot microservice running on cloud and Raspberry Pi.
 
 This is the very early version, real documentation is coming soon (hopefully). 
 

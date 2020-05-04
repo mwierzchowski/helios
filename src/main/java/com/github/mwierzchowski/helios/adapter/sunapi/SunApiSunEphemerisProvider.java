@@ -21,11 +21,11 @@ import java.time.ZoneId;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Dawn;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Dusk;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Noon;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Sunrise;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.Sunset;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DAWN;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DUSK;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.NOON;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.SUNRISE;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.SUNSET;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
@@ -133,15 +133,15 @@ public class SunApiSunEphemerisProvider implements SunEphemerisProvider {
                 .atZoneSameInstant(ZoneId.systemDefault())
                 .toLocalDate());
         ofNullable(sunApiResponse.getResults().getCivilTwilightBegin()).map(this::toLocalTime)
-                .ifPresent(time -> ephemeris.getTimes().put(Dawn, time));
+                .ifPresent(time -> ephemeris.getTimes().put(DAWN, time));
         ofNullable(sunApiResponse.getResults().getSunrise()).map(this::toLocalTime)
-                .ifPresent(time -> ephemeris.getTimes().put(Sunrise, time));
+                .ifPresent(time -> ephemeris.getTimes().put(SUNRISE, time));
         ofNullable(sunApiResponse.getResults().getSolarNoon()).map(this::toLocalTime)
-                .ifPresent(time -> ephemeris.getTimes().put(Noon, time));
+                .ifPresent(time -> ephemeris.getTimes().put(NOON, time));
         ofNullable(sunApiResponse.getResults().getSunset()).map(this::toLocalTime)
-                .ifPresent(time -> ephemeris.getTimes().put(Sunset, time));
+                .ifPresent(time -> ephemeris.getTimes().put(SUNSET, time));
         ofNullable(sunApiResponse.getResults().getCivilTwilightEnd()).map(this::toLocalTime)
-                .ifPresent(time -> ephemeris.getTimes().put(Dusk, time));
+                .ifPresent(time -> ephemeris.getTimes().put(DUSK, time));
         return ephemeris;
     }
 

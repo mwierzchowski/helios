@@ -71,7 +71,7 @@ public class TimerService {
     /**
      * Mapper
      */
-    private final static TimerMapper mapper = Mappers.getMapper(TimerMapper.class);
+    private static final TimerMapper MAPPER = Mappers.getMapper(TimerMapper.class);
 
     /**
      * Timer repository
@@ -98,7 +98,7 @@ public class TimerService {
     public List<TimerDto> getTimers() {
         log.debug("Searching for timers");
         return timerRepository.findAll().stream()
-                .map(mapper::toTimerDto)
+                .map(MAPPER::toTimerDto)
                 .collect(toList());
     }
 
@@ -117,7 +117,7 @@ public class TimerService {
                     timerDto.getDescription(), foundTimer.get().getId());
             return;
         }
-        var timer = mapper.toTimer(timerDto);
+        var timer = MAPPER.toTimer(timerDto);
         timerRepository.save(timer);
     }
 
@@ -189,7 +189,7 @@ public class TimerService {
         return timerRepository.findById(timerId)
                 .orElseThrow(() -> new NotFoundException(Timer.class, timerId))
                 .getSchedules().stream()
-                .map(mapper::toTimerScheduleDto)
+                .map(MAPPER::toTimerScheduleDto)
                 .collect(toList());
     }
 
@@ -209,7 +209,7 @@ public class TimerService {
             @NotNull @Valid @RequestBody(description = "Schedule to be added") TimerScheduleDto scheduleDto) {
         log.debug("Adding schedule to timer {}", timerId);
         var timer = timerRepository.findById(timerId).orElseThrow(() -> new NotFoundException(Timer.class, timerId));
-        var schedule = mapper.toTimerSchedule(scheduleDto);
+        var schedule = MAPPER.toTimerSchedule(scheduleDto);
         if (timer.hasSame(schedule)) {
             log.warn("Did not add schedule to timer {} as it exist", timerId);
             return;

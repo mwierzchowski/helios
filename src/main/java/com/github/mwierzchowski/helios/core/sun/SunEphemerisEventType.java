@@ -5,9 +5,9 @@ package com.github.mwierzchowski.helios.core.sun;
  * @author Marcin Wierzchowski
  */
 public enum SunEphemerisEventType {
-    Dawn,
-    Sunrise,
-    Noon,
-    Sunset,
-    Dusk
+    DAWN,
+    SUNRISE,
+    NOON,
+    SUNSET,
+    DUSK
 }

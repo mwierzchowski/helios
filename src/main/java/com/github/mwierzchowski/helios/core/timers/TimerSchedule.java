@@ -135,8 +135,8 @@ public class TimerSchedule {
      */
     private LocalDate nextDay() {
         var thisDay = LocalDate.now();
-        var thisDayOfWeek = thisDay.getDayOfWeek().getValue();
-        var nextDayOfWeek = days.stream()
+        var thisDayOfWeek = (long) thisDay.getDayOfWeek().getValue();
+        var nextDayOfWeek = (long) days.stream()
                 .map(DayOfWeek::getValue)
                 .filter(day -> day > thisDayOfWeek)
                 .sorted()

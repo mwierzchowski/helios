@@ -4,10 +4,10 @@ import spock.lang.Specification
 
 import javax.validation.Validation
 
-import static SpeedUnit.KilometersPerHour
+import static SpeedUnit.KILOMETERS_PER_HOUR
 
 class WindSpec extends Specification {
-    def speed = new Speed(100, KilometersPerHour)
+    def speed = new Speed(100, KILOMETERS_PER_HOUR)
     def validator = Validation.buildDefaultValidatorFactory().getValidator()
 
     def "Wind could be created from correct values"() {

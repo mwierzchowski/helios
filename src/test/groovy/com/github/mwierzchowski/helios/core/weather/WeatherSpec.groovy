@@ -5,13 +5,13 @@ import spock.lang.Specification
 import javax.validation.Validation
 import java.time.Instant
 
-import static SpeedUnit.KilometersPerHour
-import static TemperatureUnit.Celsius
+import static SpeedUnit.KILOMETERS_PER_HOUR
+import static TemperatureUnit.CELSIUS
 
 class WeatherSpec extends Specification {
     def timestamp = Instant.now()
-    def temperature = new Temperature(20, Celsius)
-    def wind = new Wind(new Speed(100, KilometersPerHour), 125)
+    def temperature = new Temperature(20, CELSIUS)
+    def wind = new Wind(new Speed(100, KILOMETERS_PER_HOUR), 125)
     def validator = Validation.buildDefaultValidatorFactory().getValidator()
 
     def "Weather could be created from valid values"() {

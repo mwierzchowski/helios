@@ -70,6 +70,9 @@ dependencies {
 	testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock:2.2.2.RELEASE'
 	testImplementation 'com.playtika.testcontainers:embedded-postgresql:1.43'
 	testImplementation 'org.apache.commons:commons-lang3:3.10'
+	testImplementation 'org.reflections:reflections:0.9.12'
+	testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.1.13'
+	testImplementation 'org.projectlombok:lombok'
 
 	// Dev tools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

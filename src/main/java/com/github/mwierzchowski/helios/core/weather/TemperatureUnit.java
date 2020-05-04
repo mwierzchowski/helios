@@ -12,9 +12,9 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public enum TemperatureUnit {
-    Celsius('C'),
-    Fahrenheit('F'),
-    Kelvin('K');
+    CELSIUS('C'),
+    FAHRENHEIT('F'),
+    KELVIN('K');
 
     /**
      * Upper case symbol of the unit.

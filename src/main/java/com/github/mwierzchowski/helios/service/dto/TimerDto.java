@@ -35,6 +35,7 @@ public class TimerDto {
     private Boolean scheduled;
 
     public void anotherDupa(String name) {
+
         System.out.println("robie dupa");
     }
 }

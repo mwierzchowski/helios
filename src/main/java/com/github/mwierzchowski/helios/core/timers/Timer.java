@@ -120,6 +120,8 @@ public class Timer {
     }
 
     public void dupa() {
+        String x;
+        System.out.println(x.indexOf('c'));
         // todo remove
     }
 }

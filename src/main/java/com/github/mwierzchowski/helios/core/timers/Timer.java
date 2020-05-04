@@ -119,7 +119,7 @@ public class Timer {
                 .findFirst();
     }
 
-    public void dupa() {
+    public void dupa(Integer z) {
         int y = 754;
         String x = null;
         System.out.println(x.indexOf('c'));

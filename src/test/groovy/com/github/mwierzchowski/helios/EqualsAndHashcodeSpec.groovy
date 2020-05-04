@@ -35,7 +35,7 @@ class EqualsAndHashcodeSpec extends Specification {
                 .addUrls(HeliosApplication.location)
         when:
         new Reflections(configBuilder).getSubTypesOf(Object).stream()
-                .filter(this.&testable)
+                .filter(this.&isTestable)
                 .forEach {
                     EqualsVerifier.forClass(it)
                         .suppress(STRICT_INHERITANCE)
@@ -46,7 +46,7 @@ class EqualsAndHashcodeSpec extends Specification {
         noExceptionThrown()
     }
 
-    def testable(Class<?> clazz) {
+    boolean isTestable(Class<?> clazz) {
         clazz.packageName.startsWith("com.github.mwierzchowski.helios") &&
         !excludeClasses.contains(clazz) &&
         !clazz.isInterface() &&

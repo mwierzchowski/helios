@@ -33,4 +33,8 @@ public class TimerDto {
      */
     @Schema(description = "Flag informing that timer has schedules", example = "true", accessMode = READ_ONLY)
     private Boolean scheduled;
+
+    public void anotherDupa(String name) {
+        System.out.println("robie dupa");
+    }
 }

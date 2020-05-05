@@ -22,7 +22,7 @@ public class OwmProperties {
      * https://home.openweathermap.org/users/sign_up. For rules of free subscription please take a look on
      * https://openweathermap.org/price#commonquestions.
      */
-    private String apiKey = "REGISTER_FOR_API_KEY";
+    private String apiKey;
 
     /**
      * Language

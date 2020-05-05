@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.core.weather
 
 import com.github.mwierzchowski.helios.core.commons.EventStore
+import com.github.mwierzchowski.helios.core.commons.HeliosEvent
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -16,11 +17,49 @@ class WeatherPublisherSpec extends Specification {
     EventStore eventStore = Mock()
 
     @Subject
-    WeatherPublisher weatherPublisher = new WeatherPublisher(weatherProperties, weatherProvider, eventStore)
+    WeatherPublisher weatherPublisher = new WeatherPublisher(weatherProperties, [weatherProvider], eventStore)
 
-    def "Publisher sends weather notification when first observation is available"() {
+    def "Should do nothing if weather providers are not available"() {
         given:
-        def start = now()
+        weatherPublisher = new WeatherPublisher(weatherProperties, null, eventStore)
+        when:
+        weatherPublisher.publishWeather()
+        then:
+        0 * eventStore.publish(_ as HeliosEvent)
+    }
+
+    def "Should merge observation if more then 1 weather provider is available"() {
+        given:
+        def temp = 20
+        def wind = 5
+        def weather1 = new Weather().tap {
+            it.source = 'Test source 1'
+            it.timestamp = now()
+            it.temperature = new Temperature(new BigDecimal(temp), CELSIUS)
+        }
+        def weather2 = new Weather().tap {
+            it.source = 'Test source 2'
+            it.timestamp = now()
+            it.wind = new Wind(new Speed(new BigDecimal(5), KILOMETERS_PER_HOUR), 270)
+        }
+        def provider1 = Mock(WeatherProvider)
+        def provider2 = Mock(WeatherProvider)
+        provider1.currentWeather() >> of(weather1)
+        provider2.currentWeather() >> of(weather2)
+        weatherPublisher = new WeatherPublisher(weatherProperties, [provider1, provider2], eventStore)
+        when:
+        weatherPublisher.publishWeather()
+        then:
+        1 * eventStore.publish({
+            verifyAll(it, WeatherObservationEvent) {
+                it.currentWeather.temperature.value == temp
+                it.currentWeather.wind.speed.value == wind
+            }
+        })
+    }
+
+    def "Should send weather notification if first observation is available"() {
+        given:
         def weather = weather()
         weatherProvider.currentWeather() >> of(weather)
         when:
@@ -28,12 +67,12 @@ class WeatherPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, WeatherObservationEvent) {
-                currentWeather == weather
+                currentWeather.isSameAs(weather)
             }
         })
     }
 
-    def "Publisher sends weather notification when next observation is different then previous one"() {
+    def "Should send weather notification if next observation is different then previous one"() {
         given:
         def weather1 = of(weather(now()))
         def weather2 = of(weather(now().plusSeconds(100), 50))
@@ -47,7 +86,7 @@ class WeatherPublisherSpec extends Specification {
         0 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
-    def "Publisher does not send notification when next observation is the same as previous one"() {
+    def "Should not send notification if next observation is the same as previous one"() {
         given:
         def weather1 = of(weather(now()))
         def weather2 = of(weather(now().plusSeconds(100)))
@@ -61,7 +100,7 @@ class WeatherPublisherSpec extends Specification {
         0 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
-    def "Publisher sends warning notification when first observation is missing"() {
+    def "Should send warning notification if first observation is missing"() {
         given:
         weatherProvider.currentWeather() >> empty()
         when:
@@ -70,7 +109,7 @@ class WeatherPublisherSpec extends Specification {
         1 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
-    def "Publisher does not send next warning notification when previous was sent"() {
+    def "Should not send next warning notification if previous was sent"() {
         given:
         def weather1 = empty()
         def weather2 = empty()
@@ -84,7 +123,7 @@ class WeatherPublisherSpec extends Specification {
         0 * eventStore.publish(_ as WeatherObservationEvent)
     }
 
-    def "Publisher sends warning notification when observations are missing for a long time"() {
+    def "Should send warning notification if observations are missing for a long time"() {
         given:
         def weather1 = of(weather(now().minusMillis(weatherProperties.observationDeadline + 10000)))
         def weather2 = empty()
@@ -98,7 +137,7 @@ class WeatherPublisherSpec extends Specification {
         1 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
-    def "Publisher does not send warning notification when observations are missing for a short time"() {
+    def "Should not send warning notification if observations are missing for a short time"() {
         given:
         def weather1 = of(weather(now().minusMillis(weatherProperties.observationDeadline - 10000)))
         def weather2 = empty()
@@ -112,7 +151,7 @@ class WeatherPublisherSpec extends Specification {
         0 * eventStore.publish(_ as WeatherMissingEvent)
     }
 
-    def "Publisher always sends weather notification when observation is back after warning was sent"() {
+    def "Should always sends weather notification if observation is back after warning was sent"() {
         given:
         def weather1 = of(weather(now().minusMillis(weatherProperties.observationDeadline + 10000)))
         def weather2 = empty()
@@ -128,11 +167,12 @@ class WeatherPublisherSpec extends Specification {
     }
 
     def weather(timestamp = now(), clouds = 0) {
-        return Weather.builder()
-            .timestamp(timestamp)
-            .temperature(new Temperature(new BigDecimal(20), CELSIUS))
-            .wind(new Wind(new Speed(new BigDecimal(5), KILOMETERS_PER_HOUR), 270))
-            .cloudsCoverage(clouds)
-            .build()
+        new Weather().tap {
+            it.source = 'Test source'
+            it.timestamp = timestamp
+            it.temperature = new Temperature(new BigDecimal(20), CELSIUS)
+            it.wind = new Wind(new Speed(new BigDecimal(5), KILOMETERS_PER_HOUR), 270)
+            it.cloudsCoverage = clouds
+        }
     }
 }

@@ -14,96 +14,117 @@ class WeatherSpec extends Specification {
     def wind = new Wind(new Speed(100, KILOMETERS_PER_HOUR), 125)
     def validator = Validation.buildDefaultValidatorFactory().getValidator()
 
-    def "Weather could be created from valid values"() {
+    def "Should pass validation if values are correct"() {
         given:
-        def weather = new Weather(timestamp, temperature, wind, 100)
+        def weather = weatherOf(timestamp, temperature, wind, 100)
         when:
         def errors = validator.validate(weather)
         then:
         errors.isEmpty()
     }
 
-    def "Timestamp could not be null"() {
+    def "Should have at least 1 source"() {
         given:
-        def weather = new Weather(null, temperature, wind, 100)
+        def weather = weatherOf(timestamp, temperature, wind, 100).tap {
+            sources.clear()
+        }
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Timestamp could not be in the future"() {
+    def "Should have not null timestamp"() {
+        given:
+        def weather = weatherOf(null, temperature, wind, 100)
+        when:
+        def errors = validator.validate(weather)
+        then:
+        errors.size() == 1
+    }
+
+    def "Should have timestamp in the past"() {
         given:
         timestamp = Instant.now().plusSeconds(10)
-        def weather = new Weather(timestamp, temperature, wind, 100)
+        def weather = weatherOf(timestamp, temperature, wind, 100)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Temperature could not be null"() {
+    def "Should have not null temperature"() {
         given:
-        def weather = new Weather(timestamp, null, wind, 100)
+        def weather = weatherOf(timestamp, null, wind, 100)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Temperature could not be incorrect"() {
+    def "Should have valid temperature"() {
         given:
         temperature.unit = null
-        def weather = new Weather(timestamp, temperature, wind, 100)
+        def weather = weatherOf(timestamp, temperature, wind, 100)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Wind could not be null"() {
+    def "Should have not null wind"() {
         given:
-        def weather = new Weather(timestamp, temperature, null, 100)
+        def weather = weatherOf(timestamp, temperature, null, 100)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Wind could not be incorrect"() {
+    def "Should have valid wind"() {
         given:
         wind.direction = 500
-        def weather = new Weather(timestamp, temperature, wind, 100)
+        def weather = weatherOf(timestamp, temperature, wind, 100)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Clouds coverage could not be null"() {
+    def "Should have not null clouds"() {
         given:
-        def weather = new Weather(timestamp, temperature, wind, null)
+        def weather = weatherOf(timestamp, temperature, wind, null)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Clouds coverage could not be less then 0"() {
+    def "Should have clouds coverage bigger or equal then 0"() {
         given:
-        def weather = new Weather(timestamp, temperature, wind, -1)
+        def weather = weatherOf(timestamp, temperature, wind, -1)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
     }
 
-    def "Clouds coverage could not be bigger then 100"() {
+    def "Should have clouds coverage lesser or equat then 100"() {
         given:
-        def weather = new Weather(timestamp, temperature, wind, 150)
+        def weather = weatherOf(timestamp, temperature, wind, 150)
         when:
         def errors = validator.validate(weather)
         then:
         errors.size() == 1
+    }
+
+    def weatherOf(timestamp, temperature, wind, clouds) {
+        new Weather().tap {
+            it.source = 'Test source'
+            it.timestamp = timestamp
+            it.temperature = temperature
+            it.wind = wind
+            it.cloudsCoverage = clouds
+        }
     }
 }

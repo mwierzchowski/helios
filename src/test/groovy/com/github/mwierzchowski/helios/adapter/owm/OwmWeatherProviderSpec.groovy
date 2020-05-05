@@ -26,12 +26,15 @@ class OwmWeatherProviderSpec extends Specification {
         weatherProvider.expireCachedResponse()
     }
 
-    def "Provider gives current conditions"() {
-        expect:
-        weatherProvider.currentWeather().get() != null
+    def "Should return current conditions"() {
+        when:
+        def weather = weatherProvider.currentWeather().get()
+        then:
+        weather.isProvided()
+        weather.sources[0] == OwmWeatherProvider.WEATHER_SOURCE_NAME
     }
 
-    def "Provider gives cached conditions on next attempt"() {
+    def "Should return cached conditions on next attempt"() {
         given:
         def weather1 = weatherProvider.currentWeather().get()
         when:
@@ -41,7 +44,7 @@ class OwmWeatherProviderSpec extends Specification {
         verify(1, getRequestedFor(weatherUrl))
     }
 
-    def "Provider cache could be expired"() {
+    def "Should expire cache"() {
         given:
         weatherProvider.currentWeather()
         when:
@@ -51,14 +54,14 @@ class OwmWeatherProviderSpec extends Specification {
         verify(2, getRequestedFor(weatherUrl))
     }
 
-    def "Provider registers successful requests in health indicator"() {
+    def "Should register successful requests in health indicator"() {
         when:
         weatherProvider.currentWeather()
         then:
         1 * healthIndicator.register(_ as CurrentWeatherResponse)
     }
 
-    def "Provider retries failed requests, registers failure in health indicator and gives empty optional"() {
+    def "Should retry failed requests, register failure in health indicator and give empty optional"() {
         given:
         stubFor(get(weatherUrl).willReturn(aResponse().withStatus(400)))
         when:

@@ -37,6 +37,11 @@ import static org.mapstruct.ReportingPolicy.IGNORE;
 @RequiredArgsConstructor
 public class OwmWeatherProvider implements WeatherProvider {
     /**
+     * Name of this weather source
+     */
+    public static final String WEATHER_SOURCE_NAME = OwmWeatherProvider.class.getSimpleName();
+
+    /**
      * Mapper instance
      */
     private static final OwmMapper MAPPER = Mappers.getMapper(OwmMapper.class);
@@ -107,6 +112,7 @@ public class OwmWeatherProvider implements WeatherProvider {
      */
     @Mapper(unmappedTargetPolicy = IGNORE)
     interface OwmMapper {
+        @Mapping(target = "source", expression = "java(OwmWeatherProvider.WEATHER_SOURCE_NAME)")
         @Mapping(target = "timestamp", expression = "java(java.time.Instant.ofEpochSecond(response.getDt()))") // TODO
         @Mapping(target = "temperature.value", source = "response.main.temp")
         @Mapping(target = "temperature.unit", constant = "CELSIUS") // TODO

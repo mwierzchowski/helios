@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,9 +26,9 @@ public class WeatherPublisher {
     private final WeatherProperties weatherProperties;
 
     /**
-     * Weather provider
+     * Weather providers
      */
-    private final WeatherProvider weatherProvider;
+    private final List<WeatherProvider> weatherProviders;
 
     /**
      * Events store
@@ -38,6 +40,13 @@ public class WeatherPublisher {
      */
     private HeliosEvent lastEvent;
 
+    @PostConstruct
+    public void initialize() {
+        if (providersNotAvailable()) {
+            log.warn("Providers are not available, weather will not be published");
+        }
+    }
+
     /**
      * Scheduled method that executes weather check and publish event. New weather event is published when conditions
      * have changed. Otherwise no event is published.
@@ -45,16 +54,24 @@ public class WeatherPublisher {
     @Scheduled(fixedRateString = "#{weatherProperties.checkInterval}",
             initialDelayString = "#{weatherProperties.checkDelayAfterStartup}")
     public void publishWeather() {
-        weatherProvider.currentWeather()
-                .map(this::toWeatherNotification)
-                .orElseGet(this::missingNotification)
-                .ifPresent(this::send);
+        if (providersNotAvailable()) {
+            return;
+        }
+        Weather currentWeather = new Weather();
+        for (var weatherProvider :  weatherProviders) {
+            weatherProvider.currentWeather().ifPresent(currentWeather::update);
+        }
+        Optional<HeliosEvent> event;
+        if (currentWeather.isProvided()) {
+            event = weatherNotification(currentWeather);
+        } else {
+            event = missingNotification();
+        }
+        event.ifPresent(this::send);
     }
 
-    /** Helper methods ************************************************************************************************/
-
-    private Optional<HeliosEvent> toWeatherNotification(Weather currentWeather) {
-        if (!currentWeather.isDifferentThan(previousWeather())) {
+    private Optional<HeliosEvent> weatherNotification(Weather currentWeather) {
+        if (currentWeather.isSameAs(previousWeather())) {
             log.debug("Weather has not changed.");
             return Optional.empty();
         }
@@ -94,5 +111,9 @@ public class WeatherPublisher {
 
     private boolean lastEventWasWarning() {
         return lastEvent instanceof WeatherMissingEvent;
+    }
+
+    private boolean providersNotAvailable() {
+        return weatherProviders == null || weatherProviders.isEmpty();
     }
 }

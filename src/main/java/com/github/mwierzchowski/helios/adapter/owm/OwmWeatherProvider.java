@@ -13,9 +13,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.openweathermap.api.CurrentWeatherApi;
 import org.openweathermap.model.CurrentWeatherResponse;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,8 @@ import static org.mapstruct.ReportingPolicy.IGNORE;
 @CacheConfig(cacheNames = {"owm-weather-source"})
 @Slf4j
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "helios.owm.api-key")
+@Order(10)
 public class OwmWeatherProvider implements WeatherProvider {
     /**
      * Name of this weather source

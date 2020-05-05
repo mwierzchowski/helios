@@ -28,3 +28,6 @@ helios.location:
   city: Warsaw
   latitude: 52.23
   longitude: 21.01
+
+# OWM API key
+helios.owm.api-key: DUMMY_KEY_FOR_TESTING

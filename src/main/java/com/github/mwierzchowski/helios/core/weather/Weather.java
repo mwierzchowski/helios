@@ -97,6 +97,6 @@ public class Weather {
      * @return true if weather was provided
      */
     public boolean isProvided() {
-        return this.sources.size() > 0;
+        return !this.sources.isEmpty();
     }
 }

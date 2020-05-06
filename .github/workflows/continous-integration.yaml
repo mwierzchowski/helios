@@ -23,13 +23,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Assemble JAR
+    - name: Assemble Spring Boot JAR
       run: ./gradlew assemble
 
     - name: Unit/Integration test
       run: ./gradlew test jacocoTestReport
 
-    - name: Assemble image
+    - name: Assemble Docker image
       run: docker build -t helios:0.1.0 .
 
     - name: Start smoke test environment

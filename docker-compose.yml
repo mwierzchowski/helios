@@ -1,0 +1,34 @@
+version: '3'
+services:
+  helios-app:
+    image: helios:0.1.0
+    network_mode: bridge
+    container_name: helios-app
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    depends_on:
+      - helios-db
+    links:
+      - helios-db
+
+  helios-db:
+    image: postgres:latest
+    network_mode: bridge
+    container_name: helios-db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=helios
+      - POSTGRES_PASSWORD=helios
+#      - POSTGRES_DB=testdb
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

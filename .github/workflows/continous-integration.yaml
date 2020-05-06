@@ -35,8 +35,8 @@ jobs:
     - name: Start smoke test environment
       run: echo 'todo docker-compose up'
 
-    - name: Smoke test image
-      run: echo 'todo '
+    - name: Smoke test
+      run: echo 'todo'
 
     - name: Check if test summary is available
       id: check_test_summary

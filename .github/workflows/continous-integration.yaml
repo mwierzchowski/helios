@@ -1,5 +1,5 @@
 name: CI
-on:  push
+on: push
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -23,11 +23,20 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Assemble
+    - name: Assemble JAR
       run: ./gradlew assemble
 
-    - name: Test
+    - name: Test unit/integration
       run: ./gradlew test jacocoTestReport
+
+    - name: Assemble image
+      run: docker build -t helios:0.1.0 .
+
+    - name: Start smoke test environment
+      run: echo 'todo docker-compose up'
+
+    - name: Smoke test image
+      run: echo 'todo '
 
     - name: Check if test summary is available
       id: check_test_summary
@@ -42,6 +51,9 @@ jobs:
       with:
         name: Test Summary
         path: /home/runner/work/helios/helios/build/reports/tests/test
+
+    - name: Export Docker image
+      run: echo 'todo'
 
     - name: Quality scan
       env:

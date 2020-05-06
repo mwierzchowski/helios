@@ -1,5 +1,6 @@
 package com.github.mwierzchowski.helios;
 
+import com.github.mwierzchowski.helios.service.TimerService;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +32,7 @@ public class HeliosApplication extends ResourceConfig {
 	 */
 	@PostConstruct
     public void initializeEndpoints() {
-		packages("com.github.mwierzchowski.helios.service");
+		register(TimerService.class);
     }
 
 	/**

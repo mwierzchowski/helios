@@ -1,4 +1,4 @@
-name: CI
+name: ci/cd
 on: push
 env:
   VERSION: ${{github.run_number}}
@@ -23,7 +23,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.gradle/caches
-        key: ${{runner.os}}-gradle-${{ hashFiles('**/*.gradle*') }}
+        key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*')}}
         restore-keys: |
           ${{runner.os}}-gradle-
 

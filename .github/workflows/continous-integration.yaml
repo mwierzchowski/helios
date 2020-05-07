@@ -1,4 +1,4 @@
-name: ci/cd
+name: CI
 on: push
 env:
   VERSION: ${{github.run_number}}

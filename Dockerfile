@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk13:latest
+FROM adoptopenjdk/openjdk13:alpine-slim
 MAINTAINER Marcin Wierzchowski (https://github.com/mwierzchowski/helios)
 ARG VERSION=SNAPSHOT
 ARG APPLICATION=build/libs/helios-${VERSION}.jar

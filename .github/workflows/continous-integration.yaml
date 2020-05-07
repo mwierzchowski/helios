@@ -55,3 +55,6 @@ jobs:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
+
+    - name: Export Docker image
+      run: echo 'todo'

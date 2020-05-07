@@ -1,8 +1,8 @@
 name: CI
 on: push
 env:
-  VERSION: $GITHUB_RUN_ID
-  BRANCH: $GITHUB_REF_NAME
+  VERSION: "${{GITHUB_RUN_ID}}"
+  BRANCH: "${{GITHUB_REF_NAME}}"
   TEST_SUMMARY: /home/runner/work/helios/helios/build/reports/tests/test
 
 jobs:

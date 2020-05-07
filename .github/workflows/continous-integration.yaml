@@ -1,8 +1,7 @@
 name: CI
 on: push
 env:
-  VERSION: ${{ github.run_id }}
-  BRANCH: ${{ GITHUB_REF_NAME }}
+  VERSION: ${{github.run_id}}
   TEST_SUMMARY: /home/runner/work/helios/helios/build/reports/tests/test
 
 jobs:
@@ -67,4 +66,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      run: ./gradlew sonarqube -Dsonar.branch.name=${{env.BRANCH}}
+      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME

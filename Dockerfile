@@ -1,5 +1,6 @@
 FROM adoptopenjdk/openjdk13:alpine-slim
-MAINTAINER Marcin Wierzchowski (https://github.com/mwierzchowski/helios)
+LABEL maintainer="Marcin Wierzchowski"
+LABEL github="https://github.com/mwierzchowski/helios"
 RUN addgroup -S helios && adduser -S helios -G helios
 USER helios:helios
 ARG APPLICATION=build/libs/helios-*.jar

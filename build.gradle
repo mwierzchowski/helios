@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.github.mwierzchowski.helios'
-version = '0.0.1-SNAPSHOT'
+version = System.getenv('VERSION') ?: 'SNAPSHOT'
 sourceCompatibility = '1.13'
 targetCompatibility = '1.13'
 

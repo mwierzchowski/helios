@@ -30,20 +30,11 @@ jobs:
     - name: Assemble Spring Boot JAR
       run: ./gradlew assemble
 
-    - name: Print JAR version
-      run: ls -al /home/runner/work/helios/helios/build/libs
-
     - name: Unit/Integration tests
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble Docker image
       run: docker build --build-arg VERSION=$VERSION -t helios:$VERSION .
-
-    - name: Start smoke test environment
-      run: echo 'todo docker-compose up'
-
-    - name: Smoke tests
-      run: echo 'todo'
 
     - name: Check if test summary is available
       id: check_test_summary
@@ -58,9 +49,6 @@ jobs:
       with:
         name: Test Summary
         path: ${{env.TEST_SUMMARY}}
-
-    - name: Export Docker image
-      run: echo 'todo'
 
     - name: Quality scan
       env:

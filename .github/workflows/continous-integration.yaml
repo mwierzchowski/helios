@@ -34,7 +34,7 @@ jobs:
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble Docker image
-      run: docker build -t helios:$VERSION .
+      run: docker build -t helios:latest -t helios:$VERSION .
 
     - name: Start smoke test environment
       run: echo 'todo docker-compose up'

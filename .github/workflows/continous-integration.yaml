@@ -24,18 +24,21 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        key: ${{runner.os}}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: |
-          ${{ runner.os }}-gradle-
+          ${{runner.os}}-gradle-
 
     - name: Assemble Spring Boot JAR
       run: ./gradlew assemble
+
+    - name: Print JAR version
+      run: ls -al /home/runner/work/helios/helios/build/libs
 
     - name: Unit/Integration tests
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble Docker image
-      run: docker build --build-arg VERSION=$VERSION -t helios:$VERSION .
+      run: docker build --build-arg VERSION=${{env.VERSION}} -t helios:${{env.VERSION}} .
 
     - name: Start smoke test environment
       run: echo 'todo docker-compose up'
@@ -62,6 +65,6 @@ jobs:
 
     - name: Quality scan
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew sonarqube -Dsonar.branch.name=$BRANCH
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+      run: ./gradlew sonarqube -Dsonar.branch.name=${{env.BRANCH}}

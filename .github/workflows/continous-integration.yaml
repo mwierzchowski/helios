@@ -36,6 +36,12 @@ jobs:
     - name: Assemble Docker image
       run: docker build --build-arg VERSION=$VERSION -t helios:$VERSION .
 
+    - name: Start smoke test environment
+      run: echo 'todo docker-compose up'
+
+    - name: Smoke tests
+      run: echo 'todo'
+
     - name: Check if test summary is available
       id: check_test_summary
       if: always()

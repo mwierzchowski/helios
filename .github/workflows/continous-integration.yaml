@@ -26,16 +26,16 @@ jobs:
     - name: Assemble Spring Boot JAR
       run: ./gradlew assemble
 
-    - name: Unit/Integration test
+    - name: Unit/Integration tests
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble Docker image
-      run: docker build -t helios:$GITHUB_RUN_ID .
+      run: docker build --build-arg VERSION=$GITHUB_RUN_ID -t helios:$GITHUB_RUN_ID .
 
     - name: Start smoke test environment
       run: echo 'todo docker-compose up'
 
-    - name: Smoke test
+    - name: Smoke tests
       run: echo 'todo'
 
     - name: Check if test summary is available

@@ -1,7 +1,7 @@
 name: CI
 on: push
 env:
-  VERSION: ${{ GITHUB_RUN_ID }}
+  VERSION: ${{ github.run_id }}
   BRANCH: ${{ GITHUB_REF_NAME }}
   TEST_SUMMARY: /home/runner/work/helios/helios/build/reports/tests/test
 

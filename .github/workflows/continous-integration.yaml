@@ -1,5 +1,10 @@
 name: CI
 on: push
+env:
+  VERSION: $GITHUB_RUN_ID
+  BRANCH: $GITHUB_REF_NAME
+  TEST_SUMMARY: /home/runner/work/helios/helios/build/reports/tests/test
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -30,7 +35,7 @@ jobs:
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble Docker image
-      run: docker build --build-arg VERSION=$GITHUB_RUN_ID -t helios:$GITHUB_RUN_ID .
+      run: docker build --build-arg VERSION=$VERSION -t helios:$VERSION .
 
     - name: Start smoke test environment
       run: echo 'todo docker-compose up'
@@ -43,14 +48,14 @@ jobs:
       if: always()
       uses: andstor/file-existence-action@v1
       with:
-        files: "/home/runner/work/helios/helios/build/reports/tests/test"
+        files: $TEST_SUMMARY
 
     - name: Export test summary
       if: steps.check_test_summary.outputs.files_exists == 'true'
       uses: actions/upload-artifact@v2
       with:
         name: Test Summary
-        path: /home/runner/work/helios/helios/build/reports/tests/test
+        path: $TEST_SUMMARY
 
     - name: Export Docker image
       run: echo 'todo'
@@ -59,4 +64,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
+      run: ./gradlew sonarqube -Dsonar.branch.name=$BRANCH

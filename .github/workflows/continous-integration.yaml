@@ -44,6 +44,12 @@ jobs:
     - name: Test E2E
       run: ./gradlew testEnd2End
 
+    - name: Quality scan
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
+
     - name: Check if test summary is available
       id: check_test_summary
       if: always()
@@ -57,9 +63,3 @@ jobs:
       with:
         name: Test Summary
         path: ${{env.TEST_SUMMARY}}
-
-    - name: Quality scan
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME

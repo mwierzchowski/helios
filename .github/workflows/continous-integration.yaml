@@ -30,7 +30,7 @@ jobs:
     - name: Assemble Spring Boot JAR
       run: ./gradlew assemble
 
-    - name: Test unit & integration
+    - name: Test Unit & Integration
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble Docker image

@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.equalTo
 
 class HealthTest {
     def healthUrl = "/actuator/health"
+
     @Test
     void "General health status should be UP"() {
         when().get(healthUrl)

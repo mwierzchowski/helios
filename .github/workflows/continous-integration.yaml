@@ -41,20 +41,15 @@ jobs:
         OWM_API_KEY: ${{secrets.OWM_API_KEY}}
       run: docker-compose -p helios up -d
 
-#    - name: Check if test environment is up & running
-#      uses: nev7n/wait_for_response@v1
-#      with:
-#        url: 'http://localhost:8080/actuator/health'
-#        responseCode: 200
-#        interval: 500
-#        timeout: 30000
-
     - name: Check if test environment is up & running
-      uses: jtalk/url-health-check-action@v1.3
-      with:
-        url: http://localhost:8080/actuator/health
-        retry-delay: 1s
-        max-attempts: 30
+      run: curl http://localhost:8080/actuator/health --retry-connrefused --retry 30 --retry-delay 1 -sv
+
+#    - name: Check if test environment is up & running
+#      uses: jtalk/url-health-check-action@v1.3
+#      with:
+#        url: http://localhost:8080/actuator/health
+#        retry-delay: 1s
+#        max-attempts: 30
 
     - name: Functional tests
       run: echo 'todo'

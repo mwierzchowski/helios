@@ -37,7 +37,9 @@ jobs:
       run: docker build -t helios:latest -t helios:$VERSION .
 
     - name: Start smoke test environment
-      run: echo 'todo docker-compose up'
+      env:
+        OWM_API_KEY: ${{secrets.OWM_API_KEY}}
+      run: docker-compose up
 
     - name: Smoke tests
       run: echo 'todo'

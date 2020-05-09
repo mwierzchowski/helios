@@ -42,7 +42,7 @@ jobs:
       run: docker-compose -p helios up -d
 
     - name: Check if test environment is up & running
-      run: curl --retry 30 --retry-delay 1 --retry-connrefused --fail  http://localhost:8080/actuator/health
+      run: curl --head --retry 30 --retry-delay 1 --retry-connrefused --fail  http://localhost:8080/actuator/health
 
 #    - name: Check if test environment is up & running
 #      uses: jtalk/url-health-check-action@v1.3

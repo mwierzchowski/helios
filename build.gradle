@@ -34,21 +34,21 @@ testSets {
 	}
 }
 
-tasks.testEnd2End {
-	doFirst {
-		logger.info("Waiting for application")
-		def healthUrl = "http://localhost:8080/actuator/health"
-		ant.waitfor(maxwait: "30", maxwaitunit: "second", checkevery: "500") {
-			http(url: healthUrl)
-		}
-		def code = new URL(healthUrl).openConnection().with {
-			requestMethod = 'HEAD'
-			connect()
-			responseCode
-		}
-		assert code == 200
-	}
-}
+//tasks.testEnd2End {
+//	doFirst {
+//		logger.info("Waiting for application")
+//		def healthUrl = "http://localhost:8080/actuator/health"
+//		ant.waitfor(maxwait: "30", maxwaitunit: "second", checkevery: "500") {
+//			http(url: healthUrl)
+//		}
+//		def code = new URL(healthUrl).openConnection().with {
+//			requestMethod = 'HEAD'
+//			connect()
+//			responseCode
+//		}
+//		assert code == 200
+//	}
+//}
 
 repositories {
 	mavenCentral()

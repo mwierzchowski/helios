@@ -1,34 +1,36 @@
-version: '3'
+version: '3.7'
 services:
-  helios-app:
-    image: helios:0.1.0
-    network_mode: bridge
-    container_name: helios-app
-    expose:
-      - 8080
+  backend:
+    image: 'helios:${VERSION:-latest}'
     ports:
       - 8080:8080
-    restart: unless-stopped
     depends_on:
-      - helios-db
-    links:
-      - helios-db
+      - database
+    networks:
+      - backend_network
+    environment:
+      - logging_level_com_github_mwierzchowski_helios=DEBUG
+      - spring_datasource_url=jdbc:postgresql://helios_database_1:5432/helios
+      - spring_mail_host=${MAIL_HOST:-false}
+      - spring_mail_username=${MAIL_USER:-}
+      - spring_mail_password=${MAIL_PASSWORD:-}
+      - helios_mail_recipient=${MAIL_RECIPIENT:-}
+      - helios_owm_api-key=${OWM_API_KEY:-false}
 
-  helios-db:
+  database:
     image: postgres:latest
-    network_mode: bridge
-    container_name: helios-db
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    expose:
-      - 5432
     ports:
       - 5432:5432
+    networks:
+      - backend_network
+    volumes:
+      - database_data=/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=helios
-      - POSTGRES_PASSWORD=helios
-#      - POSTGRES_DB=testdb
-    restart: unless-stopped
+      - POSTGRES_USER=${DB_USER:-helios}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-helios}
 
 volumes:
-  postgres-data:
+  database_data:
+
+networks:
+  backend_network:

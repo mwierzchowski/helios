@@ -42,7 +42,7 @@ jobs:
       run: docker-compose up -d
 
     - name: Functional tests
-      run: echo 'todo'
+      run: ./gradlew functionalTest
 
     - name: Check if test summary is available
       id: check_test_summary

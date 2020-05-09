@@ -25,6 +25,34 @@ configurations {
 	swagerUiBundle {
 		transitive = false
 	}
+	functionalTestCompile.extendsFrom testCompile
+	functionalTestRuntime.extendsFrom testRuntime
+}
+
+sourceSets {
+	functionalTest {
+		groovy {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+		}
+	}
+}
+
+task functionalTest(type: Test) {
+	testClassesDirs = sourceSets.functionalTest.output.classesDirs
+	classpath = sourceSets.functionalTest.runtimeClasspath
+	outputs.upToDateWhen {false}
+	logger.info("Waiting for application to start")
+	def healthUrl = "http://localhost:8080/actuator/health"
+	ant.waitfor(maxwait: "30", maxwaitunit: "second", checkevery: "500") {
+		http(url: healthUrl)
+	}
+	def code = new URL(healthUrl).openConnection().with {
+		requestMethod = 'HEAD'
+		connect()
+		responseCode
+	}
+	assert code == 200
 }
 
 repositories {

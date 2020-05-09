@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Functional Test" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Test E2E" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="functionalTest" />
+          <option value="testEnd2End" />
         </list>
       </option>
       <option name="vmOptions" value="" />

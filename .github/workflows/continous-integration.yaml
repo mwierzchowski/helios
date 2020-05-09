@@ -30,7 +30,7 @@ jobs:
     - name: Assemble Spring Boot JAR
       run: ./gradlew assemble
 
-    - name: Unit/Integration tests
+    - name: Test unit & integration
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble Docker image
@@ -41,8 +41,8 @@ jobs:
         OWM_API_KEY: ${{secrets.OWM_API_KEY}}
       run: docker-compose up -d
 
-    - name: Functional tests
-      run: ./gradlew functionalTest
+    - name: Test E2E
+      run: ./gradlew testEnd2End
 
     - name: Check if test summary is available
       id: check_test_summary

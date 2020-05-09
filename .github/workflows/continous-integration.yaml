@@ -31,7 +31,7 @@ jobs:
       run: ./gradlew assemble
 
     - name: Unit/Integration tests
-      run: ./gradlew test jacocoTestReport
+      run: ./gradlew test jacocoTestReport -x functionalTest
 
     - name: Assemble Docker image
       run: docker build -t helios:latest -t helios:$VERSION .

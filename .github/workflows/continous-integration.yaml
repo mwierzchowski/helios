@@ -27,14 +27,32 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Assemble Spring Boot JAR
+    - name: Assemble application
       run: ./gradlew assemble
 
-    - name: Unit/Integration tests
+    - name: Test application
       run: ./gradlew test jacocoTestReport
 
-    - name: Assemble Docker image
-      run: docker build --build-arg VERSION=$VERSION -t helios:$VERSION .
+    - name: Assemble image
+      run: docker build -t helios:latest -t helios:$VERSION .
+
+    - name: Deploy test environment
+      env:
+        OWM_API_KEY: ${{secrets.OWM_API_KEY}}
+        MAIL_HOST: smtp.gmail.com
+        MAIL_USER: ${{secrets.TEST_MAIL_USER}}
+        MAIL_PASSWORD: ${{secrets.TEST_MAIL_PASS}}
+        MAIL_RECIPIENT: ${{secrets.TEST_MAIL_USER}}@gmail.com
+      run: docker-compose up -d
+
+    - name: Test E2E
+      run: ./gradlew testE2E
+
+    - name: Quality scan
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
 
     - name: Check if test summary is available
       id: check_test_summary
@@ -43,15 +61,9 @@ jobs:
       with:
         files: ${{env.TEST_SUMMARY}}
 
-    - name: Export test summary
+    - name: Publish test summary
       if: steps.check_test_summary.outputs.files_exists == 'true'
       uses: actions/upload-artifact@v2
       with:
         name: Test Summary
         path: ${{env.TEST_SUMMARY}}
-
-    - name: Quality scan
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME

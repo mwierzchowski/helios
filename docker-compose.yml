@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  backend:
+    image: 'helios:${VERSION:-latest}'
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+    networks:
+      - backend_network
+    environment:
+      - logging_level_com_github_mwierzchowski_helios=DEBUG
+      - spring_datasource_url=jdbc:postgresql://helios_database_1:5432/helios
+      - spring_mail_host=${MAIL_HOST:-false}
+      - spring_mail_username=${MAIL_USER:-}
+      - spring_mail_password=${MAIL_PASSWORD:-}
+      - helios_mail_recipient=${MAIL_RECIPIENT:-}
+      - helios_owm_api-key=${OWM_API_KEY:-false}
+
+  database:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    networks:
+      - backend_network
+    volumes:
+      - database_data=/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USER:-helios}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-helios}
+
+volumes:
+  database_data:
+
+networks:
+  backend_network:

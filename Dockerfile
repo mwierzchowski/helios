@@ -1,7 +1,9 @@
-FROM adoptopenjdk/openjdk13:latest
-MAINTAINER Marcin Wierzchowski (https://github.com/mwierzchowski/helios)
-ARG VERSION=SNAPSHOT
-ARG APPLICATION=build/libs/helios-${VERSION}.jar
+FROM adoptopenjdk/openjdk13:alpine-slim
+LABEL maintainer="Marcin Wierzchowski"
+LABEL github="https://github.com/mwierzchowski/helios"
+ARG APPLICATION=build/libs/helios-*.jar
+RUN addgroup -S helios && adduser -S helios -G helios
+USER helios:helios
 WORKDIR /opt/helios
 COPY ${APPLICATION} helios.jar
 EXPOSE 8080

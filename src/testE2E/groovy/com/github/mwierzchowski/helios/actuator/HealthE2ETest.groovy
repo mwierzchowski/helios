@@ -26,4 +26,10 @@ class HealthE2ETest {
         when().get(healthUrl)
         .then().body("components.sunApi.status", equalTo("UP"))
     }
+
+    @Test
+    void "Mail health status should be UP"() {
+        when().get(healthUrl)
+                .then().body("components.mail.status", equalTo("UP"))
+    }
 }

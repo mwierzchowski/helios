@@ -39,6 +39,10 @@ jobs:
     - name: Deploy test environment
       env:
         OWM_API_KEY: ${{secrets.OWM_API_KEY}}
+        MAIL_HOST: smtp.gmail.com
+        MAIL_USER: ${{secrets.TEST_MAIL_USER}}
+        MAIL_PASSWORD: ${{secrets.TEST_MAIL_PASS}}
+        MAIL_RECIPIENT: ${{secrets.TEST_MAIL_USER}}@gmail.com
       run: docker-compose up -d
 
     - name: Test E2E

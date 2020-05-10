@@ -24,7 +24,7 @@ class InfoE2ETest {
     }
 
     @Test
-    void "Should return sunEphemeris info"() {
+    void "Should return sun ephemeris info"() {
         when().get(infoUrl).then()
                 .body("sunEphemeris.approximated", is(false))
     }

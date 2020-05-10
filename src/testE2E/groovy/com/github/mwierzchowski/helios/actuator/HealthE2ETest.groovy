@@ -1,4 +1,4 @@
-package com.github.mwierzchowski.helios
+package com.github.mwierzchowski.helios.actuator
 
 import org.junit.Test
 

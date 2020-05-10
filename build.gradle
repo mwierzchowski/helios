@@ -34,7 +34,7 @@ testSets {
 
 tasks.testE2E {
 	doFirst {
-		logger.info("Waiting for application")
+		logger.info("Waiting for service")
 		def healthUrl = "http://localhost:8080/actuator/health"
 		ant.waitfor(maxwait: "60", maxwaitunit: "second", checkevery: "500") {
 			http(url: healthUrl)

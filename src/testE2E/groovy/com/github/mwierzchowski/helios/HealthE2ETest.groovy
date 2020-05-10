@@ -5,7 +5,7 @@ import org.junit.Test
 import static io.restassured.RestAssured.when
 import static org.hamcrest.Matchers.equalTo
 
-class HealthTest {
+class HealthE2ETest {
     def healthUrl = "/actuator/health"
 
     @Test

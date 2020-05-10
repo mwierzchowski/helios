@@ -42,7 +42,7 @@ jobs:
       run: docker-compose up -d
 
     - name: Test E2E
-      run: ./gradlew testEnd2End
+      run: ./gradlew testE2E
 
     - name: Quality scan
       env:

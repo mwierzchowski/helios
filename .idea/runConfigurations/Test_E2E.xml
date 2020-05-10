@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="testEnd2End" />
+          <option value="testE2E" />
         </list>
       </option>
       <option name="vmOptions" value="" />

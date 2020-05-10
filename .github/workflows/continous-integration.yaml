@@ -27,16 +27,16 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Assemble Spring Boot JAR
+    - name: Assemble application
       run: ./gradlew assemble
 
-    - name: Test Unit & Integration
+    - name: Test application
       run: ./gradlew test jacocoTestReport
 
-    - name: Assemble Docker image
+    - name: Assemble image
       run: docker build -t helios:latest -t helios:$VERSION .
 
-    - name: Start test environment
+    - name: Deploy test environment
       env:
         OWM_API_KEY: ${{secrets.OWM_API_KEY}}
       run: docker-compose up -d

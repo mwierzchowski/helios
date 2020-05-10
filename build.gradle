@@ -29,12 +29,10 @@ configurations {
 }
 
 testSets {
-	testEnd2End {
-		dirName = 'test-e2e'
-	}
+	testE2E
 }
 
-tasks.testEnd2End {
+tasks.testE2E {
 	doFirst {
 		logger.info("Waiting for application")
 		def healthUrl = "http://localhost:8080/actuator/health"
@@ -98,7 +96,7 @@ dependencies {
 	testImplementation 'org.projectlombok:lombok'
 
 	// Testing E2E
-	testEnd2EndImplementation 'io.rest-assured:rest-assured'
+	testE2EImplementation 'io.rest-assured:rest-assured'
 
 	// Dev tools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

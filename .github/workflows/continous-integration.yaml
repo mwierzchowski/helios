@@ -33,7 +33,7 @@ jobs:
       run: echo "::set-env name=VERSION::$(git describe --tags --always --first-parent --dirty)"
 
     - name: Test version
-      run: echo "version is ${VERSION}
+      run: echo "version is ${VERSION}"
 
     - name: Assemble application
       run: ./gradlew assemble

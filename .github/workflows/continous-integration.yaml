@@ -26,11 +26,11 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Define version
+    - name: Set up version
 #      run: echo "::set-env name=VERSION::{"
       run: echo "git version is ${GIT_VERSION}"
       env:
-        GIT_VERSION: "$(./gradlew properties -q | grep 'version:' | awk '{print $2}')"
+        GIT_VERSION: $(./gradlew properties -q | grep 'version:' | awk '{print $2}')
 
     - name: Assemble application
       run: ./gradlew assemble

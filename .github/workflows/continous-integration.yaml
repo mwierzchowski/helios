@@ -29,11 +29,8 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Set up version
+    - name: Set up Semantic Versioning
       run: echo "::set-env name=VERSION::$(./gradlew properties -q | grep '^version:' | awk '{print $2}')"
-
-    - name: Test version
-      run: echo "Version is [${VERSION}]"
 
     - name: Assemble application
       run: ./gradlew assemble

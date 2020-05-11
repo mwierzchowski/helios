@@ -30,7 +30,10 @@ jobs:
           ${{runner.os}}-gradle-
 
     - name: Set up Semantic Versioning
-      run: echo "::set-env name=VERSION::$(./gradlew properties -q | grep '^version:' | awk '{print $2}')"
+      run: echo "::set-env name=VERSION::$(git describe --tags --always --first-parent --dirty)"
+
+    - name: Test version
+      run: echo "version is ${VERSION}
 
     - name: Assemble application
       run: ./gradlew assemble

@@ -1,7 +1,6 @@
 name: CI
 on: push
 env:
-  VERSION: ${{github.run_number}}
   TEST_SUMMARY: /home/runner/work/helios/helios/build/reports/tests/test
 
 jobs:
@@ -26,6 +25,12 @@ jobs:
         key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*')}}
         restore-keys: |
           ${{runner.os}}-gradle-
+
+    - name: Define version
+#      run: echo "::set-env name=VERSION::{"
+      run: echo 'git version is ${GIT_VERSION}'
+      env:
+        GIT_VERSION: $(./gradlew properties -q | grep "version:" | awk '{print $2}'})
 
     - name: Assemble application
       run: ./gradlew assemble

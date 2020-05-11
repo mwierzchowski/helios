@@ -26,8 +26,8 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Gradlew print version
-      run: ./gradlew printVersion
+    - name: Git describe
+      run: git describe --tags
 
     - name: Set up version
       run: ./gradlew properties -q | grep 'version'

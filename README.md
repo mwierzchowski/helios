@@ -2,7 +2,7 @@
 
 Sun blinds controller written in Java as a Spring Boot microservice running on cloud and Raspberry Pi.
 
-This is the very early version, real documentation is coming soon (hopefully). 
+This is still alpha version, real documentation is coming soon (hopefully). 
 
 # Why Helios?
 Helios is a [god of sun](https://en.wikipedia.org/wiki/Helios) in a Greek mythology. Who is better to

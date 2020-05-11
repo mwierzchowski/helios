@@ -28,7 +28,7 @@ jobs:
 
     - name: Set up version
 #      run: echo "::set-env name=VERSION::{"
-      run: echo "git version is $(./gradlew properties -q | grep 'version:' | awk '{print $2}')"
+      run: echo "git version is $(./gradlew properties -q | grep '^version:' | awk '{print $2}')"
 
     - name: Assemble application
       run: ./gradlew assemble

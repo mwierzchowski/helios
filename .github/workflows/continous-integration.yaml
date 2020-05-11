@@ -29,13 +29,16 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Git describe
-      run: git describe --tags --always
+#    - name: Git describe
+#      run: git describe --tags --always
 
     - name: Set up version
-      run: ./gradlew properties -q | grep 'version'
+#      run: ./gradlew properties -q | grep 'version'
 #      run: echo "::set-env name=VERSION::{"
-#      run: echo "git version is $(./gradlew properties -q | grep '^version:' | awk '{print $2}')"
+      run: echo "git version is $(./gradlew properties -q | grep '^version:' | awk '{print $2}')"
+
+    - name: Test version
+      run: echo "Version is [${VERSION}]"
 
     - name: Assemble application
       run: ./gradlew assemble

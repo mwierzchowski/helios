@@ -26,6 +26,9 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
+    - name: Gradlew print version
+      run: ./gradlew printVersion
+
     - name: Set up version
       run: ./gradlew properties -q | grep 'version'
 #      run: echo "::set-env name=VERSION::{"

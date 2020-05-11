@@ -32,14 +32,8 @@ jobs:
     - name: Set up Semantic Versioning
       run: echo "::set-env name=VERSION::$(git describe --tags --always --first-parent --dirty)"
 
-    - name: Test version
-      run: echo "version is ${VERSION}"
-
     - name: Assemble application
       run: ./gradlew assemble
-
-    - name: Test application
-      run: ./gradlew test jacocoTestReport
 
     - name: Assemble image
       run: docker build -t helios:latest -t helios:$VERSION .

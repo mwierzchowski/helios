@@ -1,7 +1,6 @@
 prettyPrint: true
-
-resourcePackages:
-  - com.github.mwierzchowski.helios.service
+cacheTTL: 0
+readAllResources: false
 
 openAPI:
   info:
@@ -16,5 +15,5 @@ openAPI:
       url: https://opensource.org/licenses/MIT
 
   servers:
-    - url: http://localhost:8080/api
+    - url: http://localhost:8080
       description: local dev

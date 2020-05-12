@@ -36,7 +36,7 @@ jobs:
       run: ./gradlew assemble
 
     - name: Test application
-      run: ./gradlew test jacocoTestReport
+      run: ./gradlew test jacocoTestReport -x bootBuildInfo -x addSwaggerUi
 
     - name: Assemble image
       run: docker build -t helios:latest -t helios:$VERSION .
@@ -51,7 +51,7 @@ jobs:
       run: docker-compose up -d
 
     - name: Test E2E
-      run: ./gradlew testE2E
+      run: ./gradlew testE2E -x bootBuildInfo -x addSwaggerUi
 
     - name: Quality scan
       env:

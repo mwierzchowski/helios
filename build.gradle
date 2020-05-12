@@ -30,6 +30,13 @@ testSets {
 	testE2E
 }
 
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		html.enabled false
+	}
+}
+
 tasks.testE2E {
 	doFirst {
 		logger.info("Waiting for service")
@@ -44,6 +51,10 @@ tasks.testE2E {
 		}
 		assert code == 200
 	}
+}
+
+springBoot {
+	buildInfo()
 }
 
 repositories {
@@ -139,14 +150,3 @@ sourceSets.main.resources.srcDirs += "${swaggerSources.owm.code.outputDir}/src/m
 compileJava.dependsOn swaggerSources.sunapi.code
 sourceSets.main.java.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/java"
 sourceSets.main.resources.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/resources"
-
-jacocoTestReport {
-	reports {
-		xml.enabled true
-		html.enabled false
-	}
-}
-
-springBoot {
-	buildInfo()
-}

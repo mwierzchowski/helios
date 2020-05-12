@@ -176,3 +176,7 @@ jacocoTestReport {
 		html.enabled false
 	}
 }
+
+springBoot {
+	buildInfo()
+}

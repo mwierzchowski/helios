@@ -24,9 +24,6 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	swagerUiBundle {
-		transitive = false
-	}
 }
 
 testSets {
@@ -61,7 +58,6 @@ dependencies {
 
 	// Swagger
 	swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.18'
-	swagerUiBundle 'org.webjars:swagger-ui:3.25.1'
 
 	// Compilation
 	compileOnly 'org.projectlombok:lombok'
@@ -154,21 +150,6 @@ resolve {
 	prettyPrint = true
 	outputFormat = 'JSON'
 }
-task addSwaggerUi(type: Copy) {
-	from zipTree(configurations.swagerUiBundle.singleFile).matching {
-		include "/META-INF/resources/webjars/swagger-ui/**/*.*"
-		eachFile {
-			it.relativePath = new RelativePath(true, it.relativePath.segments.drop(5))
-		}
-		includeEmptyDirs = false
-	}
-	into openApiDir
-	filter {
-		it.replaceAll('https://petstore.swagger.io/v2/swagger.json', 'openapi.json')
-	}
-	addSwaggerUi.dependsOn resolve
-}
-tasks.jar.dependsOn addSwaggerUi
 
 jacocoTestReport {
 	reports {

@@ -57,7 +57,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
+      run: ./gradlew sonarqube -x bootBuildInfo -x addSwaggerUi -Dsonar.branch.name=$GITHUB_REF_NAME
 
     - name: Check if test summary is available
       id: check_test_summary

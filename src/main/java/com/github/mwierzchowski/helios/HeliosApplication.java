@@ -1,6 +1,8 @@
 package com.github.mwierzchowski.helios;
 
 import com.github.mwierzchowski.helios.service.TimerService;
+import com.github.mwierzchowski.helios.service.ext.CorsFilter;
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +33,9 @@ public class HeliosApplication extends ResourceConfig {
 	 * Initialization of application endpoints.
 	 */
 	@PostConstruct
-    public void initializeEndpoints() {
+    public void initialize() {
+		register(OpenApiResource.class);
+		register(CorsFilter.class);
 		register(TimerService.class);
     }
 

@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.PostConstruct;
-import javax.ws.rs.ApplicationPath;
 
 /**
  * Application boot configuration.
@@ -27,15 +26,14 @@ import javax.ws.rs.ApplicationPath;
 @EnableJpaRepositories
 @EnableTransactionManagement
 @SpringBootApplication
-@ApplicationPath("/api")
 public class HeliosApplication extends ResourceConfig {
 	/**
 	 * Initialization of application endpoints.
 	 */
 	@PostConstruct
     public void initialize() {
-		register(OpenApiResource.class);
 		register(CorsFilter.class);
+		register(OpenApiResource.class);
 		register(TimerService.class);
     }
 

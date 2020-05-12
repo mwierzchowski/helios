@@ -3,10 +3,6 @@ info.app:
   name: Helios
   description: Sun blinds controller
 
-# Jersey
-spring.jersey:
-    application-path: /api
-
 # Actuator
 management:
   endpoints.web.exposure.include: '*'

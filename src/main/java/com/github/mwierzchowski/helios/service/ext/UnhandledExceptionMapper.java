@@ -1,4 +1,4 @@
-package com.github.mwierzchowski.helios.service.mapper;
+package com.github.mwierzchowski.helios.service.ext;
 
 import com.github.mwierzchowski.helios.core.commons.CommonProperties;
 import com.github.mwierzchowski.helios.service.dto.ServiceErrorDto;

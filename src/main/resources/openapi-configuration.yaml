@@ -1,18 +1,20 @@
-cacheTTL: 0
 prettyPrint: true
-readAllResources: false
 
-openapi: 3.0.1
-info:
-  version: 1.0
-  title: Helios
-  description: Sun blinds controller
-  contact:
-    name: Marcin Wierzchowski
-    url: https://github.com/mwierzchowski/helios
-  license:
-    name: MIT License
+resourcePackages:
+  - com.github.mwierzchowski.helios.service
 
-servers:
-  - url: http://localhost:8080/api
-    description: local dev
+openAPI:
+  info:
+    version: "1.0"
+    title: Helios
+    description: Sun blinds controller
+    contact:
+      name: Marcin Wierzchowski
+      url: https://github.com/mwierzchowski/helios
+    license:
+      name: MIT License
+      url: https://opensource.org/licenses/MIT
+
+  servers:
+    - url: http://localhost:8080/api
+      description: local dev

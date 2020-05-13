@@ -33,10 +33,10 @@ jobs:
       run: echo "::set-env name=VERSION::$(git describe --tags --always --first-parent --dirty)"
 
     - name: Assemble application
-      run: ./gradlew assemble
+      run: ./gradlew assemble -PbuildInfoEnabled
 
     - name: Test application
-      run: ./gradlew test jacocoTestReport -x bootBuildInfo
+      run: ./gradlew test jacocoTestReport
 
     - name: Assemble image
       run: docker build -t helios:latest -t helios:$VERSION .
@@ -51,13 +51,13 @@ jobs:
       run: docker-compose up -d
 
     - name: Test E2E
-      run: ./gradlew testE2E -x bootBuildInfo
+      run: ./gradlew testE2E
 
     - name: Quality scan
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      run: ./gradlew sonarqube -x bootBuildInfo -Dsonar.branch.name=$GITHUB_REF_NAME
+      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
 
     - name: Check if test summary is available
       id: check_test_summary

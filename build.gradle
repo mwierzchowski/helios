@@ -56,6 +56,7 @@ tasks.testE2E {
 springBoot {
 	buildInfo()
 }
+tasks.bootBuildInfo.enabled = project.hasProperty("buildInfoEnabled")
 
 repositories {
 	mavenCentral()

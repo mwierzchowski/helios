@@ -39,7 +39,7 @@ jobs:
       run: ./gradlew test jacocoTestReport
 
     - name: Assemble image
-      run: docker build -t helios:latest -t helios:$VERSION .
+      run: docker build -t helios-app -t helios-app:$VERSION .
 
     - name: Deploy test environment
       env:

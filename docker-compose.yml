@@ -1,5 +1,6 @@
 version: '3.7'
 services:
+
   backend:
     image: 'helios-app:${VERSION:-latest}'
     ports:
@@ -39,7 +40,7 @@ services:
       - backend_network
     environment:
       - BASE_URL=/swagger
-      - URL=http://helios_backend_1:8080/api/openapi.json
+      - URL=http://localhost:8080/api/openapi.json
 
 volumes:
   database_data:

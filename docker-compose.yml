@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   backend:
-    image: 'helios:${VERSION:-latest}'
+    image: 'helios-app:${VERSION:-latest}'
     ports:
       - 8080:8080
     depends_on:
@@ -28,6 +28,18 @@ services:
     environment:
       - POSTGRES_USER=${DB_USER:-helios}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-helios}
+
+  swagger:
+    image: swaggerapi/swagger-ui:latest
+    ports:
+      - 80:8080
+    depends_on:
+      - backend
+    networks:
+      - backend_network
+    environment:
+      - BASE_URL=/swagger
+      - URL=http://helios_backend_1:8080/api/openapi.json
 
 volumes:
   database_data:

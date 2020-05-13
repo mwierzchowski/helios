@@ -7,11 +7,17 @@ services:
       - 8080:8080
     depends_on:
       - database
+      - admin
     networks:
-      - backend_network
+      backend_network:
+        aliases:
+          - heliosapp
     environment:
-      - logging_level_com_github_mwierzchowski_helios=DEBUG
-      - spring_datasource_url=jdbc:postgresql://helios_database_1:5432/helios
+      - logging_level_com_github_mwierzchowski_helios=INFO
+      - spring_datasource_url=jdbc:postgresql://heliosdb:5432/helios
+      - spring_boot_admin_client_url=http://heliosadmin:1111
+      - spring_boot_admin_client_username=admin
+      - spring_boot_admin_client_password=${ADMIN_PASSWORD:-admin}
       - spring_mail_host=${MAIL_HOST:-false}
       - spring_mail_username=${MAIL_USER:-}
       - spring_mail_password=${MAIL_PASSWORD:-}
@@ -23,12 +29,28 @@ services:
     ports:
       - 5432:5432
     networks:
-      - backend_network
+      backend_network:
+        aliases:
+          - heliosdb
     volumes:
       - database_data=/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=${DB_USER:-helios}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-helios}
+
+  admin:
+    image: slydeveloper/spring-boot-admin:latest
+    ports:
+      - 8090:1111
+    networks:
+      backend_network:
+        aliases:
+          - heliosadmin
+    environment:
+      - spring_boot_admin_ui_title=Helios Admin
+      - spring_boot_admin_security_enabled=true
+      - spring_security_user_name=admin
+      - spring_security_user_password=${ADMIN_PASSWORD:-admin}
 
   swagger:
     image: swaggerapi/swagger-ui:latest

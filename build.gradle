@@ -24,13 +24,17 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	swagerUiBundle {
-		transitive = false
-	}
 }
 
 testSets {
 	testE2E
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		html.enabled false
+	}
 }
 
 tasks.testE2E {
@@ -49,6 +53,11 @@ tasks.testE2E {
 	}
 }
 
+springBoot {
+	buildInfo()
+}
+tasks.bootBuildInfo.enabled = project.hasProperty("buildInfoEnabled")
+
 repositories {
 	mavenCentral()
 }
@@ -61,7 +70,6 @@ dependencies {
 
 	// Swagger
 	swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.18'
-	swagerUiBundle 'org.webjars:swagger-ui:3.25.1'
 
 	// Compilation
 	compileOnly 'org.projectlombok:lombok'
@@ -143,40 +151,3 @@ sourceSets.main.resources.srcDirs += "${swaggerSources.owm.code.outputDir}/src/m
 compileJava.dependsOn swaggerSources.sunapi.code
 sourceSets.main.java.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/java"
 sourceSets.main.resources.srcDirs += "${swaggerSources.sunapi.code.outputDir}/src/main/resources"
-
-// Open-API and Swagger UI
-def openApiDir = file("$sourceSets.main.output.resourcesDir/static")
-resolve {
-	openApiFile = file("$project.rootDir/openapi.yaml")
-	outputDir = openApiDir
-	classpath = sourceSets.main.runtimeClasspath
-	resourcePackages = [project.group.toString()]
-	prettyPrint = true
-	outputFormat = 'JSON'
-}
-task addSwaggerUi(type: Copy) {
-	from zipTree(configurations.swagerUiBundle.singleFile).matching {
-		include "/META-INF/resources/webjars/swagger-ui/**/*.*"
-		eachFile {
-			it.relativePath = new RelativePath(true, it.relativePath.segments.drop(5))
-		}
-		includeEmptyDirs = false
-	}
-	into openApiDir
-	filter {
-		it.replaceAll('https://petstore.swagger.io/v2/swagger.json', 'openapi.json')
-	}
-	addSwaggerUi.dependsOn resolve
-}
-tasks.jar.dependsOn addSwaggerUi
-
-jacocoTestReport {
-	reports {
-		xml.enabled true
-		html.enabled false
-	}
-}
-
-springBoot {
-	buildInfo()
-}

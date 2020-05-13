@@ -1,6 +1,11 @@
 package com.github.mwierzchowski.helios;
 
 import com.github.mwierzchowski.helios.service.TimerService;
+import com.github.mwierzchowski.helios.service.ext.ConstraintExceptionMapper;
+import com.github.mwierzchowski.helios.service.ext.CorsFilter;
+import com.github.mwierzchowski.helios.service.ext.NotFoundExceptionMapper;
+import com.github.mwierzchowski.helios.service.ext.UnhandledExceptionMapper;
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,7 +36,12 @@ public class HeliosApplication extends ResourceConfig {
 	 * Initialization of application endpoints.
 	 */
 	@PostConstruct
-    public void initializeEndpoints() {
+    public void initialize() {
+		register(CorsFilter.class);
+		register(NotFoundExceptionMapper.class);
+		register(ConstraintExceptionMapper.class);
+		register(UnhandledExceptionMapper.class);
+		register(OpenApiResource.class);
 		register(TimerService.class);
     }
 

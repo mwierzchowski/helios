@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Swagger UI" type="docker-deploy" factoryName="docker-image" server-name="Docker">
+  <configuration default="false" name="Swagger" type="docker-deploy" factoryName="docker-image" server-name="Docker">
     <deployment type="docker-image">
       <settings>
         <option name="command" value="" />

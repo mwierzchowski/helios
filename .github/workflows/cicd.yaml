@@ -12,7 +12,7 @@ jobs:
       env:
         EVENT: ${{github.event_name}}
         ACTION: ${{github.event.action}}
-      run: echo "event [$EVENT] action [$ACTION]"
+      run: echo "event [$EVENT] action [$ACTION] ref [${{github.ref}}]"
 
     - name: Checkout code
       uses: actions/checkout@v2

@@ -37,7 +37,7 @@ jobs:
       run: ./gradlew assemble -PbuildInfoEnabled
 
     - name: Assemble image
-      run: docker build -t $PKG_NAME -t $PKG_NAME:$VERSION .
+      run: docker build -t $PKG_NAME:$VERSION -t $PKG_NAME:latest .
 
     - name: Deploy test environment
       env:
@@ -62,7 +62,8 @@ jobs:
 #      if: github.event_name == 'release' && github.event.action == 'created'
       run: |
         echo $GITHUB_TOKEN | docker login docker.pkg.github.com --username mwierzchowski --password-stdin
-        docker push $PKG_NAME $PKG_NAME:$VERSION
+        docker push $PKG_NAME:latest
+        docker push $PKG_NAME:$VERSION
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 

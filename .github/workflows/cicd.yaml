@@ -8,8 +8,14 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Debug process (TODO - remove me)
+        run: echo "event [$EVENT] action [$ACTION]"
+        env:
+          EVENT: ${{github.event_name}}
+          ACTION: ${{github.event.action}}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
 
     - name: Checkout tags
       run: git fetch --prune --unshallow

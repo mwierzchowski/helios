@@ -65,7 +65,7 @@ jobs:
         path: ~/work/helios/helios/build/reports/tests/testE2E
 
     - name: Publish image
-      if: github.event_name == 'release' && github.event.action == 'published'
+      if: github.ref == 'refs/tags/*'
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       run: |
@@ -116,7 +116,7 @@ jobs:
 
   Deploy:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
+    if: github.ref == 'refs/tags/*'
     needs:
       - Build
       - Test

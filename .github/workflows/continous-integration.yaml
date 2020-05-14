@@ -2,8 +2,6 @@ name: CI
 on: push
 env:
   VERSION_EXP: git describe --tags --always --first-parent --dirty
-  TEST_SUMMARY_DIR: /home/runner/work/helios/helios/build/reports/tests/test
-  TEST_E2E_SUMMARY_DIR: /home/runner/work/helios/helios/build/reports/tests/testE2E
 
 jobs:
   Build:
@@ -52,19 +50,12 @@ jobs:
     - name: Test E2E
       run: ./gradlew testE2E
 
-    - name: Check if E2E test summary is available
-      id: check_e2e_test_summary
-      if: always()
-      uses: andstor/file-existence-action@v1
-      with:
-        files: ${{env.TEST_E2E_SUMMARY_DIR}}
-
     - name: Publish E2E test summary
-      if: steps.check_e2e_test_summary.outputs.files_exists == 'true'
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: E2E Test Summary
-        path: ${{env.TEST_E2E_SUMMARY_DIR}}
+        path: /home/runner/work/helios/helios/build/reports/tests/testE2E
 
   Test:
     runs-on: ubuntu-latest
@@ -100,16 +91,9 @@ jobs:
         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       run: ./gradlew test jacocoTestReport sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
 
-    - name: Check if test summary is available
-      id: check_test_summary
-      if: always()
-      uses: andstor/file-existence-action@v1
-      with:
-        files: ${{env.TEST_SUMMARY_DIR}}
-
     - name: Publish test summary
-      if: steps.check_test_summary.outputs.files_exists == 'true'
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: Test Summary
-        path: ${{env.TEST_SUMMARY_DIR}}
+        path: /home/runner/work/helios/helios/build/reports/tests/test

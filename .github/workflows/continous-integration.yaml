@@ -2,6 +2,7 @@ name: CI
 on: push
 env:
   VERSION_EXP: git describe --tags --always --first-parent --dirty
+  PKG_NAME: docker.pkg.github.com/mwierzchowski/helios/helios-app
 
 jobs:
   Build:
@@ -36,36 +37,31 @@ jobs:
       run: ./gradlew assemble -PbuildInfoEnabled
 
     - name: Assemble image
-      run: docker build -t helios-app -t helios-app:$VERSION .
+      run: docker build -t $PKG_NAME -t $PKG_NAME:$VERSION .
 
-    - name: Deploy test environment
-      env:
-        OWM_API_KEY: ${{secrets.OWM_API_KEY}}
-        MAIL_HOST: smtp.gmail.com
-        MAIL_USER: ${{secrets.TEST_MAIL_USER}}
-        MAIL_PASSWORD: ${{secrets.TEST_MAIL_PASS}}
-        MAIL_RECIPIENT: ${{secrets.TEST_MAIL_USER}}@gmail.com
-      run: docker-compose up -d
-
-    - name: Test E2E
-      run: ./gradlew testE2E
-
-    - name: Save image
-      run: docker save --output helios-app.tar helios-app:$VERSION
-
-    - name: Publish E2E test summary
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: E2E Test Summary
-        path: /home/runner/work/helios/helios/build/reports/tests/testE2E
+#    - name: Deploy test environment
+#      env:
+#        OWM_API_KEY: ${{secrets.OWM_API_KEY}}
+#        MAIL_HOST: smtp.gmail.com
+#        MAIL_USER: ${{secrets.TEST_MAIL_USER}}
+#        MAIL_PASSWORD: ${{secrets.TEST_MAIL_PASS}}
+#        MAIL_RECIPIENT: ${{secrets.TEST_MAIL_USER}}@gmail.com
+#      run: docker-compose up -d
+#
+#    - name: Test E2E
+#      run: ./gradlew testE2E
+#
+#    - name: Publish E2E test summary
+#      if: always()
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: E2E Test Summary
+#        path: /home/runner/work/helios/helios/build/reports/tests/testE2E
 
     - name: Publish image
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: helios-app
-        path: helios-app.tar
+      run: |
+        docker login docker.pkg.github.com --username mwierzchowski --password ${{secrets.GITHUB_TOKEN}}
+        docker push $PKG_NAME:$VERSION
 
   Test:
     runs-on: ubuntu-latest

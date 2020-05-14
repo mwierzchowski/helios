@@ -93,7 +93,7 @@ jobs:
           ${{runner.os}}-gradle-
 
     - name: Set up Semantic Versioning
-     run: echo "::set-env name=VERSION::$($VERSION_EXP)"
+      run: echo "::set-env name=VERSION::$($VERSION_EXP)"
 
     - name: Test application
       run: ./gradlew test jacocoTestReport -PbuildInfoEnabled

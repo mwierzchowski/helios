@@ -59,10 +59,12 @@ jobs:
         path: ~/work/helios/helios/build/reports/tests/testE2E
 
     - name: Publish image
-      if: github.event_name == 'release' && github.event.action == 'created'
+#      if: github.event_name == 'release' && github.event.action == 'created'
       run: |
-        docker login docker.pkg.github.com --username mwierzchowski --password ${{secrets.GITHUB_TOKEN}}
+        echo $GITHUB_TOKEN | docker login docker.pkg.github.com --username mwierzchowski --password-stdin
         docker push $PKG_NAME $PKG_NAME:$VERSION
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   Test:
     runs-on: ubuntu-latest

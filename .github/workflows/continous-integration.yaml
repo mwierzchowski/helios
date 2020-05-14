@@ -37,7 +37,7 @@ jobs:
       run: ./gradlew assemble -PbuildInfoEnabled
 
     - name: Assemble image
-      run: docker build -t $PKG_NAME -t $PKG_NAME:$VERSION .
+      run: docker build -t helios-app:$VERSION .
 
     - name: Deploy test environment
       env:
@@ -58,10 +58,11 @@ jobs:
         name: E2E Test Summary
         path: /home/runner/work/helios/helios/build/reports/tests/testE2E
 
-#    - name: Publish image
-#      run: |
-#        docker login docker.pkg.github.com --username mwierzchowski --password ${{secrets.GITHUB_TOKEN}}
-#        docker push $PKG_NAME:$VERSION
+    - name: Publish image
+      run: |
+        docker login docker.pkg.github.com --username mwierzchowski --password ${{secrets.GITHUB_TOKEN}}
+        docker tag helios-app:$VERSION $PKG_NAME:$VERSION
+        docker push $PKG_NAME:$VERSION
 
   Test:
     runs-on: ubuntu-latest

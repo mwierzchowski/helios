@@ -29,7 +29,7 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Set up Semantic Versioning
+    - name: Set up version
       run: echo "::set-env name=VERSION::$($VERSION_EXP)"
 
     - name: Assemble application
@@ -50,12 +50,22 @@ jobs:
     - name: Test E2E
       run: ./gradlew testE2E
 
+    - name: Save image
+      run: docker save --output helios-app.tar helios-app:$VERSION
+
     - name: Publish E2E test summary
       if: always()
       uses: actions/upload-artifact@v2
       with:
         name: E2E Test Summary
         path: /home/runner/work/helios/helios/build/reports/tests/testE2E
+
+    - name: Publish image
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: helios-app
+        path: helios-app.tar
 
   Test:
     runs-on: ubuntu-latest
@@ -82,7 +92,7 @@ jobs:
         restore-keys: |
           ${{runner.os}}-gradle-
 
-    - name: Set up Semantic Versioning
+    - name: Set up version
       run: echo "::set-env name=VERSION::$($VERSION_EXP)"
 
     - name: Test application

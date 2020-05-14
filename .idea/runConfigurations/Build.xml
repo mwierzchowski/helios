@@ -7,7 +7,7 @@
         <option name="command" value="" />
         <option name="containerName" value="" />
         <option name="entrypoint" value="" />
-        <option name="imageTag" value="helios-app" />
+        <option name="imageTag" value="docker.pkg.github.com/mwierzchowski/helios/helios-app" />
         <option name="commandLineOptions" value="" />
         <option name="sourceFilePath" value="Dockerfile" />
       </settings>

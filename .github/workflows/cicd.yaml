@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Debug process (TODO - remove me)
-      run: echo "event [$EVENT] action [$ACTION]"
       env:
         EVENT: ${{github.event_name}}
         ACTION: ${{github.event.action}}
+      run: echo "event [$EVENT] action [$ACTION]"
 
     - name: Checkout code
       uses: actions/checkout@v2

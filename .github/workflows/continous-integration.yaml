@@ -2,11 +2,10 @@ name: CI
 on: push
 env:
   VERSION_EXP: git describe --tags --always --first-parent --dirty
-  TEST_SUMMARY: /home/runner/work/helios/helios/build/reports/tests/test
-  TEST_SUMMARY_E2E: /home/runner/work/helios/helios/build/reports/tests/testE2E
+  TEST_SUMMARY_DIR: /home/runner/work/helios/helios/build/reports/tests/test
+  TEST_E2E_SUMMARY_DIR: /home/runner/work/helios/helios/build/reports/tests/testE2E
 
 jobs:
-
   Build:
     runs-on: ubuntu-latest
     steps:
@@ -58,14 +57,14 @@ jobs:
       if: always()
       uses: andstor/file-existence-action@v1
       with:
-        files: ${{env.TEST_SUMMARY_E2E}}
+        files: ${{env.TEST_E2E_SUMMARY_DIR}}
 
     - name: Publish E2E test summary
       if: steps.check_e2e_test_summary.outputs.files_exists == 'true'
       uses: actions/upload-artifact@v2
       with:
         name: E2E Test Summary
-        path: ${{env.TEST_SUMMARY_E2E}}
+        path: ${{env.TEST_E2E_SUMMARY_DIR}}
 
   Test:
     runs-on: ubuntu-latest
@@ -109,11 +108,11 @@ jobs:
       if: always()
       uses: andstor/file-existence-action@v1
       with:
-        files: ${{env.TEST_SUMMARY}}
+        files: ${{env.TEST_SUMMARY_DIR}}
 
     - name: Publish test summary
       if: steps.check_test_summary.outputs.files_exists == 'true'
       uses: actions/upload-artifact@v2
       with:
         name: Test Summary
-        path: ${{env.TEST_SUMMARY}}
+        path: ${{env.TEST_SUMMARY_DIR}}

@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 on: push
 env:
   VERSION_EXP: git describe --tags --always --first-parent --dirty

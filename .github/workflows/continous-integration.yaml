@@ -1,11 +1,12 @@
 name: CI
 on: push
 env:
+  VERSION_EXP: git describe --tags --always --first-parent --dirty
   TEST_SUMMARY: /home/runner/work/helios/helios/build/reports/tests/test
   TEST_SUMMARY_E2E: /home/runner/work/helios/helios/build/reports/tests/testE2E
 
 jobs:
-  Build:
+  Version_POC:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -14,77 +15,92 @@ jobs:
     - name: Checkout tags
       run: git fetch --prune --unshallow
 
-    - name: Set up JDK 13
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.13
-
-    - name: Set up Gradle Wrapper
-      run: chmod +x gradlew
-
-    - name: Set up dependencies cache
-      uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*')}}
-        restore-keys: |
-          ${{runner.os}}-gradle-
-
     - name: Set up Semantic Versioning
-      run: echo "::set-env name=VERSION::$(git describe --tags --always --first-parent --dirty)"
+      run: echo "::set-env name=VERSION::$($VERSION_EXP)"
 
-    - name: Assemble application
-      run: ./gradlew assemble -PbuildInfoEnabled
+    - name: Print version
+      run: echo "Version is $VERSION"
 
-    - name: Test application
-      run: ./gradlew test jacocoTestReport
-
-    - name: Assemble image
-      run: docker build -t helios-app -t helios-app:$VERSION .
-
-    - name: Deploy test environment
-      env:
-        OWM_API_KEY: ${{secrets.OWM_API_KEY}}
-        MAIL_HOST: smtp.gmail.com
-        MAIL_USER: ${{secrets.TEST_MAIL_USER}}
-        MAIL_PASSWORD: ${{secrets.TEST_MAIL_PASS}}
-        MAIL_RECIPIENT: ${{secrets.TEST_MAIL_USER}}@gmail.com
-      run: docker-compose up -d
-
-    - name: Test E2E
-      run: ./gradlew testE2E
-
-    - name: Quality scan
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
-
-    - name: Check if test summary is available
-      id: check_test_summary
-      if: always()
-      uses: andstor/file-existence-action@v1
-      with:
-        files: ${{env.TEST_SUMMARY}}
-
-    - name: Publish test summary
-      if: steps.check_test_summary.outputs.files_exists == 'true'
-      uses: actions/upload-artifact@v2
-      with:
-        name: Test Summary
-        path: ${{env.TEST_SUMMARY}}
-
-
-    - name: Check if E2E test summary is available
-      id: check_e2e_test_summary
-      if: always()
-      uses: andstor/file-existence-action@v1
-      with:
-        files: ${{env.TEST_SUMMARY_E2E}}
-
-    - name: Publish E2E test summary
-      if: steps.check_e2e_test_summary.outputs.files_exists == 'true'
-      uses: actions/upload-artifact@v2
-      with:
-        name: E2E Test Summary
-        path: ${{env.TEST_SUMMARY_E2E}}
+#  Build:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Checkout code
+#      uses: actions/checkout@v2
+#
+#    - name: Checkout tags
+#      run: git fetch --prune --unshallow
+#
+#    - name: Set up JDK 13
+#      uses: actions/setup-java@v1
+#      with:
+#        java-version: 1.13
+#
+#    - name: Set up Gradle Wrapper
+#      run: chmod +x gradlew
+#
+#    - name: Set up dependencies cache
+#      uses: actions/cache@v1
+#      with:
+#        path: ~/.gradle/caches
+#        key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*')}}
+#        restore-keys: |
+#          ${{runner.os}}-gradle-
+#
+#    - name: Set up Semantic Versioning
+#      run: echo "::set-env name=VERSION::$(git describe --tags --always --first-parent --dirty)"
+#
+#    - name: Assemble application
+#      run: ./gradlew assemble -PbuildInfoEnabled
+#
+#    - name: Test application
+#      run: ./gradlew test jacocoTestReport
+#
+#    - name: Assemble image
+#      run: docker build -t helios-app -t helios-app:$VERSION .
+#
+#    - name: Deploy test environment
+#      env:
+#        OWM_API_KEY: ${{secrets.OWM_API_KEY}}
+#        MAIL_HOST: smtp.gmail.com
+#        MAIL_USER: ${{secrets.TEST_MAIL_USER}}
+#        MAIL_PASSWORD: ${{secrets.TEST_MAIL_PASS}}
+#        MAIL_RECIPIENT: ${{secrets.TEST_MAIL_USER}}@gmail.com
+#      run: docker-compose up -d
+#
+#    - name: Test E2E
+#      run: ./gradlew testE2E
+#
+#    - name: Quality scan
+#      env:
+#        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+#      run: ./gradlew sonarqube -Dsonar.branch.name=$GITHUB_REF_NAME
+#
+#    - name: Check if test summary is available
+#      id: check_test_summary
+#      if: always()
+#      uses: andstor/file-existence-action@v1
+#      with:
+#        files: ${{env.TEST_SUMMARY}}
+#
+#    - name: Publish test summary
+#      if: steps.check_test_summary.outputs.files_exists == 'true'
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Test Summary
+#        path: ${{env.TEST_SUMMARY}}
+#
+#
+#    - name: Check if E2E test summary is available
+#      id: check_e2e_test_summary
+#      if: always()
+#      uses: andstor/file-existence-action@v1
+#      with:
+#        files: ${{env.TEST_SUMMARY_E2E}}
+#
+#    - name: Publish E2E test summary
+#      if: steps.check_e2e_test_summary.outputs.files_exists == 'true'
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: E2E Test Summary
+#        path: ${{env.TEST_SUMMARY_E2E}}

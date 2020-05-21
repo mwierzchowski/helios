@@ -63,7 +63,7 @@ public class SunEphemerisPublisher {
         event = ephemerisProvider.sunEphemerisFor(today).firstEventAfterPreviousOrNow(event, clock)
                 .orElseGet(() -> ephemerisProvider.sunEphemerisFor(today.plusDays(1)).firstEventOfDay(clock));
         var delay = event.getDelay(clock);
-        log.debug("Next event will be {} in {}h {}min {}s", event.getType(),
+        log.debug("Next event will be {} in {}h {}min {}s", event.getSubject(),
                 delay.toHoursPart(), delay.toMinutesPart(), delay.toSecondsPart());
         executorService.schedule(this::publishEvent, delay.toMillis(), MILLISECONDS);
     }
@@ -72,7 +72,7 @@ public class SunEphemerisPublisher {
      * Publish event.
      */
     private synchronized void publishEvent() {
-        log.info("Publishing {} event", event.getType());
+        log.info("Publishing {} event", event.getSubject());
         eventStore.publish(event);
         scheduleNextEventPublish();
     }

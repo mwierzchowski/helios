@@ -16,11 +16,11 @@ import static java.time.Instant.now;
  */
 @Data
 @RequiredArgsConstructor
-public class SunEphemerisEvent implements HeliosEvent<Void> {
+public class SunEphemerisEvent implements HeliosEvent<SunEphemerisType> {
     /**
      * Type of event
      */
-    private final SunEphemerisType type;
+    private final SunEphemerisType subject;
 
     /**
      * Timestamp of the event (e.g. when sunrise happens).

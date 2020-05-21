@@ -39,7 +39,7 @@ class SunEphemerisPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, SunEphemerisEvent) {
-                type == NOON
+                subject == NOON
             }
         })
     }
@@ -64,7 +64,7 @@ class SunEphemerisPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, SunEphemerisEvent) {
-                type == DAWN
+                subject == DAWN
             }
         })
     }

@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Data
 @RequiredArgsConstructor
-public class WeatherObservationEvent implements HeliosEvent {
+public class WeatherObservationEvent implements HeliosEvent<Void> {
     /**
      * Current weather observation
      */

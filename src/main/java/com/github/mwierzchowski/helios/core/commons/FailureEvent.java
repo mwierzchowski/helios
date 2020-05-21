@@ -9,19 +9,19 @@ import java.time.Instant;
  * @author Marcin Wierzchowski
  */
 @Data
-public class FailureEvent implements HeliosEvent, Timestamped {
-    /**
-     * Timestamp of event
-     */
-    private final Instant timestamp = Instant.now();
-
+public class FailureEvent implements HeliosEvent<Throwable> {
     /**
      * Component that send this event
      */
-    private final Class<?> source;
+    private final String source;
 
     /**
      * Throwable of the failure
      */
-    private final Throwable throwable;
+    private final Throwable subject;
+
+    /**
+     * Timestamp of event
+     */
+    private final Instant timestamp = Instant.now();
 }

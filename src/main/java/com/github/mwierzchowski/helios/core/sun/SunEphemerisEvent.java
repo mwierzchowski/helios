@@ -16,7 +16,7 @@ import static java.time.Instant.now;
  */
 @Data
 @RequiredArgsConstructor
-public class SunEphemerisEvent implements HeliosEvent {
+public class SunEphemerisEvent implements HeliosEvent<Void> {
     /**
      * Type of event
      */

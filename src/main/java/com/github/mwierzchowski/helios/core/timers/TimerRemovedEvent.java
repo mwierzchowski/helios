@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Data
 @RequiredArgsConstructor
-public class TimerRemovedEvent implements HeliosEvent {
+public class TimerRemovedEvent implements HeliosEvent<Void> {
     /**
      * Timer that was removed
      */

@@ -2,7 +2,7 @@ package com.github.mwierzchowski.helios.adapter.mail;
 
 import com.github.mwierzchowski.helios.core.commons.CommonProperties;
 import com.github.mwierzchowski.helios.core.commons.FailureEvent;
-import com.github.mwierzchowski.helios.core.commons.TimestampedHeliosEvent;
+import com.github.mwierzchowski.helios.core.commons.Timestamped;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +67,7 @@ public class EventMailSender {
     /**
      * Queue of events for send
      */
-    private Queue<TimestampedHeliosEvent> eventQueue = new ConcurrentLinkedQueue<>();
+    private Queue<Timestamped> eventQueue = new ConcurrentLinkedQueue<>();
 
     /**
      * Callback post construct method that reports mail notifications availability.
@@ -96,7 +96,7 @@ public class EventMailSender {
             log.debug("Events queue is empty, nothing to send");
             return;
         }
-        Queue<TimestampedHeliosEvent> sendQueue;
+        Queue<Timestamped> sendQueue;
         synchronized (this) {
             sendQueue = new LinkedList<>(eventQueue);
             eventQueue.clear();
@@ -118,7 +118,7 @@ public class EventMailSender {
      * @param sendQueue queue of events to be send
      * @return subject
      */
-    private String buildSubject(Queue<TimestampedHeliosEvent> sendQueue) {
+    private String buildSubject(Queue<Timestamped> sendQueue) {
         var failureCount = sendQueue.stream().filter(event -> event instanceof FailureEvent).count();
         var subjectTemplate = failureCount == 1 ? "{0} status: {1} alert" : "{0} status: {1} alerts";
         return format(subjectTemplate, applicationName, failureCount);
@@ -129,9 +129,9 @@ public class EventMailSender {
      * @param sendQueue queue of events to be send
      * @return text
      */
-    private String buildText(Queue<TimestampedHeliosEvent> sendQueue) {
-        Function<TimestampedHeliosEvent, String> eventToText = e -> {
-            var event = (FailureEvent) e;
+    private String buildText(Queue<Timestamped> sendQueue) {
+        Function<Timestamped, String> eventToText = e -> {
+            var event = (FailureEvent) e; // todo this will not work when other types are used
             var time = event.getZonedDateTime().format(commonProperties.timeFormatter());
             var clazz = event.getSource().getSimpleName();
             var message = event.getThrowable().getMessage();

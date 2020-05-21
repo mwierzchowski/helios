@@ -9,7 +9,7 @@ import java.time.Instant;
  * @author Marcin Wierzchowski
  */
 @Data
-public class FailureEvent implements TimestampedHeliosEvent {
+public class FailureEvent implements HeliosEvent, Timestamped {
     /**
      * Timestamp of event
      */

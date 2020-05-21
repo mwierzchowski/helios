@@ -35,11 +35,11 @@ public class WeatherInfoContributor implements InfoContributor {
     }
 
     /**
-     * Listener method that accepts {@link WeatherMissingEvent} and use it to reset current weather.
-     * @param weatherMissingEvent weather warning
+     * Listener method that accepts {@link WeatherStaleEvent} and use it to reset current weather.
+     * @param weatherStaleEvent weather warning
      */
     @EventListener
-    public synchronized void onWeatherMissing(WeatherMissingEvent weatherMissingEvent) {
+    public synchronized void onWeatherStale(WeatherStaleEvent weatherStaleEvent) {
         this.currentWeather = null;
     }
 }

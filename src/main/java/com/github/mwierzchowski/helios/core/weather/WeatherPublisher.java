@@ -38,7 +38,7 @@ public class WeatherPublisher {
     /**
      * Last published event or null when its not available
      */
-    private HeliosEvent lastEvent;
+    private HeliosEvent<Weather> lastEvent;
 
     @PostConstruct
     public void initialize() {
@@ -61,7 +61,7 @@ public class WeatherPublisher {
         for (var weatherProvider :  weatherProviders) {
             weatherProvider.currentWeather().ifPresent(currentWeather::update);
         }
-        Optional<HeliosEvent> event;
+        Optional<HeliosEvent<Weather>> event;
         if (currentWeather.isProvided()) {
             event = weatherNotification(currentWeather);
         } else {
@@ -70,17 +70,17 @@ public class WeatherPublisher {
         event.ifPresent(this::send);
     }
 
-    private Optional<HeliosEvent> weatherNotification(Weather currentWeather) {
+    private Optional<HeliosEvent<Weather>> weatherNotification(Weather currentWeather) {
         if (currentWeather.isSameAs(previousWeather())) {
             log.debug("Weather has not changed.");
             return Optional.empty();
         }
         log.debug("Weather has changed. New observation: {}", currentWeather);
-        HeliosEvent event = new WeatherObservationEvent(currentWeather);
+        HeliosEvent<Weather> event = new WeatherObservationEvent(currentWeather);
         return Optional.of(event);
     }
 
-    private Optional<HeliosEvent> missingNotification() {
+    private Optional<HeliosEvent<Weather>> missingNotification() {
         if (lastEventWasWarning()) {
             log.debug("Missing weather warning was already sent earlier");
             return Optional.empty();
@@ -91,12 +91,12 @@ public class WeatherPublisher {
             log.debug("Weather observation is missing but warning deadline has not been passed yet");
             return Optional.empty();
         }
-        log.error("Weather observation is missing");
-        HeliosEvent event = new WeatherMissingEvent();
+        log.error("Weather observation is stale");
+        HeliosEvent<Weather> event = new WeatherStaleEvent(previousWeather);
         return Optional.of(event);
     }
 
-    private void send(HeliosEvent event) {
+    private void send(HeliosEvent<Weather> event) {
         eventStore.publish(event);
         this.lastEvent = event;
     }
@@ -105,12 +105,12 @@ public class WeatherPublisher {
         if (lastEventWasWarning() || lastEvent == null) {
             return null;
         } else {
-            return ((WeatherObservationEvent) lastEvent).getSubject();
+            return lastEvent.getSubject();
         }
     }
 
     private boolean lastEventWasWarning() {
-        return lastEvent instanceof WeatherMissingEvent;
+        return lastEvent instanceof WeatherStaleEvent;
     }
 
     private boolean providersNotAvailable() {

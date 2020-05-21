@@ -20,7 +20,7 @@ public class SunEphemerisEvent implements HeliosEvent {
     /**
      * Type of event
      */
-    private final SunEphemerisEventType type;
+    private final SunEphemerisType type;
 
     /**
      * Timestamp of the event (e.g. when sunrise happens).

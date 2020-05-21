@@ -105,7 +105,7 @@ public class WeatherPublisher {
         if (lastEventWasWarning() || lastEvent == null) {
             return null;
         } else {
-            return ((WeatherObservationEvent) lastEvent).getCurrentWeather();
+            return ((WeatherObservationEvent) lastEvent).getSubject();
         }
     }
 

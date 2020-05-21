@@ -52,8 +52,8 @@ class WeatherPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, WeatherObservationEvent) {
-                it.currentWeather.temperature.value == temp
-                it.currentWeather.wind.speed.value == wind
+                it.subject.temperature.value == temp
+                it.subject.wind.speed.value == wind
             }
         })
     }
@@ -67,7 +67,7 @@ class WeatherPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, WeatherObservationEvent) {
-                currentWeather.isSameAs(weather)
+                subject.isSameAs(weather)
             }
         })
     }

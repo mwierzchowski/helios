@@ -31,7 +31,7 @@ public class WeatherInfoContributor implements InfoContributor {
      */
     @EventListener
     public synchronized void onWeatherObservation(WeatherObservationEvent weatherObservationEvent) {
-        this.currentWeather = weatherObservationEvent.getCurrentWeather();
+        this.currentWeather = weatherObservationEvent.getSubject();
     }
 
     /**

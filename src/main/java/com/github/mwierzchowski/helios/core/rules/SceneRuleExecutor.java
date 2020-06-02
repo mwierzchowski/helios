@@ -1,27 +1,23 @@
 package com.github.mwierzchowski.helios.core.rules;
 
 import com.github.mwierzchowski.helios.core.commons.HeliosEvent;
-import com.github.mwierzchowski.helios.core.scenes.SceneMaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.DefaultRulesEngine;
-import org.jeasy.rules.core.RuleBuilder;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class SceneRuleExecutor {
     private final SceneRuleProperties properties;
-    private final SceneRuleRepository repository;
-    private final SceneMaker sceneMaker;
+//    private final SceneRuleRepository repository;
+//    private final SceneMaker sceneMaker;
     private RulesEngine rulesEngine = new DefaultRulesEngine();
     private Facts facts = new Facts();
 
@@ -36,7 +32,7 @@ public class SceneRuleExecutor {
             return;
         }
         log.debug("Executing rules for event: {}", event);
-        rulesEngine.fire(activeRules(), facts);
+//        rulesEngine.fire(activeRules(), facts);
     }
 
     private boolean updateFactsOn(HeliosEvent<?> event) {
@@ -56,14 +52,15 @@ public class SceneRuleExecutor {
     }
 
     private Rules activeRules() {
-        var ruleSet = repository.getActiveRules().stream()
-                .map(sceneRule -> new RuleBuilder()
-                        .name(sceneRule.getClass().getSimpleName())
-                        .priority(sceneRule.getPriority())
-                        .when(facts -> sceneRule.check(facts.asMap()))
-                        .then(facts -> sceneMaker.setup(sceneRule.getScene()))
-                        .build())
-                .collect(toSet());
-        return new Rules(ruleSet);
+//        var ruleSet = repository.getActiveRules().stream()
+//                .map(sceneRule -> new RuleBuilder()
+//                        .name(sceneRule.getClass().getSimpleName())
+//                        .priority(sceneRule.getPriority())
+//                        .when(facts -> sceneRule.check(facts.asMap()))
+//                        .then(facts -> sceneMaker.setup(sceneRule.getScene()))
+//                        .build())
+//                .collect(toSet());
+//        return new Rules(ruleSet);
+        return null;
     }
 }

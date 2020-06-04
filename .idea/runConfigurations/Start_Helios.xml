@@ -2,6 +2,7 @@
   <configuration default="false" name="Start Helios" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.github.mwierzchowski.helios.HeliosApplication" />
     <module name="helios.main" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=debug" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.github.mwierzchowski.helios.*" />

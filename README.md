@@ -8,5 +8,10 @@ This is still alpha version, real documentation is coming soon (hopefully).
 Helios is a [god of sun](https://en.wikipedia.org/wiki/Helios) in a Greek mythology. Who is better to
 control the sun if not him? 
 
+# Links
+- [Health](http://localhost:8080/actuator/health)
+- [API](http://localhost/swagger/)
+- [Admin](http://localhost:8090)
+
 # License
 This software is released under the [MIT](LICENSE) license.

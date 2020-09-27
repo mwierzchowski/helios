@@ -1,7 +1,7 @@
 package com.github.mwierzchowski.helios.actuator
 
+import org.junit.Ignore
 import org.junit.Test
-import spock.lang.Ignore
 
 import static io.restassured.RestAssured.when
 import static org.hamcrest.Matchers.is

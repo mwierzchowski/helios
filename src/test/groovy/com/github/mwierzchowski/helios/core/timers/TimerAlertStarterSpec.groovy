@@ -30,7 +30,7 @@ class TimerAlertStarterSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, TimerAlertEvent) {
-                it.timer == timer
+                it.subject == timer
             }
         })
     }

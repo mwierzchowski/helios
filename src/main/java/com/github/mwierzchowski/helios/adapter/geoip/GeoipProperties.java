@@ -20,7 +20,7 @@ public class GeoipProperties {
      * URL of the service that checks actual public IP of the local machine. Service is expected to return IP as
      * plain text.
      */
-    private String ipCheckerUrl = "http://checkip.amazonaws.com";
+    private String checkIpPath = "http://checkip.amazonaws.com";
 
     /**
      * Path to the GeoLite IP database. Could be classpath or file on the filesystem.

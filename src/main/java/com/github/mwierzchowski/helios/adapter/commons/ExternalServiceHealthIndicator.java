@@ -89,7 +89,7 @@ public class ExternalServiceHealthIndicator<R> implements HealthIndicator {
      */
     public synchronized void register(Throwable throwable) {
         updateHistory(throwable);
-        eventStore.publish(new FailureEvent(source, throwable));
+        eventStore.publish(new FailureEvent(source.getSimpleName(), throwable));
     }
 
     /** Helpers *******************************************************************************************************/

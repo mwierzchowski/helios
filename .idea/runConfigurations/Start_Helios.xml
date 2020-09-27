@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start Helios" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.github.mwierzchowski.helios.HeliosApplication" />
+    <module name="helios.main" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=debug" />
+    <extension name="coverage" runner="jacoco">
+      <pattern>
+        <option name="PATTERN" value="com.github.mwierzchowski.helios.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

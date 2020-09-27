@@ -91,6 +91,7 @@ dependencies {
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'com.maxmind.geoip2:geoip2:2.13.1'
+	implementation 'org.jeasy:easy-rules-core:3.4.0'
 
 	// Testing unit & integration
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

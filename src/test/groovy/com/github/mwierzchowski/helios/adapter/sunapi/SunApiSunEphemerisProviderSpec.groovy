@@ -12,7 +12,7 @@ import spock.lang.Subject
 import java.time.LocalDate
 import java.time.LocalTime
 
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DAWN
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisType.DAWN
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 @LiteIntegrationSpec([SunApiConfiguration, SunApiProperties, SunApiSunEphemerisProvider])

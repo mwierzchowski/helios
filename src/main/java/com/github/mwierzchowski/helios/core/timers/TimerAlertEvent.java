@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
  */
 @Data
 @RequiredArgsConstructor
-public class TimerAlertEvent implements HeliosEvent {
+public class TimerAlertEvent implements HeliosEvent<Timer> {
     /**
      * Timer that triggered this alert.
      */
-    private final Timer timer;
+    private final Timer subject;
 }

@@ -28,9 +28,9 @@ class ExternalServiceHealthIndicatorSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, FailureEvent) {
-                source == ExternalServiceHealthIndicatorSpec
+                source == ExternalServiceHealthIndicatorSpec.getSimpleName()
                 timestamp.isAfter(start)
-                throwable == exception
+                subject == exception
             }
         })
     }

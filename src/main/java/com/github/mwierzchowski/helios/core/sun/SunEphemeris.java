@@ -24,7 +24,7 @@ public class SunEphemeris {
     /**
      * Map with time of ephemeris events
      */
-    private Map<SunEphemerisEventType, LocalTime> times = new TreeMap<>();
+    private Map<SunEphemerisType, LocalTime> times = new TreeMap<>();
 
     /**
      * Flag informing if ephemeris is approximated. It is set to true in case of fallback response from
@@ -69,7 +69,7 @@ public class SunEphemeris {
      * @param clock clock
      * @return event
      */
-    private SunEphemerisEvent eventOf(SunEphemerisEventType type, Clock clock) {
+    private SunEphemerisEvent eventOf(SunEphemerisType type, Clock clock) {
         Instant timestamp = times.get(type).atDate(day).atZone(clock.getZone()).toInstant();
         return new SunEphemerisEvent(type, timestamp);
     }

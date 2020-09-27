@@ -2,7 +2,6 @@
 .gradle
 .gradletasknamecache
 build/
-config/
 
 ### IntelliJ IDEA ###
 .idea/

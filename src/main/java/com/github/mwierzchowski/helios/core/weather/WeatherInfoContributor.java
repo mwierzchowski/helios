@@ -1,5 +1,6 @@
 package com.github.mwierzchowski.helios.core.weather;
 
+import lombok.Getter;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.context.event.EventListener;
@@ -14,6 +15,7 @@ public class WeatherInfoContributor implements InfoContributor {
     /**
      * Current weather observation published by weather publisher.
      */
+    @Getter
     private Weather currentWeather = null;
 
     /**

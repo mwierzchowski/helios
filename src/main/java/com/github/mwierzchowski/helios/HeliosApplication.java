@@ -1,5 +1,6 @@
 package com.github.mwierzchowski.helios;
 
+import com.github.mwierzchowski.helios.service.BlindService;
 import com.github.mwierzchowski.helios.service.TimerService;
 import com.github.mwierzchowski.helios.service.ext.ConstraintExceptionMapper;
 import com.github.mwierzchowski.helios.service.ext.CorsFilter;
@@ -43,6 +44,7 @@ public class HeliosApplication extends ResourceConfig {
 		register(UnhandledExceptionMapper.class);
 		register(OpenApiResource.class);
 		register(TimerService.class);
+		register(BlindService.class);
     }
 
 	/**

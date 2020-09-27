@@ -71,10 +71,10 @@ public class GeoipLocationProvider implements LocationProvider {
     /**
      * Helper method that finds IP of the machine
      * @return ip
-     * @throws UnknownHostException
+     * @throws UnknownHostException in case of network problems
      */
     private InetAddress publicIpAddress() throws UnknownHostException {
-        var checkerResponse = new RestTemplate().getForObject(geoipProperties.getIpCheckerUrl(), String.class);
+        var checkerResponse = new RestTemplate().getForObject(geoipProperties.getCheckIpPath(), String.class);
         if (checkerResponse == null || checkerResponse.isEmpty()) {
             throw new IllegalStateException("Could not determine public IP of this machine");
         }

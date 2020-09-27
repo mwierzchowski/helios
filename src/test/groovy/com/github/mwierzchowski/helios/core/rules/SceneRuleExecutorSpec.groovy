@@ -46,4 +46,15 @@ class SceneRuleExecutorSpec extends Specification {
         // TODO this specification is rather dummy
         noExceptionThrown()
     }
+  
+    def "Should reset facts on not supported events"() {
+        given:
+        def weather = new Weather()
+        def event = new WeatherStaleEvent(weather)
+        when:
+        executor.executeRulesFor(event)
+        then:
+        // TODO this specification is rather dummy
+        noExceptionThrown()
+    }
 }

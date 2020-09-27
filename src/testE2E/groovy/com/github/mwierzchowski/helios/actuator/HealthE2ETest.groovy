@@ -1,6 +1,7 @@
 package com.github.mwierzchowski.helios.actuator
 
 import org.junit.Test
+import spock.lang.Ignore
 
 import static io.restassured.RestAssured.when
 import static org.hamcrest.Matchers.is
@@ -40,6 +41,7 @@ class HealthE2ETest {
     }
 
     @Test
+    @Ignore
     void "Should return mail health status UP"() {
         when().get(healthUrl).then()
                 .body("components.mail.status", is("UP"))

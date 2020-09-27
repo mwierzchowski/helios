@@ -41,10 +41,6 @@ jobs:
 
     - name: Deploy test environment
       env:
-        MAIL_HOST: smtp.gmail.com
-        MAIL_USER: ${{secrets.TEST_MAIL_USER}}
-        MAIL_PASSWORD: ${{secrets.TEST_MAIL_PASS}}
-        MAIL_RECIPIENT: ${{secrets.TEST_MAIL_USER}}@gmail.com
         OWM_API_KEY: ${{secrets.OWM_API_KEY}}
       run: docker-compose up -d
 

@@ -9,7 +9,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.util.concurrent.Executors
 
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.*
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisType.*
 
 class SunEphemerisPublisherSpec extends Specification {
     def ephemerisProvider = Mock(SunEphemerisProvider)
@@ -39,7 +39,7 @@ class SunEphemerisPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, SunEphemerisEvent) {
-                type == NOON
+                subject == NOON
             }
         })
     }
@@ -64,7 +64,7 @@ class SunEphemerisPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, SunEphemerisEvent) {
-                type == DAWN
+                subject == DAWN
             }
         })
     }

@@ -22,8 +22,8 @@ class EventMailSenderSpec extends Specification {
 
     def "Should send email if events were enqueued"() {
         given:
-        def event1 = new FailureEvent(EventMailSenderSpec, new RuntimeException())
-        def event2 = new FailureEvent(EventMailSenderSpec, new RuntimeException())
+        def event1 = new FailureEvent("EventMailSenderSpec", new RuntimeException())
+        def event2 = new FailureEvent("EventMailSenderSpec", new RuntimeException())
         mailSender.createMimeMessage() >> mimeMessage
         when:
         eventMailSender.enqueue(event1)
@@ -47,7 +47,7 @@ class EventMailSenderSpec extends Specification {
     def "Should not send email if mail was already sent"() {
         given:
         mailSender.createMimeMessage() >> mimeMessage
-        eventMailSender.enqueue(new FailureEvent(EventMailSenderSpec, new RuntimeException()))
+        eventMailSender.enqueue(new FailureEvent("EventMailSenderSpec", new RuntimeException()))
         eventMailSender.sendMail()
         when:
         eventMailSender.sendMail()
@@ -58,7 +58,7 @@ class EventMailSenderSpec extends Specification {
     def "Should send email if previous mail sending failed"() {
         given:
         mailSender.createMimeMessage() >>> [null, mimeMessage]
-        eventMailSender.enqueue(new FailureEvent(EventMailSenderSpec, new RuntimeException()))
+        eventMailSender.enqueue(new FailureEvent("EventMailSenderSpec", new RuntimeException()))
         eventMailSender.sendMail()
         when:
         eventMailSender.sendMail()

@@ -16,7 +16,7 @@ resilience4j.retry.instances:
 # Canned responses from WireMock
 helios.owm.base-path: http://localhost:${wiremock.server.port}/owm-mock/data/2.5/
 helios.sunapi.base-path: http://localhost:${wiremock.server.port}/sun-mock
-helios.geoip.ip-checker-url: http://localhost:${wiremock.server.port}/checkip-mock
+helios.geoip.check-ip-path: http://localhost:${wiremock.server.port}/checkip-mock
 
 # Disable automatic processes binded to application start
 helios.common.processing-on-startup-enabled: false
@@ -29,5 +29,5 @@ helios.location:
   latitude: 52.23
   longitude: 21.01
 
-# OWM API key
+# OWM API dummy key
 helios.owm.api-key: DUMMY_KEY_FOR_TESTING

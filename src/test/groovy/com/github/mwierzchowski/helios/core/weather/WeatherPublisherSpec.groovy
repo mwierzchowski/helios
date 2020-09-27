@@ -52,8 +52,8 @@ class WeatherPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, WeatherObservationEvent) {
-                it.currentWeather.temperature.value == temp
-                it.currentWeather.wind.speed.value == wind
+                it.subject.temperature.value == temp
+                it.subject.wind.speed.value == wind
             }
         })
     }
@@ -67,7 +67,7 @@ class WeatherPublisherSpec extends Specification {
         then:
         1 * eventStore.publish({
             verifyAll(it, WeatherObservationEvent) {
-                currentWeather.isSameAs(weather)
+                subject.isSameAs(weather)
             }
         })
     }
@@ -83,7 +83,7 @@ class WeatherPublisherSpec extends Specification {
         }
         then:
         2 * eventStore.publish(_ as WeatherObservationEvent)
-        0 * eventStore.publish(_ as WeatherMissingEvent)
+        0 * eventStore.publish(_ as WeatherStaleEvent)
     }
 
     def "Should not send notification if next observation is the same as previous one"() {
@@ -97,7 +97,7 @@ class WeatherPublisherSpec extends Specification {
         }
         then:
         1 * eventStore.publish(_ as WeatherObservationEvent)
-        0 * eventStore.publish(_ as WeatherMissingEvent)
+        0 * eventStore.publish(_ as WeatherStaleEvent)
     }
 
     def "Should send warning notification if first observation is missing"() {
@@ -106,7 +106,7 @@ class WeatherPublisherSpec extends Specification {
         when:
         weatherPublisher.publishWeather()
         then:
-        1 * eventStore.publish(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherStaleEvent)
     }
 
     def "Should not send next warning notification if previous was sent"() {
@@ -119,7 +119,7 @@ class WeatherPublisherSpec extends Specification {
             weatherPublisher.publishWeather()
         }
         then:
-        1 * eventStore.publish(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherStaleEvent)
         0 * eventStore.publish(_ as WeatherObservationEvent)
     }
 
@@ -134,7 +134,7 @@ class WeatherPublisherSpec extends Specification {
         }
         then:
         1 * eventStore.publish(_ as WeatherObservationEvent)
-        1 * eventStore.publish(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherStaleEvent)
     }
 
     def "Should not send warning notification if observations are missing for a short time"() {
@@ -148,7 +148,7 @@ class WeatherPublisherSpec extends Specification {
         }
         then:
         1 * eventStore.publish(_ as WeatherObservationEvent)
-        0 * eventStore.publish(_ as WeatherMissingEvent)
+        0 * eventStore.publish(_ as WeatherStaleEvent)
     }
 
     def "Should always sends weather notification if observation is back after warning was sent"() {
@@ -163,7 +163,7 @@ class WeatherPublisherSpec extends Specification {
         }
         then:
         2 * eventStore.publish(_ as WeatherObservationEvent)
-        1 * eventStore.publish(_ as WeatherMissingEvent)
+        1 * eventStore.publish(_ as WeatherStaleEvent)
     }
 
     def weather(timestamp = now(), clouds = 0) {

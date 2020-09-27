@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
  * Interface for time-stamped application events.
  * @author Marcin Wierzchowski
  */
-public interface TimestampedHeliosEvent extends HeliosEvent, Comparable<TimestampedHeliosEvent> {
+public interface Timestamped extends Comparable<Timestamped> {
     Instant getTimestamp();
 
     default ZonedDateTime getZonedDateTime() {
@@ -16,7 +16,7 @@ public interface TimestampedHeliosEvent extends HeliosEvent, Comparable<Timestam
     }
 
     @Override
-    default int compareTo(TimestampedHeliosEvent that) {
+    default int compareTo(Timestamped that) {
         var timestamp1 = this.getTimestamp().toEpochMilli();
         var timestamp2 = that.getTimestamp().toEpochMilli();
         return (int) (timestamp1 - timestamp2);

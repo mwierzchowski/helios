@@ -21,11 +21,11 @@ import java.time.ZoneId;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DAWN;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.DUSK;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.NOON;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.SUNRISE;
-import static com.github.mwierzchowski.helios.core.sun.SunEphemerisEventType.SUNSET;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisType.DAWN;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisType.DUSK;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisType.NOON;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisType.SUNRISE;
+import static com.github.mwierzchowski.helios.core.sun.SunEphemerisType.SUNSET;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 

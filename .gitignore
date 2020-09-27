@@ -42,3 +42,4 @@ out/
 ### Others ###
 *.log
 hs_err_pid*
+config/

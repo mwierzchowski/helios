@@ -4,6 +4,7 @@ import com.github.mwierzchowski.helios.core.timers.Timer
 import com.github.mwierzchowski.helios.core.timers.TimerAlertEvent
 import com.github.mwierzchowski.helios.core.timers.TimerRemovedEvent
 import com.github.mwierzchowski.helios.core.timers.TimerSchedule
+import com.github.mwierzchowski.helios.service.BlindService
 import nl.jqno.equalsverifier.EqualsVerifier
 import org.mapstruct.Mapper
 import org.reflections.Reflections
@@ -25,7 +26,8 @@ class EqualsAndHashcodeSpec extends Specification {
             TimerAlertEvent,
             TimerSchedule,
             TimerRemovedEvent,
-            Timer
+            Timer,
+            BlindService
     ]
 
     def "Classes should implement equals and hashcode methods"() {
